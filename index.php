@@ -1,4 +1,4 @@
- 213   <?php
+<?php
     // Get current date in Indonesian format
     function getCurrentDate() {
         $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
