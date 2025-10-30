@@ -231,14 +231,14 @@ switch ($action) {
                 $stmtUpdate = $pdo->prepare("
                     UPDATE setoran SET 
                         jam_masuk = ?, jam_keluar = ?, nomor_awal = ?, nomor_akhir = ?, 
-                        total_liter = ?, qris = ?, cash = ?, total_setoran = ?, 
+                        jumlah_tera = ?, total_liter = ?, qris = ?, cash = ?, total_setoran = ?, 
                         total_pengeluaran = ?, total_pemasukan = ?, total_keseluruhan = ?, 
                         employee_name = ?, store_name = ?
                     WHERE id = ?
                 ");
                 $stmtUpdate->execute([
                     $data['jam_masuk'], $data['jam_keluar'], $data['nomor_awal'], $data['nomor_akhir'],
-                    $data['total_liter'], $data['qris'], $data['cash'], $total_setoran_calculated,
+                    $jumlah_tera, $data['total_liter'], $data['qris'], $data['cash'], $total_setoran_calculated,
                     $data['total_pengeluaran'], $data['total_pemasukan'], $data['total_keseluruhan'],
                     $employee_name, $store_name, $existingSetoranId
                 ]);
