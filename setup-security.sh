@@ -1,7 +1,5 @@
 #!/bin/bash
-sudo apt update
-sudo apt install php8.2-pdo php8.2-mysql
-sudo systemctl restart apache2
+apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
 # =============================================================================
 # Admin Panel POSM - Security Setup Script
 # =============================================================================

@@ -705,7 +705,7 @@
         };
 
         try {
-            const response = await fetch('api.php?action=save_setoran', {
+            const response = await fetch('config/api.php?action=save_setoran', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -734,7 +734,7 @@
         storeSelect.disabled = true;
 
         try {
-            const response = await fetch(`api.php?action=get_stores`);
+            const response = await fetch(`config/api.php?action=get_stores`);
             const result = await response.json();
             
             if (result.success && result.data.length > 0) {
@@ -763,7 +763,7 @@
         employeeSelect.disabled = true;
 
         try {
-            const response = await fetch(`api.php?action=get_employees&store_id=${store_id}`);
+            const response = await fetch(`config/api.php?action=get_employees&store_id=${store_id}`);
             const result = await response.json();
             
             if (result.success && result.data.length > 0) {

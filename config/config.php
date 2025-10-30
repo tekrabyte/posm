@@ -5,13 +5,6 @@ date_default_timezone_set('Asia/Jakarta');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Session Configuration
-ini_set('session.cookie_httponly', 1); // Prevent JavaScript access to session cookie
-ini_set('session.use_only_cookies', 1); // Use only cookies for sessions
-ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-ini_set('session.gc_maxlifetime', 1800); // 30 minutes
-ini_set('session.cookie_lifetime', 1800); // 30 minutes
-
 $host = 'srv1412.hstgr.io';
 $dbname = 'u215947863_pom';
 $username = 'u215947863_pom';
