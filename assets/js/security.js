@@ -12,7 +12,7 @@ let csrfToken = '';
 // Initialize CSRF Token
 async function initializeCSRFToken() {
     try {
-        const response = await fetch('api.php?action=get_csrf_token');
+        const response = await fetch('../config/api.php?action=get_csrf_token');
         const result = await response.json();
         if (result.success && result.data && result.data.csrf_token) {
             csrfToken = result.data.csrf_token;
