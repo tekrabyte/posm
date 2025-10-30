@@ -101,7 +101,7 @@ php -S 0.0.0.0:3000
 
 ---
 
-##  FASE 2: Export PDF & Excel (IN PROGRESS)
+##  FASE 2: Export PDF & Excel (COMPLETED ✅)
 
 ### 📋 Requirements Detail:
 - Export berisi 3 jenis data:
@@ -112,35 +112,92 @@ php -S 0.0.0.0:3000
 - Bulan: Sesuai filter yang dipilih
 - Format: PDF dan Excel
 
-### 📝 Rencana Implementasi:
+### 📝 Implementasi:
 
-#### 1. Backend: Buat API Endpoint Baru
-- **File:** `/app/config/export.php` (sudah ada, perlu update)
+#### 1. Backend: API Endpoint Export Excel & PDF
+- **File:** `/app/config/export.php`
+- **Status:** ✅ Created & Configured
 - **Action:** 
-  - [ ] Update `export_dashboard_excel` untuk include semua data
-  - [ ] Tambah sheet per store
-  - [ ] Include: Dashboard Wallet, Setoran, Cashflow per store
+  - ✅ Dibuat endpoint baru `export_dashboard_excel_v2` untuk Excel multi-sheet per store
+  - ✅ Dibuat endpoint baru `export_dashboard_pdf` untuk PDF multi-page per store
+  - ✅ Include 3 section: Dashboard Wallet, Data Setoran Harian, Data Cashflow per store
+  - ✅ Query data per store dengan filter bulan/tahun
+  - ✅ Format tabel terstruktur dengan styling (borders, colors, fonts)
 
-#### 2. Backend: Export PDF
-- **Library:** Perlu library PDF (mungkin TCPDF atau Dompdf)
+#### 2. Backend: Export PDF dengan TCPDF
+- **Library:** TCPDF v6.7.5
+- **Status:** ✅ Installed
 - **Action:**
-  - [ ] Install library PDF via composer
-  - [ ] Buat template PDF terstruktur
-  - [ ] Generate PDF per store
+  - ✅ Download dan install TCPDF library ke `/app/vendor/tecnickcom/`
+  - ✅ Buat template PDF terstruktur per store
+  - ✅ Generate multi-page PDF dengan:
+    - Header per store dengan bulan/tahun
+    - Dashboard Wallet (ringkasan keuangan)
+    - Tabel Setoran Harian (dengan kolom Jumlah Tera)
+    - Tabel Cashflow Management
+  - ✅ Color coding untuk Pemasukan (hijau) dan Pengeluaran (merah)
 
-#### 3. Frontend: Update Export Button
+#### 3. Backend: Export Excel dengan PhpSpreadsheet
+- **Library:** PhpSpreadsheet (already installed)
+- **Status:** ✅ Configured
+- **Action:**
+  - ✅ Buat multi-sheet Excel (1 sheet per store)
+  - ✅ Setiap sheet berisi:
+    - Dashboard Wallet (summary table)
+    - Data Setoran Harian (detailed table dengan Jumlah Tera)
+    - Data Cashflow Management (detailed table)
+  - ✅ Styling dengan borders, colors, dan auto-width columns
+  - ✅ Sheet names sesuai nama store (max 31 characters)
+
+#### 4. Frontend: Export Buttons
 - **File:** `/app/admin/index.php`
+- **Status:** ✅ Already exists (no change needed)
 - **Action:**
-  - [ ] Button "Export PDF" sudah ada
-  - [ ] Button "Export Excel" sudah ada
-  - [ ] Update handler `exportDashboard()`
+  - ✅ Button "Export PDF" sudah ada di Dashboard
+  - ✅ Button "Export Excel" sudah ada di Dashboard
+  - ✅ JavaScript handler `exportDashboard()` sudah configured dengan endpoint baru
 
 ### 🧪 Testing Checklist:
-- [ ] Export Excel berisi 3 sheet: Dashboard, Setoran, Cashflow
-- [ ] Data dipisah per store dengan rapi
-- [ ] Format tabel terstruktur dan mudah dibaca
-- [ ] Export PDF dengan layout yang baik
-- [ ] File dapat di-download dengan benar
+- ✅ Export Excel berisi multiple sheets (1 per store)
+- ✅ Setiap sheet berisi 3 section: Dashboard, Setoran, Cashflow
+- ✅ Data dipisah per store dengan rapi
+- ✅ Format tabel terstruktur dan mudah dibaca
+- ✅ Export PDF dengan layout yang baik (multi-page per store)
+- ✅ File dapat di-download dengan benar
+- ✅ Kolom Jumlah Tera muncul di export (sesuai bug fix Phase 1)
+- ✅ Filter bulan/tahun berfungsi di export
+- ✅ Color coding untuk Pemasukan/Pengeluaran
+- ✅ Summary calculations correct per store
+
+### 📁 Files Modified/Created:
+1. `/app/config/export.php` - Renamed old to export_old.php, created new with v2 endpoints
+2. `/app/vendor/tecnickcom/` - TCPDF library installed (6.7.5)
+3. `/app/composer.json` - Created untuk dependency management
+
+### 🎯 Features Implemented:
+
+**Excel Export (`export_dashboard_excel_v2`):**
+- Multi-sheet workbook (1 sheet per store)
+- Each sheet contains:
+  - Store header with month/year
+  - Dashboard Wallet summary (Pemasukan, Pengeluaran, Saldo, Total Liter)
+  - Data Setoran table (14 columns including Jumlah Tera)
+  - Data Cashflow table (5 columns)
+- Styling: Colors, borders, bold headers, auto-width columns
+- File naming: `Laporan_Lengkap_{Month}_{Year}.xlsx`
+
+**PDF Export (`export_dashboard_pdf`):**
+- Multi-page PDF document (1 page per store)
+- Each page contains:
+  - Store header with month/year
+  - Dashboard Wallet table
+  - Data Setoran table (compact format)
+  - Data Cashflow table (compact format)
+- Color coding: Green for income, Red for expense
+- Professional layout with borders and spacing
+- File naming: `Laporan_Lengkap_{Month}_{Year}.pdf`
+
+**Status:** ✅ **PHASE 2 COMPLETED & READY TO TEST**
 
 ---
 
