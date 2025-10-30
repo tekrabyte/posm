@@ -200,8 +200,12 @@ switch ($action) {
                 if (!isset($data[$field])) throw new Exception("Field wajib '{$field}' hilang.");
             }
 
+            // Start transaction untuk data consistency
+            $pdo->beginTransaction();
+
             $today = date('Y-m-d');
             $total_setoran_calculated = (float)$data['qris'] + (float)$data['cash'];
+            $qris_amount = (float)$data['qris'];
 
             $stmtEmp = $pdo->prepare("SELECT employee_name FROM employees WHERE id = ?");
             $stmtEmp->execute([$data['employee_id']]);
@@ -216,6 +220,11 @@ switch ($action) {
             $existingSetoranId = $stmtCheck->fetchColumn();
 
             if ($existingSetoranId) {
+                // Get old QRIS value before update
+                $stmtOldQris = $pdo->prepare("SELECT qris FROM setoran WHERE id = ?");
+                $stmtOldQris->execute([$existingSetoranId]);
+                $old_qris = (float)$stmtOldQris->fetchColumn();
+
                 $stmtUpdate = $pdo->prepare("
                     UPDATE setoran SET 
                         jam_masuk = ?, jam_keluar = ?, nomor_awal = ?, nomor_akhir = ?, 
@@ -234,6 +243,10 @@ switch ($action) {
                 $setoran_id = $existingSetoranId;
                 $pdo->exec("DELETE FROM pengeluaran WHERE setoran_id = $setoran_id");
                 $pdo->exec("DELETE FROM pemasukan WHERE setoran_id = $setoran_id");
+                
+                // Delete old QRIS cashflow entry and create new one
+                $pdo->prepare("DELETE FROM cash_flow_management WHERE category = 'qris_setoran' AND notes LIKE ?")->execute(["%SETORAN_ID:$setoran_id%"]);
+                
                 $message = 'Data setoran berhasil diperbarui (ditimpa)';
             } else {
                 $stmtInsert = $pdo->prepare("
@@ -266,6 +279,7 @@ switch ($action) {
                 $message = 'Data setoran berhasil disimpan';
             }
 
+            // Insert pengeluaran details
             if (!empty($data['pengeluaran'])) {
                 $stmtPeng = $pdo->prepare("INSERT INTO pengeluaran (setoran_id, description, amount) VALUES (?, ?, ?)");
                 foreach ($data['pengeluaran'] as $item) {
@@ -273,6 +287,7 @@ switch ($action) {
                 }
             }
 
+            // Insert pemasukan details
             if (!empty($data['pemasukan'])) {
                 $stmtMasuk = $pdo->prepare("INSERT INTO pemasukan (setoran_id, description, amount) VALUES (?, ?, ?)");
                 foreach ($data['pemasukan'] as $item) {
@@ -280,8 +295,35 @@ switch ($action) {
                 }
             }
 
-            jsonResponse(true, $message, ['id' => $setoran_id]);
+            // ========================================
+            // AUTO-SYNC QRIS TO CASHFLOW MANAGEMENT
+            // ========================================
+            if ($qris_amount > 0) {
+                $qris_description = "Pemasukan QRIS Setoran - {$employee_name} ({$store_name})";
+                $qris_notes = "AUTO_SYNC:SETORAN_ID:{$setoran_id}:EMPLOYEE:{$employee_name}:DATE:{$today}";
+                
+                $stmtCashflow = $pdo->prepare("
+                    INSERT INTO cash_flow_management 
+                    (tanggal, store_id, description, amount, type, category, notes, created_at)
+                    VALUES (?, ?, ?, ?, 'Pemasukan', 'qris_setoran', ?, NOW())
+                ");
+                $stmtCashflow->execute([
+                    $today,
+                    $data['store_id'],
+                    $qris_description,
+                    $qris_amount,
+                    $qris_notes
+                ]);
+                
+                $message .= ' | QRIS otomatis masuk ke Cashflow Management';
+            }
+
+            // Commit transaction
+            $pdo->commit();
+
+            jsonResponse(true, $message, ['id' => $setoran_id, 'qris_synced' => ($qris_amount > 0)]);
         } catch (Exception $e) {
+            $pdo->rollBack();
             jsonResponse(false, 'Error: Gagal menyimpan data setoran. ' . $e->getMessage(), [], [], 500);
         }
         break;
