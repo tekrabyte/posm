@@ -96,8 +96,12 @@ switch ($action) {
                 if ($password === $user['password']) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
+                    $_SESSION['LAST_ACTIVITY'] = time();
                     
-                    jsonResponse(true, 'Login berhasil.');
+                    // Generate CSRF token for this session
+                    $csrf_token = generateCSRFToken();
+                    
+                    jsonResponse(true, 'Login berhasil.', ['csrf_token' => $csrf_token]);
                 } else {
                     jsonResponse(false, 'Username atau password salah.', [], [], 401);
                 }
