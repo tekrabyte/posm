@@ -1644,13 +1644,25 @@
             const year = document.getElementById('filter_year_dashboard').value || '<?php echo $current_year; ?>';
             const store_id = document.getElementById('filter_store_dashboard')?.value || '';
 
+            console.log('🔍 Fetching dashboard data for:', { month, year, store_id });
+
             // --- 1. Ambil data Wallet dan Breakdown (get_dashboard_wallet) ---
             try {
                 const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`);
                 const walletResult = await walletResponse.json();
 
+                console.log('✅ Wallet data received:', walletResult);
+
                 if (walletResult.success) {
                     updateDashboardDisplay(walletResult.data);
+                    
+                    // Initialize charts with the fetched data
+                    if (typeof initializeDashboardCharts === 'function') {
+                        console.log('📊 Initializing dashboard charts...');
+                        initializeDashboardCharts(walletResult.data);
+                    } else {
+                        console.warn('⚠️ initializeDashboardCharts function not found');
+                    }
                 } else {
                     console.error('API Error fetching dashboard wallet:', walletResult.message);
                 }
