@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once 'config/config.php';
-require_once 'config/security.php';
+require_once '../config/config.php';
+require_once '../config/security.php';
 
 // Cek sesi login
 if (!isset($_SESSION['user_id'])) {
-    header('Location: config/login.php');
+    header('Location: ../config/login.php');
     exit;
 }
 
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 if (!checkSessionTimeout()) {
     session_unset();
     session_destroy();
-    header('Location: config/login.php?expired=1');
+    header('Location: ../config/login.php?expired=1');
     exit;
 }
 
