@@ -1,10 +1,24 @@
 <?php
 session_start();
+require_once 'config.php';
+require_once 'security.php';
+
 // Cek sesi login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+
+// Check session timeout
+if (!checkSessionTimeout()) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php?expired=1');
+    exit;
+}
+
+// Generate CSRF token for this session
+$csrf_token = generateCSRFToken();
 
 // Ambil data filter dari URL atau set default ke bulan/tahun saat ini
 $current_month = date('m');
@@ -35,6 +49,10 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <script src="https://cdn.tailwindcss.com"></script>
     <!--<script>console.log = function() {};</script>-->
     <link rel="stylesheet" href="assets/css/admin.css">
+    <script>
+        // Initialize CSRF Token from PHP
+        const CSRF_TOKEN = '<?php echo $csrf_token; ?>';
+    </script>
 </head>
 
 <body class="bg-gray-100">
