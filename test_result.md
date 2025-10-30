@@ -18,10 +18,9 @@ dan lihat hasil console atau errornya langsung di port 3000
 Berdasarkan problem statement dari client:
 
 1.  **Perbaiki filter store** - Tidak berfungsi di dashboard admin → **HAPUS FILTER STORE**
-2. ⏳ **Hapus date range** 
-3. ⏳ **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
-4. ⏳ **Online report viewer** - Preview laporan sebelum download
-5. ⏳ **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
+3.  **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
+4.  **Online report viewer** - Preview laporan sebelum download
+5.  **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
 6.  **Tambah field tera di index.php** - Field `jumlah_tera` setelah `nomor_akhir`, ubah logika: `total_liter = nomor_akhir - nomor_awal - jumlah_tera`
 
 ---
@@ -105,7 +104,7 @@ Berdasarkan problem statement dari client:
 
 ---
 
-## ⏳ FASE 3: Export PDF & Excel (IN PROGRESS)
+##  FASE 3: Export PDF & Excel (IN PROGRESS)
 
 ### 📋 Requirements Detail:
 - Export berisi 3 jenis data:
@@ -148,7 +147,7 @@ Berdasarkan problem statement dari client:
 
 ---
 
-## ⏳ FASE 4: Online Report Viewer (PENDING)
+##  FASE 4: Online Report Viewer (PENDING)
 
 ### 📋 Requirements Detail:
 - Preview laporan sebelum download
@@ -178,7 +177,7 @@ Berdasarkan problem statement dari client:
 
 ---
 
-## ⏳ FASE 5: Scheduled Email Reports (PENDING)
+##  FASE 5: Scheduled Email Reports (PENDING)
 
 ### 📋 Requirements Detail:
 - Kirim email otomatis setiap hari jam 12 malam
@@ -249,9 +248,9 @@ Berdasarkan problem statement dari client:
 |------|------|--------|------------|
 | 1 | Field Tera di index.php |  Done | 100% |
 | 2 | Hapus Filter Store Dashboard |  Done | 100% |
-| 3 | Export PDF & Excel | ⏳ In Progress | 0% |
-| 4 | Online Report Viewer | ⏳ Pending | 0% |
-| 5 | Scheduled Email Reports | ⏳ Pending | 0% |
+| 3 | Export PDF & Excel |  In Progress | 0% |
+| 4 | Online Report Viewer |  Pending | 0% |
+| 5 | Scheduled Email Reports |  Pending | 0% |
 
 **Overall Progress:** 40% (2/5 fase selesai)
 
@@ -266,18 +265,6 @@ Berdasarkan problem statement dari client:
 - **Solution:** ✅ **FIXED** - Memindahkan semua elemen dashboard (Breakdown & BBM Report) ke dalam container `tab-dashboard`
 - **Fixed on:** 2025-01-XX
 - **Priority:** High
-
-### Issue #2: Database Migration
-- **Description:** `mysql` dan `php` CLI tidak tersedia di environment
-- **Impact:** Migration script belum dijalankan
-- **Solution:** File migration sudah dibuat, akan dijalankan saat sistem online
-- **Priority:** Medium
-
-### Issue #3: Populate Store Filter
-- **Description:** JavaScript masih populate filter store di cashflow
-- **Impact:** Minor, tidak mempengarukan fungsionalitas dashboard
-- **Solution:** Akan dibersihkan di fase berikutnya
-- **Priority:** Low
 
 ---
 
@@ -296,8 +283,8 @@ Berdasarkan problem statement dari client:
 
 -  Semua file di `/app/` sudah ter-update
 -  Database schema migration ready
-- ⏳ Perlu install library PDF untuk export
-- ⏳ Perlu setup cron job untuk scheduled reports
+-  Perlu install library PDF untuk export
+-  Perlu setup cron job untuk scheduled reports
 -  Hot reload enabled untuk frontend & backend
 
 ---

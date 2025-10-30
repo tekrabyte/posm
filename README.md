@@ -531,10 +531,7 @@ find /backup/ -name "*.sql" -mtime +30 -delete
    - Visual KPIs
    - Trend analysis
 
-3. **Advanced Filtering (MEDIUM)**
-   - Date range picker
-   - Multi-select filters
-   - Saved filter presets
+
 
 4. **Pagination (MEDIUM)**
    - For tables with >100 rows

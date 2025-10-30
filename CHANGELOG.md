@@ -109,13 +109,7 @@ All notable changes to this project will be documented in this file.
 - [ ] Input sanitization layer
 - [ ] SQL injection prevention audit
 
-### [4.1.0] - Advanced Filters (Q1 2025)
-- [ ] Date range picker
-- [ ] Multi-store selection
-- [ ] Amount range filter
-- [ ] Category filter for cash flow
-- [ ] Employee filter for setoran
-- [ ] Filter presets (Today, This Week, etc.)
+
 
 ### [4.2.0] - Bulk Operations (Q2 2025)
 - [ ] Bulk delete
