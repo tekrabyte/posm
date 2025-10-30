@@ -62,7 +62,7 @@
         // --- Autentikasi ---
         document.getElementById('logoutBtn').addEventListener('click', async function () {
             if (confirm('Anda yakin ingin logout?')) {
-                await fetch('api.php?action=logout');
+                await fetch('../config/api.php?action=logout');
                 window.location.href = 'login.php';
             }
         });
@@ -70,7 +70,7 @@
         // --- Populate Store/Employee Filter ---
         async function fetchAllStoresAndEmployeesForFilter() {
             // Ambil Store untuk filter dan modal
-            const storeResponse = await fetch('api.php?action=get_stores');
+            const storeResponse = await fetch('../config/api.php?action=get_stores');
             const storeResult = await storeResponse.json();
             if (storeResult.success) {
                 allStores = storeResult.data;
@@ -105,7 +105,7 @@
             }
 
             // Ambil Employee untuk filter 
-            const employeeResponse = await fetch('api.php?action=get_employees');
+            const employeeResponse = await fetch('../config/api.php?action=get_employees');
             const employeeResult = await employeeResponse.json();
             if (employeeResult.success) {
                 allEmployees = employeeResult.data;
@@ -202,7 +202,7 @@
             if (!confirm('Anda yakin ingin menghapus setoran ini?')) return;
 
             try {
-                const response = await fetch('api.php?action=delete_setoran', {
+                const response = await fetch('../config/api.php?action=delete_setoran', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: id })
@@ -351,7 +351,7 @@
         async function loadStoresForFilter() {
             try {
                 console.log('Loading stores...');
-                const response = await fetch('api.php?action=get_stores');
+                const response = await fetch('../config/api.php?action=get_stores');
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -980,7 +980,7 @@
         async function saveBBMDistributionDetails(transactionId, distribution) {
             try {
                 // Simpan ke API khusus untuk BBM distribution
-                const response = await fetch('api.php?action=save_bbm_distribution', {
+                const response = await fetch('../config/api.php?action=save_bbm_distribution', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1077,7 +1077,7 @@
     }
 
     try {
-        const response = await fetch('api.php?action=delete_management_cash_flow', {
+        const response = await fetch('../config/api.php?action=delete_management_cash_flow', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1376,7 +1376,7 @@
             tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">Memuat data...</td></tr>';
 
             try {
-                const response = await fetch('api.php?action=get_stores');
+                const response = await fetch('../config/api.php?action=get_stores');
                 const result = await response.json();
                 allStores = result.data || [];
 
@@ -1431,7 +1431,7 @@
             if (!confirm('Anda yakin ingin menghapus Store ini? Semua data setoran yang terikat akan kehilangan relasi ke store ini.')) return;
 
             try {
-                const response = await fetch('api.php?action=delete_store', {
+                const response = await fetch('../config/api.php?action=delete_store', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: id })
@@ -1484,7 +1484,7 @@
             tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-500">Memuat data...</td></tr>';
 
             try {
-                const response = await fetch('api.php?action=get_employees');
+                const response = await fetch('../config/api.php?action=get_employees');
                 const result = await response.json();
                 allEmployees = result.data || [];
 
@@ -1521,7 +1521,7 @@
 
         async function populateStoreDropdown(selectId, selectedId = null) {
             if (allStores.length === 0) {
-                const response = await fetch('api.php?action=get_stores');
+                const response = await fetch('../config/api.php?action=get_stores');
                 const result = await response.json();
                 allStores = result.data || [];
             }
@@ -1574,7 +1574,7 @@
             if (!confirm(`Anda yakin ingin ${statusText} Karyawan ${employee.employee_name}?`)) return;
 
             try {
-                const response = await fetch('api.php?action=edit_employee', {
+                const response = await fetch('../config/api.php?action=edit_employee', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1935,7 +1935,7 @@ function updateStoreWallet(stores) {
         async function fetchAllStoresAndEmployeesForFilter() {
             try {
                 // --- Ambil Store untuk filter dan modal ---
-                const storeResponse = await fetch('api.php?action=get_stores');
+                const storeResponse = await fetch('../config/api.php?action=get_stores');
                 const storeResult = await storeResponse.json();
 
                 if (storeResult.success && Array.isArray(storeResult.data)) {
@@ -1975,7 +1975,7 @@ function updateStoreWallet(stores) {
                 }
 
                 // --- Ambil Employee untuk filter setoran ---
-                const employeeResponse = await fetch('api.php?action=get_employees');
+                const employeeResponse = await fetch('../config/api.php?action=get_employees');
                 const employeeResult = await employeeResponse.json();
 
                 if (employeeResult.success && Array.isArray(employeeResult.data)) {
@@ -2325,7 +2325,7 @@ function updateStoreWallet(stores) {
             try {
                 console.log('🧪 Testing cashflow submission...');
 
-                const response = await fetch('api.php?action=add_management_cash_flow', {
+                const response = await fetch('../config/api.php?action=add_management_cash_flow', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
