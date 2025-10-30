@@ -200,6 +200,9 @@ switch ($action) {
                 if (!isset($data[$field])) throw new Exception("Field wajib '{$field}' hilang.");
             }
 
+            // jumlah_tera is optional, default to 0
+            $jumlah_tera = isset($data['jumlah_tera']) ? (float)$data['jumlah_tera'] : 0;
+
             // Start transaction untuk data consistency
             $pdo->beginTransaction();
 
