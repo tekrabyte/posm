@@ -55,44 +55,7 @@ function addDateRangePickers() {
     }
 }
 
-/**
- * Add Date Range Controls to Filter Form
- */
-function addDateRangeToFilter(form, tabName) {
-    // Check if already added
-    if (form.querySelector('.date-range-container')) return;
-    
-    const monthSelect = form.querySelector(`[id*="filter_month_${tabName}"]`);
-    const yearSelect = form.querySelector(`[id*="filter_year_${tabName}"]`);
-    
-    if (!monthSelect || !yearSelect) return;
-    
-    // Create container for date range mode toggle
-    const modeContainer = document.createElement('div');
-    modeContainer.className = 'w-full mb-4 flex items-center gap-2';
-    modeContainer.innerHTML = `
-        <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="dateRangeMode_${tabName}" class="rounded">
-            <span class="text-sm font-medium text-gray-700">Gunakan Date Range</span>
-        </label>
-    `;
-    
-    // Create date range inputs
-    const dateRangeContainer = document.createElement('div');
-    dateRangeContainer.className = 'date-range-container hidden grid grid-cols-2 gap-2 w-full';
-    dateRangeContainer.innerHTML = `
-        <div>
-            <label for="date_from_${tabName}" class="block text-xs font-medium text-gray-500 mb-1">Dari Tanggal</label>
-            <input type="date" id="date_from_${tabName}" name="date_from" 
-                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 text-sm">
-        </div>
-        <div>
-            <label for="date_to_${tabName}" class="block text-xs font-medium text-gray-500 mb-1">Sampai Tanggal</label>
-            <input type="date" id="date_to_${tabName}" name="date_to" 
-                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 text-sm">
-        </div>
-    `;
-    
+ 
     // Insert before the month select
     const monthContainer = monthSelect.closest('div');
     const yearContainer = yearSelect.closest('div');

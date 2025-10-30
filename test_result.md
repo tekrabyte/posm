@@ -8,7 +8,10 @@
 ## NOTE PENTING
 Ini adalah Aplikasi POS dengan PHP tradisional dan database Mysql (remote) yang sudah di konfigurasi 
 semua pembaharuan, improvisasi dan perbaikian aplikasi akan di update dokumen ini
-
+jika ingin melakukan testing otomatis tinggal jalankan bash``
+apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
+php -S 0.0.0.0:3000``
+dan lihat hasil console atau errornya langsung di port 3000
 
 ## 🎯 Daftar Tugas (Requirements)
 
