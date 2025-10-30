@@ -73,7 +73,7 @@ async function secureFetch(url, options = {}) {
         if (response.status === 401 && data.message && data.message.includes('berakhir')) {
             showToast('Sesi Anda telah berakhir. Silakan login kembali.', 'error');
             setTimeout(() => {
-                window.location.href = 'login.php';
+                window.location.href = '../config/login.php';
             }, 2000);
             return null;
         }
