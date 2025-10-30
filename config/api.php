@@ -1182,9 +1182,10 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 $stmt_id->execute([$store['store_name']]);
                 $store_id = $stmt_id->fetchColumn();
 
+                // NOTE: Exclude qris_setoran category karena sudah included dalam setoran
                 $sql_cf_store = "
                     SELECT
-                        SUM(CASE WHEN type = 'Pemasukan' THEN amount ELSE 0 END) as pemasukan_cf,
+                        SUM(CASE WHEN type = 'Pemasukan' AND category != 'qris_setoran' THEN amount ELSE 0 END) as pemasukan_cf,
                         SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as pengeluaran_cf
                     FROM cash_flow_management
                     WHERE store_id = ? AND YEAR(tanggal) = ? AND MONTH(tanggal) = ?
@@ -1193,8 +1194,8 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 $stmt_cf_store->execute([$store_id, $year, $month]);
                 $cf_store = $stmt_cf_store->fetch(PDO::FETCH_ASSOC);
 
-                // Setoran admin dihilangkan dari perhitungan cashflow per store
-                $income = ($store['pemasukan_setoran'] ?? 0) + ($cf_store['pemasukan_cf'] ?? 0);
+                // Total income per store = setoran (cash+qris already included) + pemasukan_setoran + cashflow pemasukan (excluding qris_setoran)
+                $income = ($store['setoran'] ?? 0) + ($store['pemasukan_setoran'] ?? 0) + ($cf_store['pemasukan_cf'] ?? 0);
                 $expense = ($store['pengeluaran_setoran'] ?? 0) + ($cf_store['pengeluaran_cf'] ?? 0);
 
                 $per_store[] = [
