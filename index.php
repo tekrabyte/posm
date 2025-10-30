@@ -399,6 +399,25 @@
         return formatNumber(amount, 0);
     }
 
+    // Format QRIS function
+    function formatQris(value) {
+        const qrisDisplay = document.getElementById('qris_display');
+        const qrisValue = document.getElementById('qris_value');
+        
+        if (!qrisDisplay || !qrisValue) return;
+        
+        // Get numeric value
+        const numericValue = value ? parseInt(value) : 0;
+        
+        // Save to hidden field
+        qrisValue.value = numericValue;
+        
+        // Format display
+        qrisDisplay.value = formatRupiah(numericValue);
+        
+        // Recalculate
+        calculateAll();
+    }
     // Format input QRIS
     function setupQrisInput() {
         const qrisDisplay = document.getElementById('qris_display');
