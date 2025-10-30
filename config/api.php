@@ -1089,13 +1089,15 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
 
             $params = [$year, $month];
             $where_clause = "YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?";
+            $where_clause_setoran = "YEAR(s.tanggal) = ? AND MONTH(s.tanggal) = ?";
             
             if (!empty($store_id_filter)) {
                 $where_clause .= " AND cfm.store_id = ?";
+                $where_clause_setoran .= " AND s.store_id = ?";
                 $params[] = $store_id_filter;
             }
 
-            // HANYA BACA DARI CASHFLOW MANAGEMENT
+            // Query Cashflow Management untuk Income & Expense
             $sql_cf = "
                 SELECT
                     SUM(CASE WHEN type = 'Pemasukan' THEN amount ELSE 0 END) as total_pemasukan,
@@ -1110,14 +1112,26 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $total_income = $cf_data['total_pemasukan'] ?? 0;
             $total_expense = $cf_data['total_pengeluaran'] ?? 0;
 
+            // Query Total Liter dari tabel Setoran
+            $sql_liter = "
+                SELECT
+                    COALESCE(SUM(s.total_liter), 0) as total_liter
+                FROM setoran s
+                WHERE {$where_clause_setoran}
+            ";
+            $stmt_liter = $pdo->prepare($sql_liter);
+            $stmt_liter->execute($params);
+            $liter_data = $stmt_liter->fetch(PDO::FETCH_ASSOC);
+            $total_liter = $liter_data['total_liter'] ?? 0;
+
             $all_stores = [
                 'total_income' => $total_income,
                 'total_expense' => $total_expense,
                 'balance' => $total_income - $total_expense,
-                'total_liter' => 0 // Tidak ada data liter di cashflow
+                'total_liter' => $total_liter
             ];
 
-            // Breakdown Pengeluaran - HANYA dari cashflow
+            // Breakdown Pengeluaran - dari cashflow
             $sql_expense = "
                 SELECT description, SUM(amount) as amount
                 FROM cash_flow_management cfm
@@ -1134,7 +1148,7 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt_expense->execute($expense_params);
             $expense_breakdown = $stmt_expense->fetchAll(PDO::FETCH_ASSOC);
 
-            // Breakdown Pemasukan - HANYA dari cashflow
+            // Breakdown Pemasukan - dari cashflow
             $sql_income = "
                 SELECT description, SUM(amount) as amount
                 FROM cash_flow_management cfm
@@ -1144,12 +1158,13 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 ORDER BY amount DESC
             ";
             $stmt_income = $pdo->prepare($sql_income);
-            $stmt_income->execute($expense_params); // Reuse same params
+            $stmt_income->execute($expense_params);
             $income_breakdown = $stmt_income->fetchAll(PDO::FETCH_ASSOC);
 
-            // Per Store - HANYA dari cashflow
+            // Per Store - Gabungkan data dari cashflow dan setoran
             $sql_store = "
                 SELECT
+                    st.id,
                     st.store_name,
                     COALESCE(SUM(CASE WHEN cfm.type = 'Pemasukan' THEN cfm.amount ELSE 0 END), 0) as income,
                     COALESCE(SUM(CASE WHEN cfm.type = 'Pengeluaran' THEN cfm.amount ELSE 0 END), 0) as expense
@@ -1163,14 +1178,34 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt_store->execute([$year, $month]);
             $stores_data = $stmt_store->fetchAll(PDO::FETCH_ASSOC);
 
+            // Query liter per store
+            $sql_liter_per_store = "
+                SELECT
+                    store_id,
+                    COALESCE(SUM(total_liter), 0) as total_liter
+                FROM setoran
+                WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+                GROUP BY store_id
+            ";
+            $stmt_liter_per_store = $pdo->prepare($sql_liter_per_store);
+            $stmt_liter_per_store->execute([$year, $month]);
+            $liter_per_store_data = $stmt_liter_per_store->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Create a map of store_id => total_liter
+            $liter_map = [];
+            foreach ($liter_per_store_data as $liter_row) {
+                $liter_map[$liter_row['store_id']] = $liter_row['total_liter'];
+            }
+
             $per_store = [];
             foreach ($stores_data as $store) {
+                $store_liter = $liter_map[$store['id']] ?? 0;
                 $per_store[] = [
                     'store_name' => $store['store_name'],
                     'income' => $store['income'],
                     'expense' => $store['expense'],
                     'balance' => $store['income'] - $store['expense'],
-                    'total_liter' => 0 // Tidak ada data liter di cashflow
+                    'total_liter' => $store_liter
                 ];
             }
 
@@ -1181,7 +1216,7 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 'per_store' => $per_store
             ];
 
-            jsonResponse(true, 'Dashboard data berhasil dimuat (ONLY CASHFLOW)', $result);
+            jsonResponse(true, 'Dashboard data berhasil dimuat', $result);
 
         } catch (Exception $e) {
             jsonResponse(false, 'Error: ' . $e->getMessage(), [], [], 500);
