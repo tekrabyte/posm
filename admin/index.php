@@ -773,7 +773,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
 
                                 <!-- Form Content -->
                                 <div class="px-6 py-4">
-                                    <form id="cashflowForm" method="POST" action="api.php">
+                                    <form id="cashflowForm" method="POST" action="../config/api.php">
                                         <input type="hidden" id="cashflow_id" name="id">
 
                                         <!-- Message Area -->
@@ -1338,7 +1338,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <!-- External JavaScript -->
     <script src="../assets/js/security.js"></script>
     <script src="../assets/js/admin-integration.js"></script>
-    <script src="../assets/js/admin.min.js"></script>
+    <script src="../assets/js/admin.js"></script>
     <script>
         // Initialize CSRF Token from PHP
         if (typeof CSRF_TOKEN !== 'undefined') {

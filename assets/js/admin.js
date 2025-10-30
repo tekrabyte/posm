@@ -137,7 +137,7 @@
             const employeeId = document.getElementById('filter_employee_id_setoran').value || '';
             const storeId = document.getElementById('filter_store_id_setoran').value || '';
 
-            let apiUrl = `api.php?action=get_history&month=${month}&year=${year}`;
+            let apiUrl = `../config/api.php?action=get_history&month=${month}&year=${year}`;
             if (employeeId) apiUrl += `&employee_id=${employeeId}`;
             if (storeId) apiUrl += `&store_id=${storeId}`;
 
@@ -596,7 +596,7 @@
         // Usage example:
         async function loadStoresForFilter() {
             try {
-                const result = await safeFetch('api.php?action=get_stores');
+                const result = await safeFetch('../config/api.php?action=get_stores');
 
                 if (result.success) {
                     allStores = result.data;
@@ -1656,7 +1656,7 @@
 
             // --- 2. Ambil data Ringkasan Cash Flow (gunakan endpoint yang benar) ---
             try {
-                const cashflowUrl = `api.php?action=get_management_cash_flow&month=${month}&year=${year}&store_id=${store_id}`;
+                const cashflowUrl = `../config/api.php?action=get_management_cash_flow&month=${month}&year=${year}&store_id=${store_id}`;
                 const cashflowResponse = await fetch(cashflowUrl);
                 const cashflowResult = await cashflowResponse.json();
 
