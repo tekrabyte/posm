@@ -1352,7 +1352,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <script src="../assets/js/admin-enhanced.js"></script>
     <script src="../assets/js/admin-integration.js"></script>
     <script src="../assets/js/admin.js"></script>
-    <script src="../assets/js/dashboard-charts.js"></script>
+    <!-- dashboard-charts.js removed - charts section no longer used -->
     <script src="../assets/js/admin-improvements.js"></script>
     <script>
         // Initialize CSRF Token from PHP
