@@ -155,54 +155,54 @@ if ($action === 'export_dashboard_excel_v2') {
             $dashboard_end_row = $row;
             $sheet->getStyle("B5:C$dashboard_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
-            // ===== SECTION 2: DATA SETORAN =====
+            // ===== SECTION 2: DATA SETORAN (MULAI DARI CELL B) =====
             $row += 3;
             $setoran_start_row = $row;
-            $sheet->setCellValue("A$row", 'DATA SETORAN HARIAN');
-            $sheet->mergeCells("A$row:N$row");
-            $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
-            $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('10B981');
-            $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
-            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->setCellValue("B$row", 'DATA SETORAN HARIAN');
+            $sheet->mergeCells("B$row:P$row");
+            $sheet->getStyle("B$row")->getFont()->setBold(true)->setSize(14);
+            $sheet->getStyle("B$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('10B981');
+            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB('FFFFFF');
+            $sheet->getStyle("B$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $row++;
             $headers = ['Tanggal', 'Karyawan', 'Jam Masuk', 'Jam Keluar', 'No. Awal', 'No. Akhir', 'Jumlah Tera', 'Total Liter', 'Cash', 'QRIS', 'Total Setoran', 'Pengeluaran', 'Pemasukan', 'Total Bersih'];
-            $col = 'A';
+            $col = 'B'; // Mulai dari B
             foreach ($headers as $header) {
                 $sheet->setCellValue($col.$row, $header);
                 $col++;
             }
-            $sheet->getStyle("A$row:N$row")->getFont()->setBold(true);
-            $sheet->getStyle("A$row:N$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('D1FAE5');
+            $sheet->getStyle("B$row:O$row")->getFont()->setBold(true);
+            $sheet->getStyle("B$row:O$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('D1FAE5');
             
             $row++;
             if (count($setoran_data) > 0) {
                 foreach ($setoran_data as $data) {
-                    $sheet->setCellValue("A$row", $data['tanggal']);
-                    $sheet->setCellValue("B$row", $data['employee_name'] ?? 'N/A');
-                    $sheet->setCellValue("C$row", substr($data['jam_masuk'], 0, 5));
-                    $sheet->setCellValue("D$row", substr($data['jam_keluar'], 0, 5));
-                    $sheet->setCellValue("E$row", number_format($data['nomor_awal'], 2, ',', '.'));
-                    $sheet->setCellValue("F$row", number_format($data['nomor_akhir'], 2, ',', '.'));
-                    $sheet->setCellValue("G$row", number_format($data['jumlah_tera'] ?? 0, 2, ',', '.'));
-                    $sheet->setCellValue("H$row", number_format($data['total_liter'], 2, ',', '.') . ' L');
-                    $sheet->setCellValue("I$row", "Rp " . formatRupiahNumber($data['cash']));
-                    $sheet->setCellValue("J$row", "Rp " . formatRupiahNumber($data['qris']));
-                    $sheet->setCellValue("K$row", "Rp " . formatRupiahNumber($data['total_setoran']));
-                    $sheet->setCellValue("L$row", "Rp " . formatRupiahNumber($data['total_pengeluaran']));
-                    $sheet->setCellValue("M$row", "Rp " . formatRupiahNumber($data['total_pemasukan']));
-                    $sheet->setCellValue("N$row", "Rp " . formatRupiahNumber($data['total_keseluruhan']));
+                    $sheet->setCellValue("B$row", $data['tanggal']);
+                    $sheet->setCellValue("C$row", $data['employee_name'] ?? 'N/A');
+                    $sheet->setCellValue("D$row", substr($data['jam_masuk'], 0, 5));
+                    $sheet->setCellValue("E$row", substr($data['jam_keluar'], 0, 5));
+                    $sheet->setCellValue("F$row", number_format($data['nomor_awal'], 2, ',', '.'));
+                    $sheet->setCellValue("G$row", number_format($data['nomor_akhir'], 2, ',', '.'));
+                    $sheet->setCellValue("H$row", number_format($data['jumlah_tera'] ?? 0, 2, ',', '.'));
+                    $sheet->setCellValue("I$row", number_format($data['total_liter'], 2, ',', '.') . ' L');
+                    $sheet->setCellValue("J$row", "Rp " . formatRupiahNumber($data['cash']));
+                    $sheet->setCellValue("K$row", "Rp " . formatRupiahNumber($data['qris']));
+                    $sheet->setCellValue("L$row", "Rp " . formatRupiahNumber($data['total_setoran']));
+                    $sheet->setCellValue("M$row", "Rp " . formatRupiahNumber($data['total_pengeluaran']));
+                    $sheet->setCellValue("N$row", "Rp " . formatRupiahNumber($data['total_pemasukan']));
+                    $sheet->setCellValue("O$row", "Rp " . formatRupiahNumber($data['total_keseluruhan']));
                     $row++;
                 }
             } else {
-                $sheet->setCellValue("A$row", 'Tidak ada data setoran');
-                $sheet->mergeCells("A$row:N$row");
-                $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->setCellValue("B$row", 'Tidak ada data setoran');
+                $sheet->mergeCells("B$row:O$row");
+                $sheet->getStyle("B$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $row++;
             }
             
             $setoran_end_row = $row - 1;
-            $sheet->getStyle("A$setoran_start_row:N$setoran_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle("B$setoran_start_row:O$setoran_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
             // ===== SECTION 3: DATA CASHFLOW =====
             $row += 2;
