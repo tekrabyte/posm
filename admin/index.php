@@ -146,14 +146,6 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="mb-4 md:mb-0 md:mr-3">
-                            <label for="filter_store_dashboard" class="block text-sm font-medium text-gray-700">Filter
-                                Store</label>
-                            <select id="filter_store_dashboard" name="store_id"
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                <option value="">Semua Store</option>
-                            </select>
-                        </div>
                         <button type="submit"
                             class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg shadow-md text-sm transition duration-200"
                             data-tooltip="Terapkan filter yang dipilih">
