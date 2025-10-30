@@ -1043,7 +1043,8 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt_cf->execute([$year, $month]);
             $cf_data = $stmt_cf->fetch(PDO::FETCH_ASSOC);
 
-            $total_income = ($setoran_data['total_setoran'] ?? 0) + ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
+            // Setoran admin dihilangkan dari perhitungan cashflow
+            $total_income = ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
             $total_expense = ($setoran_data['total_pengeluaran_setoran'] ?? 0) + ($cf_data['pengeluaran_manajemen'] ?? 0);
 
             $all_stores = [
@@ -1184,7 +1185,8 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt_cf->execute([$year, $month]);
             $cf_data = $stmt_cf->fetch(PDO::FETCH_ASSOC);
 
-            $total_income = ($setoran_data['total_setoran'] ?? 0) + ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
+            // Setoran admin dihilangkan dari perhitungan cashflow
+            $total_income = ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
             $total_expense = ($setoran_data['total_pengeluaran_setoran'] ?? 0) + ($cf_data['pengeluaran_manajemen'] ?? 0);
 
             if ($type === 'pdf') {
