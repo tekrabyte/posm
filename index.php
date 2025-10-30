@@ -395,43 +395,80 @@
         return formatNumber(amount, 0);
     }
 
-    // Format QRIS function
+    // Format QRIS function - FIXED VERSION
     function formatQris(value) {
         const qrisDisplay = document.getElementById('qris_display');
         const qrisValue = document.getElementById('qris_value');
         
         if (!qrisDisplay || !qrisValue) return;
         
-        // Get numeric value
-        const numericValue = value ? parseInt(value) : 0;
+        // Remove all non-digit characters
+        let cleanValue = value.toString().replace(/\D/g, '');
         
-        // Save to hidden field
+        // Convert to integer
+        const numericValue = cleanValue ? parseInt(cleanValue) : 0;
+        
+        // Save raw numeric value to hidden field
         qrisValue.value = numericValue;
         
-        // Format display
+        // Format display with thousand separators
         qrisDisplay.value = formatRupiah(numericValue);
         
         // Recalculate
         calculateAll();
     }
-    // Format input QRIS
+    
+    // Setup QRIS Input - FIXED VERSION
     function setupQrisInput() {
         const qrisDisplay = document.getElementById('qris_display');
         const qrisValue = document.getElementById('qris_value');
         
+        if (!qrisDisplay || !qrisValue) return;
+        
+        // Handle input event
         qrisDisplay.addEventListener('input', function(e) {
-            // Hanya allow angka
+            // Get current cursor position
+            const cursorPosition = e.target.selectionStart;
+            const oldLength = e.target.value.length;
+            
+            // Remove all non-digit characters
             let value = e.target.value.replace(/\D/g, '');
             
-            // Simpan nilai asli
-            qrisValue.value = value;
+            // Save raw value to hidden field
+            qrisValue.value = value ? parseInt(value) : 0;
             
-            // Format tampilan
+            // Format display
             const numericValue = value ? parseInt(value) : 0;
             const formatted = formatRupiah(numericValue);
-            qrisDisplay.value = formatted;
-           
             
+            // Update display
+            e.target.value = formatted;
+            
+            // Restore cursor position (adjust for added separators)
+            const newLength = formatted.length;
+            const diff = newLength - oldLength;
+            const newPosition = cursorPosition + diff;
+            
+            // Set cursor position
+            if (newPosition >= 0 && newPosition <= newLength) {
+                e.target.setSelectionRange(newPosition, newPosition);
+            }
+            
+            // Recalculate
+            calculateAll();
+        });
+        
+        // Handle focus - show formatted value
+        qrisDisplay.addEventListener('focus', function(e) {
+            // Keep formatted value on focus
+            const currentValue = qrisValue.value || '0';
+            e.target.value = formatRupiah(parseInt(currentValue));
+        });
+        
+        // Handle blur - ensure formatted
+        qrisDisplay.addEventListener('blur', function(e) {
+            const currentValue = qrisValue.value || '0';
+            e.target.value = formatRupiah(parseInt(currentValue));
             calculateAll();
         });
     }
