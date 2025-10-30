@@ -306,74 +306,74 @@ Result: ✅ Shows "51-100 of 150"
 
 ## 🐛 Known Issues (Updated)
 
-### ✅ Dashboard Analisis Kosong - FIXED
+### ✅ Dashboard Charts Section - REMOVED BY DESIGN
+**Status:** ✅ COMPLETED  
+**Reported:** 15 Januari 2025  
+**Completed:** 15 Januari 2025  
+**Priority:** HIGH 🔴
+
+**Action Taken:**
+- ✅ Removed "Analisis Dashboard" charts section completely
+- ✅ Removed all chart canvas elements (trendChart, storeComparisonChart, incomeBreakdownChart, expenseBreakdownChart)
+- ✅ Commented out chart initialization code
+- ✅ Removed dashboard-charts.js script reference
+- ✅ Preserved BBM Summary Table (Laporan Pembelian BBM)
+- ✅ Preserved Wallet Utama section with all functionality
+
+**Reason for Removal:**
+User request - charts section not needed, causing UI clutter and performance issues
+
+**Files Modified:**
+1. `/app/admin/index.php` - Removed charts section (lines 248-289)
+2. `/app/assets/js/admin.js` - Commented out chart initialization
+3. `/app/admin/index.php` - Removed script tag for dashboard-charts.js (line 1355)
+
+**Current Dashboard Components:**
+```
+✅ Filter Panel (Month, Year, Store) - Working
+✅ Wallet Utama Cards - Working
+✅ BBM Summary Table - Working
+✅ Export Functionality - Working
+✅ Responsive Layout - Working
+```
+
+---
+
+### ✅ Dashboard Filter Store - FIXED
 **Status:** ✅ RESOLVED  
-**Reported:** 14 Januari 2025  
+**Reported:** 15 Januari 2025  
 **Fixed:** 15 Januari 2025  
 **Priority:** HIGH 🔴
 
 **Problem:**
-- Dashboard tab "Analisis Dashboard" section tidak menampilkan data
-- Wallet cards (Total Pemasukan, Pengeluaran, Liter) kosong
-- Charts tidak ter-render
-- Komposisi charts hanya menampilkan "Pen" tanpa label yang jelas
+- Filter store di dashboard tidak berfungsi
+- Aplikasi ngelag saat menggunakan filter
+- Store_id tidak terkirim ke API
 
-**Root Cause Analysis:**
-1. ✅ `fetchDashboardData()` EXISTS and called on page load
-2. ❌ **ISSUE FOUND:** `initializeDashboardCharts()` NOT called after data fetch
-3. ❌ **ISSUE FOUND:** `getBBMSummary()` NOT called for BBM table
-4. ❌ **ISSUE FOUND:** Mock data used instead of real API data
-5. ❌ **ISSUE FOUND:** Doughnut charts missing percentage in legend/tooltip
+**Root Cause:**
+Parameter `store_id` tidak di-include dalam API query URL
 
 **Solution Implemented:**
 ```javascript
-// File: /app/assets/js/admin.js
-async function fetchDashboardData() {
-    // ... fetch wallet data ...
-    
-    // ✅ FIXED: Call initializeDashboardCharts
-    if (typeof initializeDashboardCharts === 'function') {
-        initializeDashboardCharts(walletResult.data);
-    }
-    
-    // ✅ FIXED: Call getBBMSummary  
-    if (typeof getBBMSummary === 'function') {
-        await getBBMSummary(month, year);
-    }
-}
+// File: /app/assets/js/admin.js (line 1651)
+// BEFORE:
+const walletResponse = await fetch(
+    `../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`
+);
 
-// File: /app/assets/js/dashboard-charts.js
-// ✅ FIXED: Use real data from API
-function prepareTrendData(data) {
-    // Now aggregates from per_store data
-}
-
-// ✅ FIXED: Enhanced tooltips with percentages
-tooltip: {
-    callbacks: {
-        label: function(context) {
-            return `${label}: ${formatCurrency(value)} (${percentage}%)`;
-        }
-    }
-}
+// AFTER:
+const walletResponse = await fetch(
+    `../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}&store_id=${store_id}`
+);
 ```
-
-**Files Modified:**
-1. `/app/assets/js/admin.js` - Added chart & BBM initialization calls
-2. `/app/assets/js/dashboard-charts.js` - Fixed data preparation & tooltips
-3. `/app/admin/index.php` - Improved chart spacing & sizing
-4. `/app/assets/css/admin.css` - Added responsive canvas styles
 
 **Test Results:**
 ```
-✅ Charts initialized: Working
-✅ Real data displayed: Working
-✅ Doughnut chart labels: "Kategori (45.2%)"
-✅ Tooltips: "Kategori: Rp 1.500.000 (45.2%)"
-✅ BBM Summary table: Populated
-✅ Layout spacing: Consistent
-✅ Mobile responsive: Improved
-✅ Empty state handling: Graceful
+✅ Filter month: Working
+✅ Filter year: Working  
+✅ Filter store: Working (FIXED)
+✅ No lag: Performance improved
+✅ Data filtered correctly: Working
 ```
 
 ---
