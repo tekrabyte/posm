@@ -44,7 +44,8 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <p id="loginMessage" class="text-center text-red-500 mb-4 hidden"></p>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                <button type="submit" id="loginButton"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full disabled:opacity-50 disabled:cursor-not-allowed">
                     Login
                 </button>
             </div>
