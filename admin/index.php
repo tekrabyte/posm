@@ -60,58 +60,57 @@ $selected_store_id = $_GET['store_id'] ?? '';
 <body class="bg-gray-100">
     <div class="min-h-screen flex flex-col">
 
-     <header class="bg-white shadow-lg sticky top-0 z-10 border-b border-gray-200">
-    <div class="content-wrapper px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <h1 class="text-3xl font-extrabold text-indigo-700">Admin Dashboard</h1>
-        <div class="flex items-center space-x-4">
-            <span class="text-gray-700 text-sm">Masuk sebagai: <span class="font-semibold">
-                    <?php echo htmlspecialchars($_SESSION['username']); ?>
-                </span></span>
-            
-            <!-- TOMBOL REFRESH BARU -->
-            <button id="refreshBtn"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200 flex items-center"
-                data-tooltip="Muat ulang data terbaru"
-                title="Refresh Halaman">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                Refresh
-            </button>
-            
-            <button id="logoutBtn"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200"
-                data-tooltip="Keluar dari sistem">
-                <svg class="w-4 h-4 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                    </path>
-                </svg>
-                Logout
-            </button>
-        </div>
-    </div>
+        <header class="bg-white shadow-lg sticky top-0 z-10 border-b border-gray-200">
+            <div class="content-wrapper px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 class="text-3xl font-extrabold text-indigo-700">Admin Dashboard</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-700 text-sm">Masuk sebagai: <span class="font-semibold">
+                            <?php echo htmlspecialchars($_SESSION['username']); ?>
+                        </span></span>
 
-    <!-- Navigation menu tetap sama -->
-    <nav class="bg-gray-50 border-t border-gray-200">
-        <div class="content-wrapper px-4 sm:px-6 lg:px-8">
-            <div class="flex space-x-6">
-                <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600 active-tab"
-                    data-tab="dashboard">Dashboard Wallet</button>
-                <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
-                    data-tab="setoran">History Setoran</button>
-                <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
-                    data-tab="cashflow">Manajemen Kas</button>
-                <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
-                    data-tab="stores">Manajemen Store</button>
-                <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
-                    data-tab="employees">Manajemen Karyawan</button>
+                    <!-- TOMBOL REFRESH BARU -->
+                    <button id="refreshBtn"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200 flex items-center"
+                        data-tooltip="Muat ulang data terbaru" title="Refresh Halaman">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Refresh
+                    </button>
+
+                    <button id="logoutBtn"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200"
+                        data-tooltip="Keluar dari sistem">
+                        <svg class="w-4 h-4 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                            </path>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
+
+            <!-- Navigation menu tetap sama -->
+            <nav class="bg-gray-50 border-t border-gray-200">
+                <div class="content-wrapper px-4 sm:px-6 lg:px-8">
+                    <div class="flex space-x-6">
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600 active-tab"
+                            data-tab="dashboard">Dashboard Wallet</button>
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
+                            data-tab="setoran">History Setoran</button>
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
+                            data-tab="cashflow">Manajemen Kas</button>
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
+                            data-tab="stores">Manajemen Store</button>
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
+                            data-tab="employees">Manajemen Karyawan</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
         <main class="w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow">
             <div class="content-wrapper">
@@ -187,64 +186,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                 Export Excel
                             </button>
                         </div>
-                
                     </form>
- <div class="mb-6">
-    <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-gray-800">Laporan Pembelian BBM</h3>
-      
-    </div>
-    <div id="bbmSummaryContainer">
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="bg-blue-600 px-4 py-3">
-                <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                    Laporan Pembelian BBM per Store
-                </h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Store</th>
-                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Drigen</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Pokok</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Pajak & Beban</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total Pembelian</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bbmTableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Data akan diisi otomatis oleh JavaScript -->
-                    </tbody>
-                    <tfoot class="bg-gray-50 font-semibold border-t-2 border-gray-200">
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-gray-900">TOTAL</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-center text-gray-900">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
-                                    0 drigen
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-blue-700">
-                                Rp 0
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-orange-700">
-                                Rp 0
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-green-700">
-                                Rp 0
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
- 
 
                     <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6 rounded-xl shadow-xl mb-8">
                         <h3 class="text-xl font-bold mb-4">Wallet Utama (All Stores)</h3>
@@ -267,24 +209,87 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             </div>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
-                            <div id="expense_breakdown" class="space-y-2"></div>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pemasukan</h3>
-                            <div id="income_breakdown" class="space-y-2"></div>
-                        </div>
-                    </div>
-
+                    
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h3 class="text-lg font-bold mb-4 text-gray-800">Wallet Per Store</h3>
                         <div id="wallet_per_store" class="space-y-4"></div>
                     </div>
                 </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
+                        <div id="expense_breakdown" class="space-y-2"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pemasukan</h3>
+                        <div id="income_breakdown" class="space-y-2"></div>
+                    </div>
+                </div>
 
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Laporan Pembelian BBM</h3>
+                    </div>
+                    <div id="bbmSummaryContainer">
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div class="bg-blue-600 px-4 py-3">
+                                <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    Laporan Pembelian BBM per Store
+                                </h3>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th
+                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Store</th>
+                                            <th
+                                                class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Total Drigen</th>
+                                            <th
+                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Harga Pokok</th>
+                                            <th
+                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Pajak & Beban</th>
+                                            <th
+                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Total Pembelian</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bbmTableBody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Data akan diisi otomatis oleh JavaScript -->
+                                    </tbody>
+                                    <tfoot class="bg-gray-50 font-semibold border-t-2 border-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-3 whitespace-nowrap text-gray-900">TOTAL</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-center text-gray-900">
+                                                <span
+                                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
+                                                    0 drigen
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-right text-blue-700">
+                                                Rp 0
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-right text-orange-700">
+                                                Rp 0
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-right text-green-700">
+                                                Rp 0
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div id="tab-setoran" class="tab-content hidden">
                     <h2 class="text-2xl font-bold mb-6 text-gray-800">Riwayat Setoran Harian</h2>
@@ -1054,25 +1059,26 @@ $selected_store_id = $_GET['store_id'] ?? '';
                 </div>
 
                 <!-- MODAL STORE -->
-                <div id="modalStore" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+                <div id="modalStore"
+                    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
                     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                         <div class="mt-3">
                             <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalStoreTitle">Tambah Store</h3>
                             <form id="storeForm">
                                 <input type="hidden" id="store_id" name="id">
-                                
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Store</label>
                                     <input type="text" id="store_name" name="store_name" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
                                     <textarea id="store_address" name="address" rows="3"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                                 </div>
-                                
+
                                 <div class="flex justify-end gap-3 mt-6">
                                     <button type="button" onclick="hideModal('modalStore')"
                                         class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
@@ -1089,25 +1095,27 @@ $selected_store_id = $_GET['store_id'] ?? '';
                 </div>
 
                 <!-- MODAL EMPLOYEE -->
-                <div id="modalEmployee" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+                <div id="modalEmployee"
+                    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
                     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                         <div class="mt-3">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalEmployeeTitle">Tambah Karyawan</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4" id="modalEmployeeTitle">Tambah Karyawan
+                            </h3>
                             <form id="employeeForm">
                                 <input type="hidden" id="employee_id" name="id">
-                                
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Nama Karyawan</label>
                                     <input type="text" id="employee_name" name="employee_name" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Kode Karyawan</label>
                                     <input type="text" id="employee_code" name="employee_code"
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Store</label>
                                     <select id="employee_store_id" name="store_id" required
@@ -1115,7 +1123,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                         <option value="">Pilih Store</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="mb-4" id="employee_status_container" style="display: none;">
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                                     <select id="employee_is_active" name="is_active"
@@ -1124,7 +1132,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                         <option value="0">Tidak Aktif</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="flex justify-end gap-3 mt-6">
                                     <button type="button" onclick="hideModal('modalEmployee')"
                                         class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
@@ -1361,4 +1369,5 @@ $selected_store_id = $_GET['store_id'] ?? '';
         }
     </script>
 </body>
+
 </html>
