@@ -1656,13 +1656,13 @@
                 if (walletResult.success) {
                     updateDashboardDisplay(walletResult.data);
                     
-                    // Initialize charts with the fetched data
-                    if (typeof initializeDashboardCharts === 'function') {
-                        console.log('📊 Initializing dashboard charts...');
-                        initializeDashboardCharts(walletResult.data);
-                    } else {
-                        console.warn('⚠️ initializeDashboardCharts function not found');
-                    }
+                    // Charts have been removed from UI - commented out initialization
+                    // if (typeof initializeDashboardCharts === 'function') {
+                    //     console.log('📊 Initializing dashboard charts...');
+                    //     initializeDashboardCharts(walletResult.data);
+                    // } else {
+                    //     console.warn('⚠️ initializeDashboardCharts function not found');
+                    // }
                 } else {
                     console.error('API Error fetching dashboard wallet:', walletResult.message);
                 }
