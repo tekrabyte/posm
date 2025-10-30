@@ -69,6 +69,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
             <!-- TOMBOL REFRESH BARU -->
             <button id="refreshBtn"
                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200 flex items-center"
+                data-tooltip="Muat ulang data terbaru"
                 title="Refresh Halaman">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
