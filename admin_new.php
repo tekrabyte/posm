@@ -1317,3 +1317,8 @@ $selected_store_id = $_GET['store_id'] ?? '';
     </div>
 
 
+
+    <!-- External JavaScript -->
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
