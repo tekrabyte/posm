@@ -58,10 +58,14 @@ if (isset($_SESSION['user_id'])) {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const messageEl = document.getElementById('loginMessage');
+            const loginButton = document.getElementById('loginButton');
             
-            messageEl.textContent = 'Memproses...';
-            messageEl.classList.remove('hidden', 'text-red-500', 'text-green-500');
-            messageEl.classList.add('text-indigo-500');
+            // Disable button during request
+            loginButton.disabled = true;
+            loginButton.textContent = 'Memproses...';
+            
+            messageEl.textContent = '';
+            messageEl.classList.add('hidden');
 
             try {
                 const response = await fetch('api.php?action=login', {
@@ -76,18 +80,31 @@ if (isset($_SESSION['user_id'])) {
 
                 if (result.success) {
                     messageEl.textContent = 'Login berhasil! Mengarahkan...';
-                    messageEl.classList.remove('text-red-500', 'text-indigo-500');
+                    messageEl.classList.remove('hidden', 'text-red-500');
                     messageEl.classList.add('text-green-500');
-                    window.location.href = 'admin.php'; // Redirect ke panel admin
+                    
+                    // Store CSRF token if provided
+                    if (result.data && result.data.csrf_token) {
+                        sessionStorage.setItem('csrf_token', result.data.csrf_token);
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin.php';
+                    }, 500);
                 } else {
                     messageEl.textContent = result.message || 'Username atau password salah.';
-                    messageEl.classList.remove('text-green-500', 'text-indigo-500');
+                    messageEl.classList.remove('hidden', 'text-green-500');
                     messageEl.classList.add('text-red-500');
+                    loginButton.disabled = false;
+                    loginButton.textContent = 'Login';
                 }
             } catch (error) {
-                messageEl.textContent = 'Gagal terhubung ke server.';
-                messageEl.classList.remove('text-green-500', 'text-indigo-500');
+                console.error('Login error:', error);
+                messageEl.textContent = 'Gagal terhubung ke server. Periksa koneksi internet Anda.';
+                messageEl.classList.remove('hidden', 'text-green-500');
                 messageEl.classList.add('text-red-500');
+                loginButton.disabled = false;
+                loginButton.textContent = 'Login';
             }
         });
     </script>
