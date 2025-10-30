@@ -79,7 +79,8 @@ $selected_store_id = $_GET['store_id'] ?? '';
             </button>
             
             <button id="logoutBtn"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200">
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium transition duration-200"
+                data-tooltip="Keluar dari sistem">
                 <svg class="w-4 h-4 inline-block mr-1 -mt-0.5" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
