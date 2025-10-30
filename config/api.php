@@ -1243,9 +1243,10 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt->execute($params);
             $setoran_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            // NOTE: Exclude qris_setoran category karena sudah included dalam total_setoran
             $sql_cf = "
                 SELECT
-                    SUM(CASE WHEN type = 'Pemasukan' THEN amount ELSE 0 END) as pemasukan_manajemen,
+                    SUM(CASE WHEN type = 'Pemasukan' AND category != 'qris_setoran' THEN amount ELSE 0 END) as pemasukan_manajemen,
                     SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as pengeluaran_manajemen
                 FROM cash_flow_management
                 WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
@@ -1254,8 +1255,8 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
             $stmt_cf->execute([$year, $month]);
             $cf_data = $stmt_cf->fetch(PDO::FETCH_ASSOC);
 
-            // Setoran admin dihilangkan dari perhitungan cashflow
-            $total_income = ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
+            // Total income = setoran (cash+qris already included) + pemasukan_setoran + cashflow pemasukan (excluding qris_setoran)
+            $total_income = ($setoran_data['total_setoran'] ?? 0) + ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
             $total_expense = ($setoran_data['total_pengeluaran_setoran'] ?? 0) + ($cf_data['pengeluaran_manajemen'] ?? 0);
 
             if ($type === 'pdf') {
