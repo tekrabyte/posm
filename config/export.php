@@ -472,40 +472,40 @@ if ($action === 'export_dashboard_pdf') {
             
             $pdf->Ln(3);
 
-            // Data Cashflow
-            $pdf->SetFont('dejavusans', 'B', 12);
+            // Data Cashflow - COMPACT
+            $pdf->SetFont('dejavusans', 'B', 10);
             $pdf->SetFillColor(245, 158, 11);
             $pdf->SetTextColor(255, 255, 255);
-            $pdf->Cell(0, 8, 'DATA MANAJEMEN KAS', 1, 1, 'C', true);
+            $pdf->Cell(0, 5, 'DATA MANAJEMEN KAS', 1, 1, 'C', true);
             
             if (count($cashflow_data) > 0) {
-                $pdf->SetFont('dejavusans', 'B', 8);
+                $pdf->SetFont('dejavusans', 'B', 7);
                 $pdf->SetFillColor(254, 243, 199);
                 $pdf->SetTextColor(0, 0, 0);
-                $pdf->Cell(25, 6, 'Tanggal', 1, 0, 'C', true);
-                $pdf->Cell(60, 6, 'Deskripsi', 1, 0, 'C', true);
-                $pdf->Cell(30, 6, 'Jenis', 1, 0, 'C', true);
-                $pdf->Cell(30, 6, 'Kategori', 1, 0, 'C', true);
-                $pdf->Cell(35, 6, 'Nominal', 1, 1, 'C', true);
+                $pdf->Cell(25, 4, 'Tanggal', 1, 0, 'C', true);
+                $pdf->Cell(90, 4, 'Deskripsi', 1, 0, 'C', true);
+                $pdf->Cell(30, 4, 'Jenis', 1, 0, 'C', true);
+                $pdf->Cell(35, 4, 'Kategori', 1, 0, 'C', true);
+                $pdf->Cell(30, 4, 'Nominal', 1, 1, 'C', true);
                 
-                $pdf->SetFont('dejavusans', '', 7);
+                $pdf->SetFont('dejavusans', '', 6);
                 foreach ($cashflow_data as $data) {
-                    $pdf->Cell(25, 5, $data['tanggal'], 1, 0, 'C');
-                    $pdf->Cell(60, 5, substr($data['description'], 0, 30), 1, 0, 'L');
-                    $pdf->Cell(30, 5, $data['type'], 1, 0, 'C');
-                    $pdf->Cell(30, 5, $data['category'], 1, 0, 'C');
+                    $pdf->Cell(25, 4, $data['tanggal'], 1, 0, 'C');
+                    $pdf->Cell(90, 4, substr($data['description'], 0, 50), 1, 0, 'L');
+                    $pdf->Cell(30, 4, $data['type'], 1, 0, 'C');
+                    $pdf->Cell(35, 4, $data['category'], 1, 0, 'C');
                     
                     if ($data['type'] === 'pemasukan' || $data['type'] === 'Pemasukan') {
                         $pdf->SetTextColor(5, 150, 105);
                     } else {
                         $pdf->SetTextColor(220, 38, 38);
                     }
-                    $pdf->Cell(35, 5, formatRupiahNumber($data['amount']), 1, 1, 'R');
+                    $pdf->Cell(30, 4, formatRupiahNumber($data['amount']), 1, 1, 'R');
                     $pdf->SetTextColor(0, 0, 0);
                 }
             } else {
-                $pdf->SetFont('dejavusans', 'I', 10);
-                $pdf->Cell(0, 7, 'Tidak ada data cashflow', 1, 1, 'C');
+                $pdf->SetFont('dejavusans', 'I', 8);
+                $pdf->Cell(0, 5, 'Tidak ada data cashflow', 1, 1, 'C');
             }
         }
 
