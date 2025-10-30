@@ -746,6 +746,7 @@
         
         const nomorAwal = parseInputNumber(document.getElementById('nomor_awal')?.value);
         const nomorAkhir = parseInputNumber(document.getElementById('nomor_akhir')?.value);
+        const jumlahTera = parseInputNumber(document.getElementById('jumlah_tera')?.value);
         
         const qris = parseInt(document.getElementById('qris_value').value) || 0;
 
@@ -756,6 +757,7 @@
             jam_keluar: jamKeluar,
             nomor_awal: nomorAwal,
             nomor_akhir: nomorAkhir,
+            jumlah_tera: jumlahTera,
             total_liter: appData.calculations.totalLiter,
             qris: qris,
             cash: appData.calculations.cash,

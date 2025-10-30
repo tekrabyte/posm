@@ -17,7 +17,7 @@ Ini adalah Aplikasi POS dengan PHP tradisional dan database MySQL (remote) yang 
 - Database: MySQL (Remote)
 - Server: Apache/Nginx
 
-**Testing Lokal (WAJI):**
+**Testing Lokal (WAJIB SEBELUM MEMULAI SEMUA ):**
 ```bash
 # Untuk testing PHP server lokal
 apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
