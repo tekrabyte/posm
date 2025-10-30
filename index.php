@@ -22,7 +22,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         <title>Setoran Harian</title>
-        <link rel="shortcut icon" href="">
+        <link rel="shortcut icon" href="https://tekrabyte.com/dev/wp-content/uploads/2025/10/cropped-fav-32x32.png">
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             .modal {
