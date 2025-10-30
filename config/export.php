@@ -468,6 +468,32 @@ if ($action === 'export_dashboard_pdf') {
                     $pdf->Cell(25, 4, formatRupiahNumber($data['total_pemasukan']), 1, 0, 'R');
                     $pdf->Cell(28, 4, formatRupiahNumber($data['total_keseluruhan']), 1, 1, 'R');
                 }
+                
+                // SUMMARY ROW untuk Setoran
+                $pdf->SetFont('dejavusans', 'B', 7);
+                $pdf->SetFillColor(200, 250, 205);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->Cell(20, 4, 'TOTAL', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, '', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, '', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, '', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, '', 1, 0, 'C', true);
+                $pdf->Cell(15, 4, '', 1, 0, 'C', true);
+                $pdf->Cell(20, 4, number_format($total_liter, 1), 1, 0, 'R', true);
+                
+                $total_cash_sum = array_sum(array_column($setoran_data, 'cash'));
+                $total_qris_sum = array_sum(array_column($setoran_data, 'qris'));
+                $total_setoran_sum = array_sum(array_column($setoran_data, 'total_setoran'));
+                $total_pengeluaran_sum = array_sum(array_column($setoran_data, 'total_pengeluaran'));
+                $total_pemasukan_sum = array_sum(array_column($setoran_data, 'total_pemasukan'));
+                $total_keseluruhan_sum = array_sum(array_column($setoran_data, 'total_keseluruhan'));
+                
+                $pdf->Cell(25, 4, formatRupiahNumber($total_cash_sum), 1, 0, 'R', true);
+                $pdf->Cell(25, 4, formatRupiahNumber($total_qris_sum), 1, 0, 'R', true);
+                $pdf->Cell(28, 4, formatRupiahNumber($total_setoran_sum), 1, 0, 'R', true);
+                $pdf->Cell(25, 4, formatRupiahNumber($total_pengeluaran_sum), 1, 0, 'R', true);
+                $pdf->Cell(25, 4, formatRupiahNumber($total_pemasukan_sum), 1, 0, 'R', true);
+                $pdf->Cell(28, 4, formatRupiahNumber($total_keseluruhan_sum), 1, 1, 'R', true);
             } else {
                 $pdf->SetFont('dejavusans', 'I', 8);
                 $pdf->Cell(0, 5, 'Tidak ada data setoran', 1, 1, 'C');
