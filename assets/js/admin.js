@@ -228,7 +228,7 @@
             loading.textContent = 'Memuat rincian setoran...';
 
             try {
-                const response = await fetch(`api.php?action=get_setoran_detail&id=${setoranId}`);
+                const response = await fetch(`../config/api.php?action=get_setoran_detail&id=${setoranId}`);
                 const result = await response.json();
 
                 if (result.success && result.data.setoran.length === 1) {
@@ -408,7 +408,7 @@
 
                 console.log('🔍 Fetching cashflow data with params:', params.toString());
 
-                const response = await fetch(`api.php?${params}`);
+                const response = await fetch(`../config/api.php?${params}`);
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -635,7 +635,7 @@
                     store_id: storeId
                 });
 
-                const response = await fetch(`api.php?${params}`);
+                const response = await fetch(`../config/api.php?${params}`);
                 const result = await response.json();
 
                 if (result.success) {
@@ -930,7 +930,7 @@
         async function saveCashFlowTransaction(payload) {
             const action = payload.id ? 'edit_management_cash_flow' : 'add_management_cash_flow';
 
-            const response = await fetch(`api.php?action=${action}`, {
+            const response = await fetch(`../config/api.php?action=${action}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1455,7 +1455,7 @@
             };
 
             try {
-                const response = await fetch(`api.php?action=${action}`, {
+                const response = await fetch(`../config/api.php?action=${action}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
@@ -1609,7 +1609,7 @@
             messageEl.classList.add('hidden');
 
             try {
-                const response = await fetch(`api.php?action=${action}`, {
+                const response = await fetch(`../config/api.php?action=${action}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
@@ -1642,7 +1642,7 @@
 
             // --- 1. Ambil data Wallet dan Breakdown (get_dashboard_wallet) ---
             try {
-                const walletResponse = await fetch(`api.php?action=get_dashboard_wallet&month=${month}&year=${year}`);
+                const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`);
                 const walletResult = await walletResponse.json();
 
                 if (walletResult.success) {
@@ -2356,7 +2356,7 @@ async function getBBMSummary(month = null, year = null) {
         if (!month) month = document.getElementById('filter_month_cashflow')?.value || new Date().getMonth() + 1;
         if (!year) year = document.getElementById('filter_year_cashflow')?.value || new Date().getFullYear();
 
-        const response = await fetch(`api.php?action=get_bbm_detailed_summary&month=${month}&year=${year}`);
+        const response = await fetch(`../config/api.php?action=get_bbm_detailed_summary&month=${month}&year=${year}`);
         const result = await response.json();
 
         console.log('📊 BBM Summary Result:', result);
