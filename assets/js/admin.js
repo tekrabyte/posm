@@ -247,6 +247,7 @@
                     document.getElementById('detail_jam_keluar').textContent = detail.jam_keluar.substring(0, 5);
                     document.getElementById('detail_nomor_awal').textContent = parseFloat(detail.nomor_awal).toFixed(2);
                     document.getElementById('detail_nomor_akhir').textContent = parseFloat(detail.nomor_akhir).toFixed(2);
+                    document.getElementById('detail_jumlah_tera').textContent = parseFloat(detail.jumlah_tera || 0).toFixed(2);
                     document.getElementById('detail_total_liter').textContent = parseFloat(detail.total_liter).toFixed(2) + ' L';
                     document.getElementById('detail_cash').textContent = formatRupiah(detail.cash);
                     document.getElementById('detail_qris').textContent = formatRupiah(detail.qris);
