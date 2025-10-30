@@ -96,7 +96,7 @@
                     <h3 class="text-base font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         ⛽ Data Meter
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Nomor Awal</label>
                             <input
@@ -113,6 +113,16 @@
                                 id="nomor_akhir"
                                 class="w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="0"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Jumlah Tera (Optional)</label>
+                            <input
+                                type="number"
+                                id="jumlah_tera"
+                                class="w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="0"
+                                step="0.01"
                             />
                         </div>
                         <div>
