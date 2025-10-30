@@ -154,7 +154,7 @@
                                 />
                             </div>
                         </div>
-                        <!-- Ganti bagian QRIS dengan ini: -->
+                        <!-- QRIS Input -->
 <div>
     <label class="block text-xs font-medium text-gray-700 mb-1">QRIS</label>
     <div class="relative">
@@ -164,11 +164,7 @@
             id="qris_display"
             class="w-full p-2.5 pl-8 text-sm border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             placeholder="0"
-            onfocus="this.value = document.getElementById('qris_value').value.replace(/\D/g,'')"
-            onblur="formatQris(this.value)"
-            oninput="this.value = this.value.replace(/\D/g,'')"
         />
-        
     </div>
     <input type="hidden" id="qris_value" value="0">
 </div>
