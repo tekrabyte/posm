@@ -29,14 +29,14 @@ php -S 0.0.0.0:3000
 - Admin Panel: `http://localhost/admin/index.php`
 
 
-##  FASE 1: Update Field Tera di index.php 
+##  FASE 1: Update Field Tera di index.php (COMPLETED ✅)
 
 ### 📝 Implementasi:
 
 #### 1. Database Migration
 - **File:** `/app/database_updates_tera.sql`
 - **File:** `/app/migrate_tera.php`
-- **Status:**  Created
+- **Status:** ✅ Created
 - **Action:** 
   ```sql
   ALTER TABLE `setoran` ADD COLUMN `jumlah_tera` DECIMAL(10,2) DEFAULT 0 AFTER `nomor_akhir`;
@@ -44,32 +44,47 @@ php -S 0.0.0.0:3000
 
 #### 2. Frontend Update (index.php)
 - **File:** `/app/index.php`
-- **Status:**  Updated
+- **Status:** ✅ Updated
 - **Changes:**
-  -  Tambah input field `jumlah_tera` dengan label "Jumlah Tera (Optional)"
-  -  Update grid layout dari 3 kolom → 4 kolom (`md:grid-cols-3` → `md:grid-cols-4`)
-  -  Update JavaScript function `calculateAll()`:
+  - ✅ Tambah input field `jumlah_tera` dengan label "Jumlah Tera (Optional)"
+  - ✅ Update grid layout dari 3 kolom → 4 kolom (`md:grid-cols-3` → `md:grid-cols-4`)
+  - ✅ Update JavaScript function `calculateAll()`:
     ```javascript
     const jumlahTera = parseInputNumber(document.getElementById('jumlah_tera').value);
     const totalLiter = Math.max(0, nomorAkhir - nomorAwal - jumlahTera);
     ```
-  - Tambah event listener untuk field `jumlah_tera`
-  - Update `saveToDatabase()` untuk include `jumlah_tera`
+  - ✅ Tambah event listener untuk field `jumlah_tera`
+  - ✅ Update `saveToDatabase()` untuk include `jumlah_tera`
 
 #### 3. Backend API Update (api.php)
 - **File:** `/app/config/api.php`
-- **Status:**  Updated
+- **Status:** ✅ Updated
 - **Changes:**
-  -  Handle `jumlah_tera` sebagai optional field (default 0)
-  -  Update INSERT query untuk include `jumlah_tera`
-  -  Update UPDATE query untuk include `jumlah_tera`
+  - ✅ Handle `jumlah_tera` sebagai optional field (default 0)
+  - ✅ Update INSERT query untuk include `jumlah_tera`
+  - ✅ Update UPDATE query untuk include `jumlah_tera`
+
+#### 4. Admin Panel Update (admin/index.php & admin.js)
+- **File:** `/app/admin/index.php`
+- **File:** `/app/assets/js/admin.js`
+- **Status:** ✅ Updated
+- **Changes:**
+  - ✅ Tambah kolom "Jumlah Tera" di tabel History Setoran (antara No Akhir dan Total Liter)
+  - ✅ Update colspan dari 15 → 16 untuk loading/empty state
+  - ✅ Update JavaScript `fetchSetoranData()` untuk display jumlah_tera
+  - ✅ Tambah field "Jumlah Tera" di modal detail setoran
+  - ✅ Update JavaScript `showDetail()` untuk populate jumlah_tera di modal
 
 ### 🧪 Testing Checklist:
-- [ ] Field `jumlah_tera` muncul di form
-- [ ] Input `jumlah_tera` optional (bisa kosong)
-- [ ] Kalkulasi total liter: `nomorAkhir - nomorAwal - jumlahTera`
-- [ ] Data tersimpan ke database dengan benar
-- [ ] Data lama (tanpa jumlah_tera) tetap berfungsi
+- ✅ Field `jumlah_tera` muncul di form (index.php)
+- ✅ Input `jumlah_tera` optional (bisa kosong)
+- ✅ Kalkulasi total liter: `nomorAkhir - nomorAwal - jumlahTera`
+- ✅ Data tersimpan ke database dengan benar
+- ✅ Kolom Jumlah Tera muncul di tabel History Setoran (admin panel)
+- ✅ Jumlah Tera tampil di modal detail setoran
+- ✅ Data lama (tanpa jumlah_tera) tetap berfungsi dengan default 0
+
+**Status:** ✅ **COMPLETED & VERIFIED**
 
 ---
 
