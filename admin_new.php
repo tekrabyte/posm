@@ -34,3 +34,5 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <title>Panel Admin | Setoran Harian</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!--<script>console.log = function() {};</script>-->
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
