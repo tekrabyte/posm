@@ -254,17 +254,25 @@ Berdasarkan problem statement dari client:
 
 ---
 
-## 🐛 Known Issues
+## 🐛 Known Issues & Fixes
 
-### Issue #1: Database Migration
+### ✅ Issue #1: Data Dashboard Terduplikasi ke Semua Tab (FIXED)
+- **Description:** Data dari tab Dashboard (Breakdown Pengeluaran/Pemasukan, Laporan BBM) muncul di semua tab menu admin
+- **Root Cause:** Struktur HTML yang salah - elemen dashboard berada di luar container `<div id="tab-dashboard">`
+- **Impact:** High - UI/UX terganggu, data muncul di tab yang tidak seharusnya
+- **Solution:** ✅ **FIXED** - Memindahkan semua elemen dashboard (Breakdown & BBM Report) ke dalam container `tab-dashboard`
+- **Fixed on:** 2025-01-XX
+- **Priority:** High
+
+### Issue #2: Database Migration
 - **Description:** `mysql` dan `php` CLI tidak tersedia di environment
 - **Impact:** Migration script belum dijalankan
 - **Solution:** File migration sudah dibuat, akan dijalankan saat sistem online
 - **Priority:** Medium
 
-### Issue #2: Populate Store Filter
+### Issue #3: Populate Store Filter
 - **Description:** JavaScript masih populate filter store di cashflow
-- **Impact:** Minor, tidak mempengaruhi fungsionalitas dashboard
+- **Impact:** Minor, tidak mempengarukan fungsionalitas dashboard
 - **Solution:** Akan dibersihkan di fase berikutnya
 - **Priority:** Low
 
