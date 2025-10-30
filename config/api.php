@@ -355,7 +355,10 @@ switch ($action) {
             }
 
             $sql_history = "
-                SELECT * FROM setoran s
+                SELECT s.*, e.employee_name, st.store_name
+                FROM setoran s
+                LEFT JOIN employees e ON s.employee_id = e.id
+                LEFT JOIN stores st ON s.store_id = st.id
                 WHERE {$where_clause}
                 ORDER BY s.tanggal DESC, s.jam_masuk DESC
             ";
