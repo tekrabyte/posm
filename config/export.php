@@ -251,21 +251,22 @@ if ($action === 'export_dashboard_excel_v2') {
             $cashflow_end_row = $row - 1;
             $sheet->getStyle("B$cashflow_start_row:F$cashflow_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
-            // Set column widths
-            $sheet->getColumnDimension('A')->setWidth(15);
-            $sheet->getColumnDimension('B')->setWidth(25);
-            $sheet->getColumnDimension('C')->setWidth(12);
+            // Set column widths (A kosong, B onwards)
+            $sheet->getColumnDimension('A')->setWidth(5); // Column A kosong tapi visible
+            $sheet->getColumnDimension('B')->setWidth(15);
+            $sheet->getColumnDimension('C')->setWidth(25);
             $sheet->getColumnDimension('D')->setWidth(12);
-            $sheet->getColumnDimension('E')->setWidth(15);
+            $sheet->getColumnDimension('E')->setWidth(12);
             $sheet->getColumnDimension('F')->setWidth(15);
-            $sheet->getColumnDimension('G')->setWidth(13);
+            $sheet->getColumnDimension('G')->setWidth(15);
             $sheet->getColumnDimension('H')->setWidth(13);
-            $sheet->getColumnDimension('I')->setWidth(15);
+            $sheet->getColumnDimension('I')->setWidth(13);
             $sheet->getColumnDimension('J')->setWidth(15);
             $sheet->getColumnDimension('K')->setWidth(15);
             $sheet->getColumnDimension('L')->setWidth(15);
             $sheet->getColumnDimension('M')->setWidth(15);
             $sheet->getColumnDimension('N')->setWidth(15);
+            $sheet->getColumnDimension('O')->setWidth(15);
 
             $sheetIndex++;
         }
