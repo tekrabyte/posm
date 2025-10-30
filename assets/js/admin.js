@@ -988,7 +988,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         transaction_id: transactionId,
-                        distribution: distribution
+                        distribution: distribution,
+                        csrf_token: CSRF_TOKEN
                     })
                 });
 
