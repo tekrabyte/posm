@@ -299,8 +299,8 @@ if ($action === 'export_dashboard_pdf') {
         $stmt_stores = $pdo->query("SELECT id, store_name FROM stores ORDER BY store_name ASC");
         $stores = $stmt_stores->fetchAll(PDO::FETCH_ASSOC);
 
-        // Buat PDF
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        // Buat PDF dengan orientasi LANDSCAPE
+        $pdf = new TCPDF('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
         
         // Set document information
         $pdf->SetCreator(PDF_CREATOR);
@@ -308,16 +308,16 @@ if ($action === 'export_dashboard_pdf') {
         $pdf->SetTitle("Laporan Lengkap $month_name $year");
         $pdf->SetSubject("Laporan Keuangan Per Store");
 
-        // Set margins
-        $pdf->SetMargins(15, 15, 15);
+        // Set margins lebih kecil
+        $pdf->SetMargins(10, 10, 10);
         $pdf->SetHeaderMargin(5);
-        $pdf->SetFooterMargin(10);
+        $pdf->SetFooterMargin(8);
 
         // Set auto page breaks
-        $pdf->SetAutoPageBreak(TRUE, 15);
+        $pdf->SetAutoPageBreak(TRUE, 10);
 
         // Set font
-        $pdf->SetFont('dejavusans', '', 10);
+        $pdf->SetFont('dejavusans', '', 8);
 
         // Loop untuk setiap store
         foreach ($stores as $store) {
