@@ -255,10 +255,10 @@ switch ($action) {
                 $stmtInsert = $pdo->prepare("
                     INSERT INTO setoran (
                         tanggal, employee_id, employee_name, store_id, store_name, 
-                        jam_masuk, jam_keluar, nomor_awal, nomor_akhir, 
+                        jam_masuk, jam_keluar, nomor_awal, nomor_akhir, jumlah_tera,
                         total_liter, qris, cash, total_setoran,
                         total_pengeluaran, total_pemasukan, total_keseluruhan
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 $stmtInsert->execute([
                     $today,
@@ -270,6 +270,7 @@ switch ($action) {
                     $data['jam_keluar'],
                     $data['nomor_awal'],
                     $data['nomor_akhir'],
+                    $jumlah_tera,
                     $data['total_liter'],
                     $data['qris'],
                     $data['cash'],
