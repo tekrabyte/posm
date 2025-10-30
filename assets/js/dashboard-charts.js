@@ -437,10 +437,10 @@ function initExpenseBreakdownChart(canvasId, data) {
                         generateLabels: function(chart) {
                             const data = chart.data;
                             if (data.labels.length && data.datasets.length) {
+                                const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
                                 return data.labels.map((label, i) => {
                                     const value = data.datasets[0].data[i];
-                                    const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                                     
                                     return {
                                         text: `${label} (${percentage}%)`,
@@ -451,6 +451,19 @@ function initExpenseBreakdownChart(canvasId, data) {
                                 });
                             }
                             return [];
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                            
+                            return `${label}: ${formatCurrency(value)} (${percentage}%)`;
                         }
                     }
                 }
