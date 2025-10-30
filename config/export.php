@@ -423,40 +423,54 @@ if ($action === 'export_dashboard_pdf') {
             
             $pdf->Ln(3);
 
-            // Data Setoran
-            $pdf->SetFont('dejavusans', 'B', 12);
+            // Data Setoran - OPTIMIZED untuk landscape
+            $pdf->SetFont('dejavusans', 'B', 10);
             $pdf->SetFillColor(16, 185, 129);
             $pdf->SetTextColor(255, 255, 255);
-            $pdf->Cell(0, 8, 'DATA SETORAN HARIAN', 1, 1, 'C', true);
+            $pdf->Cell(0, 5, 'DATA SETORAN HARIAN', 1, 1, 'C', true);
             
             if (count($setoran_data) > 0) {
-                $pdf->SetFont('dejavusans', 'B', 8);
+                $pdf->SetFont('dejavusans', 'B', 7);
                 $pdf->SetFillColor(209, 250, 229);
                 $pdf->SetTextColor(0, 0, 0);
-                $pdf->Cell(20, 6, 'Tanggal', 1, 0, 'C', true);
-                $pdf->Cell(30, 6, 'Karyawan', 1, 0, 'C', true);
-                $pdf->Cell(18, 6, 'Jam', 1, 0, 'C', true);
-                $pdf->Cell(25, 6, 'Total Liter', 1, 0, 'C', true);
-                $pdf->Cell(35, 6, 'Cash', 1, 0, 'C', true);
-                $pdf->Cell(35, 6, 'QRIS', 1, 0, 'C', true);
-                $pdf->Cell(35, 6, 'Total Bersih', 1, 1, 'C', true);
                 
-                $pdf->SetFont('dejavusans', '', 7);
+                // Column widths optimized untuk landscape A4 (270mm available)
+                $pdf->Cell(20, 4, 'Tanggal', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, 'Karyawan', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, 'Jam', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, 'No Awal', 1, 0, 'C', true);
+                $pdf->Cell(18, 4, 'No Akhir', 1, 0, 'C', true);
+                $pdf->Cell(15, 4, 'Tera', 1, 0, 'C', true);
+                $pdf->Cell(20, 4, 'Liter', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, 'Cash', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, 'QRIS', 1, 0, 'C', true);
+                $pdf->Cell(28, 4, 'Setoran', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, 'Pengeluaran', 1, 0, 'C', true);
+                $pdf->Cell(25, 4, 'Pemasukan', 1, 0, 'C', true);
+                $pdf->Cell(28, 4, 'Total', 1, 1, 'C', true);
+                
+                $pdf->SetFont('dejavusans', '', 6);
                 foreach ($setoran_data as $data) {
-                    $pdf->Cell(20, 5, $data['tanggal'], 1, 0, 'C');
-                    $pdf->Cell(30, 5, substr($data['employee_name'] ?? 'N/A', 0, 15), 1, 0, 'L');
-                    $pdf->Cell(18, 5, substr($data['jam_masuk'], 0, 5) . '-' . substr($data['jam_keluar'], 0, 5), 1, 0, 'C');
-                    $pdf->Cell(25, 5, number_format($data['total_liter'], 2) . ' L', 1, 0, 'R');
-                    $pdf->Cell(35, 5, formatRupiahNumber($data['cash']), 1, 0, 'R');
-                    $pdf->Cell(35, 5, formatRupiahNumber($data['qris']), 1, 0, 'R');
-                    $pdf->Cell(35, 5, formatRupiahNumber($data['total_keseluruhan']), 1, 1, 'R');
+                    $pdf->Cell(20, 4, $data['tanggal'], 1, 0, 'C');
+                    $pdf->Cell(25, 4, substr($data['employee_name'] ?? 'N/A', 0, 12), 1, 0, 'L');
+                    $pdf->Cell(18, 4, substr($data['jam_masuk'], 0, 5) . '-' . substr($data['jam_keluar'], 0, 5), 1, 0, 'C');
+                    $pdf->Cell(18, 4, number_format($data['nomor_awal'], 1), 1, 0, 'R');
+                    $pdf->Cell(18, 4, number_format($data['nomor_akhir'], 1), 1, 0, 'R');
+                    $pdf->Cell(15, 4, number_format($data['jumlah_tera'] ?? 0, 1), 1, 0, 'R');
+                    $pdf->Cell(20, 4, number_format($data['total_liter'], 1), 1, 0, 'R');
+                    $pdf->Cell(25, 4, formatRupiahNumber($data['cash']), 1, 0, 'R');
+                    $pdf->Cell(25, 4, formatRupiahNumber($data['qris']), 1, 0, 'R');
+                    $pdf->Cell(28, 4, formatRupiahNumber($data['total_setoran']), 1, 0, 'R');
+                    $pdf->Cell(25, 4, formatRupiahNumber($data['total_pengeluaran']), 1, 0, 'R');
+                    $pdf->Cell(25, 4, formatRupiahNumber($data['total_pemasukan']), 1, 0, 'R');
+                    $pdf->Cell(28, 4, formatRupiahNumber($data['total_keseluruhan']), 1, 1, 'R');
                 }
             } else {
-                $pdf->SetFont('dejavusans', 'I', 10);
-                $pdf->Cell(0, 7, 'Tidak ada data setoran', 1, 1, 'C');
+                $pdf->SetFont('dejavusans', 'I', 8);
+                $pdf->Cell(0, 5, 'Tidak ada data setoran', 1, 1, 'C');
             }
             
-            $pdf->Ln(5);
+            $pdf->Ln(3);
 
             // Data Cashflow
             $pdf->SetFont('dejavusans', 'B', 12);
