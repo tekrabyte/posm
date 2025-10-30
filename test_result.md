@@ -14,23 +14,23 @@ semua pembaharuan, improvisasi dan perbaikian aplikasi akan di update dokumen in
 
 Berdasarkan problem statement dari client:
 
-1. ✅ **Perbaiki filter store** - Tidak berfungsi di dashboard admin → **HAPUS FILTER STORE**
+1.  **Perbaiki filter store** - Tidak berfungsi di dashboard admin → **HAPUS FILTER STORE**
 2. ⏳ **Hapus date range** 
 3. ⏳ **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
 4. ⏳ **Online report viewer** - Preview laporan sebelum download
 5. ⏳ **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
-6. ✅ **Tambah field tera di index.php** - Field `jumlah_tera` setelah `nomor_akhir`, ubah logika: `total_liter = nomor_akhir - nomor_awal - jumlah_tera`
+6.  **Tambah field tera di index.php** - Field `jumlah_tera` setelah `nomor_akhir`, ubah logika: `total_liter = nomor_akhir - nomor_awal - jumlah_tera`
 
 ---
 
-## ✅ FASE 1: Update Field Tera di index.php (COMPLETED)
+##  FASE 1: Update Field Tera di index.php (COMPLETED)
 
 ### 📝 Implementasi:
 
 #### 1. Database Migration
 - **File:** `/app/database_updates_tera.sql`
 - **File:** `/app/migrate_tera.php`
-- **Status:** ✅ Created
+- **Status:**  Created
 - **Action:** 
   ```sql
   ALTER TABLE `setoran` ADD COLUMN `jumlah_tera` DECIMAL(10,2) DEFAULT 0 AFTER `nomor_akhir`;
@@ -38,25 +38,25 @@ Berdasarkan problem statement dari client:
 
 #### 2. Frontend Update (index.php)
 - **File:** `/app/index.php`
-- **Status:** ✅ Updated
+- **Status:**  Updated
 - **Changes:**
-  - ✅ Tambah input field `jumlah_tera` dengan label "Jumlah Tera (Optional)"
-  - ✅ Update grid layout dari 3 kolom → 4 kolom (`md:grid-cols-3` → `md:grid-cols-4`)
-  - ✅ Update JavaScript function `calculateAll()`:
+  -  Tambah input field `jumlah_tera` dengan label "Jumlah Tera (Optional)"
+  -  Update grid layout dari 3 kolom → 4 kolom (`md:grid-cols-3` → `md:grid-cols-4`)
+  -  Update JavaScript function `calculateAll()`:
     ```javascript
     const jumlahTera = parseInputNumber(document.getElementById('jumlah_tera').value);
     const totalLiter = Math.max(0, nomorAkhir - nomorAwal - jumlahTera);
     ```
-  - ✅ Tambah event listener untuk field `jumlah_tera`
-  - ✅ Update `saveToDatabase()` untuk include `jumlah_tera`
+  - Tambah event listener untuk field `jumlah_tera`
+  - Update `saveToDatabase()` untuk include `jumlah_tera`
 
 #### 3. Backend API Update (api.php)
 - **File:** `/app/config/api.php`
-- **Status:** ✅ Updated
+- **Status:**  Updated
 - **Changes:**
-  - ✅ Handle `jumlah_tera` sebagai optional field (default 0)
-  - ✅ Update INSERT query untuk include `jumlah_tera`
-  - ✅ Update UPDATE query untuk include `jumlah_tera`
+  -  Handle `jumlah_tera` sebagai optional field (default 0)
+  -  Update INSERT query untuk include `jumlah_tera`
+  -  Update UPDATE query untuk include `jumlah_tera`
 
 ### 🧪 Testing Checklist:
 - [ ] Field `jumlah_tera` muncul di form
@@ -67,16 +67,16 @@ Berdasarkan problem statement dari client:
 
 ---
 
-## ✅ FASE 2: Hapus Filter Store di Dashboard (COMPLETED)
+##  FASE 2: Hapus Filter Store di Dashboard (COMPLETED)
 
 ### 📝 Implementasi:
 
 #### 1. Frontend Update (admin/index.php)
 - **File:** `/app/admin/index.php`
-- **Status:** ✅ Updated
+- **Status:**  Updated
 - **Changes:**
-  - ✅ Hapus dropdown filter store di form dashboard
-  - ✅ Hapus:
+  -  Hapus dropdown filter store di form dashboard
+  -  Hapus:
     ```html
     <div class="mb-4 md:mb-0 md:mr-3">
         <label for="filter_store_dashboard">Filter Store</label>
@@ -86,10 +86,10 @@ Berdasarkan problem statement dari client:
 
 #### 2. JavaScript Update (admin.js)
 - **File:** `/app/assets/js/admin.js`
-- **Status:** ✅ Updated
+- **Status:**  Updated
 - **Changes:**
-  - ✅ Remove `store_id` parameter dari `fetchDashboardData()`
-  - ✅ Update API call untuk tidak include `store_id`:
+  -  Remove `store_id` parameter dari `fetchDashboardData()`
+  -  Update API call untuk tidak include `store_id`:
     ```javascript
     fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`)
     ```
@@ -244,8 +244,8 @@ Berdasarkan problem statement dari client:
 
 | Fase | Task | Status | Completion |
 |------|------|--------|------------|
-| 1 | Field Tera di index.php | ✅ Done | 100% |
-| 2 | Hapus Filter Store Dashboard | ✅ Done | 100% |
+| 1 | Field Tera di index.php |  Done | 100% |
+| 2 | Hapus Filter Store Dashboard |  Done | 100% |
 | 3 | Export PDF & Excel | ⏳ In Progress | 0% |
 | 4 | Online Report Viewer | ⏳ Pending | 0% |
 | 5 | Scheduled Email Reports | ⏳ Pending | 0% |
@@ -272,8 +272,8 @@ Berdasarkan problem statement dari client:
 
 ## 🔄 Next Steps
 
-1. ✅ ~~Implementasi field tera~~ (DONE)
-2. ✅ ~~Hapus filter store dashboard~~ (DONE)
+1.  ~~Implementasi field tera~~ (DONE)
+2.  ~~Hapus filter store dashboard~~ (DONE)
 3. 🚀 **[CURRENT]** Implementasi Export PDF & Excel per store
 4. 🔜 Buat Online Report Viewer
 5. 🔜 Setup Email Configuration Tab
@@ -283,11 +283,11 @@ Berdasarkan problem statement dari client:
 
 ## 📝 Notes
 
-- ✅ Semua file di `/app/` sudah ter-update
-- ✅ Database schema migration ready
+-  Semua file di `/app/` sudah ter-update
+-  Database schema migration ready
 - ⏳ Perlu install library PDF untuk export
 - ⏳ Perlu setup cron job untuk scheduled reports
-- ✅ Hot reload enabled untuk frontend & backend
+-  Hot reload enabled untuk frontend & backend
 
 ---
 
