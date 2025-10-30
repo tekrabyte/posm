@@ -375,6 +375,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                     <th class="px-4 py-2 text-center font-semibold">Jam Keluar</th>
                                     <th class="px-4 py-2 text-right font-semibold">No Awal</th>
                                     <th class="px-4 py-2 text-right font-semibold">No Akhir</th>
+                                    <th class="px-4 py-2 text-right font-semibold">Jumlah Tera</th>
                                     <th class="px-4 py-2 text-right font-semibold">Total Liter</th>
                                     <th class="px-4 py-2 text-right font-semibold">QRIS</th>
                                     <th class="px-4 py-2 text-right font-semibold">Cash</th>
@@ -387,7 +388,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             </thead>
                             <tbody id="setoranTableBody" class="bg-white divide-y divide-gray-200">
                                 <tr>
-                                    <td colspan="15" class="text-center py-6 text-gray-500">Memuat data...</td>
+                                    <td colspan="16" class="text-center py-6 text-gray-500">Memuat data...</td>
                                 </tr>
                             </tbody>
                         </table>
