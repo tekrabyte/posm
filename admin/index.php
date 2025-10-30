@@ -206,84 +206,76 @@ $selected_store_id = $_GET['store_id'] ?? '';
                         <h3 class="text-lg font-bold mb-4 text-gray-800">Wallet Per Store</h3>
                         <div id="wallet_per_store" class="space-y-4"></div>
                     </div>
-                </div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800"></h3>
-                    </div>
-                      <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800"></h3>
-                    </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
-                        <div id="expense_breakdown" class="space-y-2"></div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pemasukan</h3>
-                        <div id="income_breakdown" class="space-y-2"></div>
-                    </div>
-                </div>
 
-                <div class="mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800"></h3>
-                    </div> 
-                    <div id="bbmSummaryContainer">
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <div class="bg-blue-600 px-4 py-3">
-                                <h3 class="text-lg font-semibold text-white flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                    Laporan Pembelian BBM per Store
-                                </h3>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th
-                                                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Store</th>
-                                            <th
-                                                class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Total Drigen</th>
-                                            <th
-                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Harga Pokok</th>
-                                            <th
-                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Pajak & Beban</th>
-                                            <th
-                                                class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Total Pembelian</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="bbmTableBody" class="bg-white divide-y divide-gray-200">
-                                        <!-- Data akan diisi otomatis oleh JavaScript -->
-                                    </tbody>
-                                    <tfoot class="bg-gray-50 font-semibold border-t-2 border-gray-200">
-                                        <tr>
-                                            <td class="px-4 py-3 whitespace-nowrap text-gray-900">TOTAL</td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-center text-gray-900">
-                                                <span
-                                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
-                                                    0 drigen
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-right text-blue-700">
-                                                Rp 0
-                                            </td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-right text-orange-700">
-                                                Rp 0
-                                            </td>
-                                            <td class="px-4 py-3 whitespace-nowrap text-right text-green-700">
-                                                Rp 0
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mt-8">
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
+                            <div id="expense_breakdown" class="space-y-2"></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pemasukan</h3>
+                            <div id="income_breakdown" class="space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div id="bbmSummaryContainer">
+                            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                                <div class="bg-blue-600 px-4 py-3">
+                                    <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                        </svg>
+                                        Laporan Pembelian BBM per Store
+                                    </h3>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th
+                                                    class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Store</th>
+                                                <th
+                                                    class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Total Drigen</th>
+                                                <th
+                                                    class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Harga Pokok</th>
+                                                <th
+                                                    class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Pajak & Beban</th>
+                                                <th
+                                                    class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    Total Pembelian</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bbmTableBody" class="bg-white divide-y divide-gray-200">
+                                            <!-- Data akan diisi otomatis oleh JavaScript -->
+                                        </tbody>
+                                        <tfoot class="bg-gray-50 font-semibold border-t-2 border-gray-200">
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap text-gray-900">TOTAL</td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-center text-gray-900">
+                                                    <span
+                                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-600 text-white">
+                                                        0 drigen
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-right text-blue-700">
+                                                    Rp 0
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-right text-orange-700">
+                                                    Rp 0
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-right text-green-700">
+                                                    Rp 0
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
