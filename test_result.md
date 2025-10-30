@@ -17,7 +17,6 @@ dan lihat hasil console atau errornya langsung di port 3000
 
 Berdasarkan problem statement dari client:
 
-1.  **Perbaiki filter store** - Tidak berfungsi di dashboard admin → **HAPUS FILTER STORE**
 3.  **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
 4.  **Online report viewer** - Preview laporan sebelum download
 5.  **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
@@ -25,7 +24,7 @@ Berdasarkan problem statement dari client:
 
 ---
 
-##  FASE 1: Update Field Tera di index.php (COMPLETED)
+##  FASE 1: Update Field Tera di index.php 
 
 ### 📝 Implementasi:
 
@@ -69,42 +68,8 @@ Berdasarkan problem statement dari client:
 
 ---
 
-##  FASE 2: Hapus Filter Store di Dashboard (COMPLETED)
 
-### 📝 Implementasi:
-
-#### 1. Frontend Update (admin/index.php)
-- **File:** `/app/admin/index.php`
-- **Status:**  Updated
-- **Changes:**
-  -  Hapus dropdown filter store di form dashboard
-  -  Hapus:
-    ```html
-    <div class="mb-4 md:mb-0 md:mr-3">
-        <label for="filter_store_dashboard">Filter Store</label>
-        <select id="filter_store_dashboard">...</select>
-    </div>
-    ```
-
-#### 2. JavaScript Update (admin.js)
-- **File:** `/app/assets/js/admin.js`
-- **Status:**  Updated
-- **Changes:**
-  -  Remove `store_id` parameter dari `fetchDashboardData()`
-  -  Update API call untuk tidak include `store_id`:
-    ```javascript
-    fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`)
-    ```
-
-### 🧪 Testing Checklist:
-- [ ] Filter store tidak muncul di dashboard
-- [ ] Dashboard menampilkan data semua store
-- [ ] Filter bulan & tahun masih berfungsi
-- [ ] Data per store ditampilkan dengan benar
-
----
-
-##  FASE 3: Export PDF & Excel (IN PROGRESS)
+##  FASE 2: Export PDF & Excel (IN PROGRESS)
 
 ### 📋 Requirements Detail:
 - Export berisi 3 jenis data:
@@ -147,7 +112,7 @@ Berdasarkan problem statement dari client:
 
 ---
 
-##  FASE 4: Online Report Viewer (PENDING)
+##  FASE 3: Online Report Viewer (PENDING)
 
 ### 📋 Requirements Detail:
 - Preview laporan sebelum download
@@ -315,4 +280,4 @@ Berdasarkan problem statement dari client:
 ---
 
 **Last Updated:** 2025-01-XX  
-**Status:** 🚀 Fase 3 - Export Implementation
+**Status:** 🚀 Fase 1 
