@@ -1317,7 +1317,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
 
 
 
-    <!-- External JavaScript -->
-    <script src="assets/js/admin.js"></script>
+    <!-- External JavaScript (Obfuscated) -->
+    <script src="assets/js/admin.min.js"></script>
 </body>
 </html>
