@@ -48,6 +48,19 @@
     
     thead, tbody, tr {
         display: table;
+    }
+    
+    /* Chart responsiveness */
+    canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+    
+    /* Adjust chart containers on mobile */
+    .grid-cols-1.lg\:grid-cols-2 {
+        gap: 1rem;
+    }
+}
         width: 100%;
         table-layout: fixed;
     }
