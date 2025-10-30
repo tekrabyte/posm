@@ -218,6 +218,9 @@ $selected_store_id = $_GET['store_id'] ?? '';
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-gray-800"></h3>
                     </div>
+                      <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800"></h3>
+                    </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
@@ -231,7 +234,9 @@ $selected_store_id = $_GET['store_id'] ?? '';
 
                 <div class="mb-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">Laporan Pembelian BBM</h3>
+                        <h3 class="text-lg font-bold text-gray-800"></h3>
+                    </div>  <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800"></h3>
                     </div>
                     <div id="bbmSummaryContainer">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
