@@ -47,6 +47,8 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin | Setoran Harian</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for Dashboard Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!--<script>console.log = function() {};</script>-->
     <link rel="stylesheet" href="../assets/css/admin.css">
     <script>
