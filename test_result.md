@@ -2,25 +2,44 @@
 
 **Tanggal:** 2025-01-XX  
 **Project:** Admin Panel POSM - Feature Enhancement  
-**Developer:** E1 AI Agent
+**Developer:** E1 AI Agent  
+**Last Updated:** 2025-01-XX
 
 ---
-## NOTE PENTING
-Ini adalah Aplikasi POS dengan PHP tradisional dan database Mysql (remote) yang sudah di konfigurasi 
-semua pembaharuan, improvisasi dan perbaikian aplikasi akan di update dokumen ini
-jika ingin melakukan testing otomatis tinggal jalankan bash``
-apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
-php -S 0.0.0.0:3000``
-dan lihat hasil console atau errornya langsung di port 3000
 
-## 🎯 Daftar Tugas (Requirements)
+## 📌 NOTE PENTING
+
+Ini adalah Aplikasi POS dengan PHP tradisional dan database MySQL (remote) yang sudah dikonfigurasi.
+
+**Tech Stack:**
+- Frontend: HTML, CSS (Tailwind), JavaScript
+- Backend: PHP (Traditional/Vanilla)
+- Database: MySQL (Remote)
+- Server: Apache/Nginx
+
+**Testing Manual:**
+```bash
+# Untuk testing PHP server lokal
+apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
+php -S 0.0.0.0:3000
+```
+
+**Akses Aplikasi:**
+- Public Form: `http://localhost/index.php`
+- Admin Panel: `http://localhost/admin/index.php`
+
+---
+
+## 🎯 Daftar Tugas (Original Requirements)
 
 Berdasarkan problem statement dari client:
 
-3.  **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
-4.  **Online report viewer** - Preview laporan sebelum download
-5.  **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
-6.  **Tambah field tera di index.php** - Field `jumlah_tera` setelah `nomor_akhir`, ubah logika: `total_liter = nomor_akhir - nomor_awal - jumlah_tera`
+1. ✅ **Perbaiki filter store** - Tidak berfungsi di dashboard admin → **HAPUS FILTER STORE**
+2. ⏳ **Hapus date range**
+3. ⏳ **Export PDF dan Excel** - Berisi data dashboard, laporan setoran, dan cashflow dalam 1 bulan, pisahkan per store
+4. ⏳ **Online report viewer** - Preview laporan sebelum download
+5. ⏳ **Scheduled reports (email)** - Kirim PDF setiap hari jam 12 malam dengan data bulan sekarang
+6. ✅ **Tambah field tera di index.php** - Field `jumlah_tera` setelah `nomor_akhir`, ubah logika: `total_liter = nomor_akhir - nomor_awal - jumlah_tera`
 
 ---
 
