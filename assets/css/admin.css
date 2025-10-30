@@ -1,0 +1,32 @@
+/* Gaya dasar untuk modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+}
+
+.modal.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Peningkatan UI untuk Tab */
+.tab-button {
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.active-tab {
+    border-bottom-color: #4f46e5;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+/* Untuk tampilan penuh yang lebih bersih */
+.content-wrapper {
+    max-width: 1400px;
+    /* Batas lebar baru, lebih lebar dari 7xl (1280px) */
+    margin-left: auto;
+    margin-right: auto;
+}
