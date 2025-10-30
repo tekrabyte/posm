@@ -5,6 +5,10 @@
 **Developer:** E1 AI Agent
 
 ---
+## NOTE PENTING
+Ini adalah Aplikasi POS dengan PHP tradisional dan database Mysql (remote) yang sudah di konfigurasi 
+semua pembaharuan, improvisasi dan perbaikian aplikasi akan di update dokumen ini
+
 
 ## 🎯 Daftar Tugas (Requirements)
 
