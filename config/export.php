@@ -107,53 +107,53 @@ if ($action === 'export_dashboard_excel_v2') {
             
             $sheet->setTitle(substr($store_name, 0, 31)); // Max 31 chars for sheet name
 
-            // ===== SECTION 1: DASHBOARD WALLET =====
+            // ===== SECTION 1: DASHBOARD WALLET (CELL A KOSONG, MULAI DARI B) =====
             $row = 1;
-            $sheet->setCellValue("A$row", "LAPORAN KEUANGAN - $store_name");
-            $sheet->setCellValue("A".($row+1), "$month_name $year");
-            $sheet->mergeCells("A$row:F$row");
-            $sheet->mergeCells("A".($row+1).":F".($row+1));
-            $sheet->getStyle("A$row:A".($row+1))->getFont()->setBold(true)->setSize(16);
-            $sheet->getStyle("A$row:A".($row+1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            // Cell A kosong, data mulai dari B
+            $sheet->setCellValue("B$row", "LAPORAN KEUANGAN - $store_name");
+            $sheet->setCellValue("B".($row+1), "$month_name $year");
+            $sheet->mergeCells("B$row:G$row");
+            $sheet->mergeCells("B".($row+1).":G".($row+1));
+            $sheet->getStyle("B$row:B".($row+1))->getFont()->setBold(true)->setSize(16);
+            $sheet->getStyle("B$row:B".($row+1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             $row += 3;
-            $sheet->setCellValue("A$row", 'DASHBOARD WALLET');
-            $sheet->mergeCells("A$row:B$row");
-            $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
-            $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('4F46E5');
-            $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
-            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->setCellValue("B$row", 'DASHBOARD WALLET');
+            $sheet->mergeCells("B$row:C$row");
+            $sheet->getStyle("B$row")->getFont()->setBold(true)->setSize(14);
+            $sheet->getStyle("B$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('4F46E5');
+            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB('FFFFFF');
+            $sheet->getStyle("B$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $row++;
-            $sheet->setCellValue("A$row", 'Keterangan');
-            $sheet->setCellValue("B$row", 'Jumlah');
-            $sheet->getStyle("A$row:B$row")->getFont()->setBold(true);
-            $sheet->getStyle("A$row:B$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('E5E7EB');
+            $sheet->setCellValue("B$row", 'Keterangan');
+            $sheet->setCellValue("C$row", 'Jumlah');
+            $sheet->getStyle("B$row:C$row")->getFont()->setBold(true);
+            $sheet->getStyle("B$row:C$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('E5E7EB');
             
             $row++;
-            $sheet->setCellValue("A$row", 'Total Pemasukan');
-            $sheet->setCellValue("B$row", "Rp " . formatRupiahNumber($total_income));
-            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB('059669');
+            $sheet->setCellValue("B$row", 'Total Pemasukan');
+            $sheet->setCellValue("C$row", "Rp " . formatRupiahNumber($total_income));
+            $sheet->getStyle("C$row")->getFont()->getColor()->setRGB('059669');
             
             $row++;
-            $sheet->setCellValue("A$row", 'Total Pengeluaran');
-            $sheet->setCellValue("B$row", "Rp " . formatRupiahNumber($total_expense));
-            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB('DC2626');
+            $sheet->setCellValue("B$row", 'Total Pengeluaran');
+            $sheet->setCellValue("C$row", "Rp " . formatRupiahNumber($total_expense));
+            $sheet->getStyle("C$row")->getFont()->getColor()->setRGB('DC2626');
             
             $row++;
-            $sheet->setCellValue("A$row", 'Saldo Bersih');
-            $sheet->setCellValue("B$row", "Rp " . formatRupiahNumber($balance));
-            $sheet->getStyle("A$row:B$row")->getFont()->setBold(true);
-            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB($balance >= 0 ? '059669' : 'DC2626');
+            $sheet->setCellValue("B$row", 'Saldo Bersih');
+            $sheet->setCellValue("C$row", "Rp " . formatRupiahNumber($balance));
+            $sheet->getStyle("B$row:C$row")->getFont()->setBold(true);
+            $sheet->getStyle("C$row")->getFont()->getColor()->setRGB($balance >= 0 ? '059669' : 'DC2626');
 
             $row++;
-            $sheet->setCellValue("A$row", 'Total Liter Terjual');
-            $sheet->setCellValue("B$row", number_format($total_liter, 2, ',', '.') . ' L');
-            $sheet->getStyle("A$row:B$row")->getFont()->setBold(true);
+            $sheet->setCellValue("B$row", 'Total Liter Terjual');
+            $sheet->setCellValue("C$row", number_format($total_liter, 2, ',', '.') . ' L');
+            $sheet->getStyle("B$row:C$row")->getFont()->setBold(true);
 
             $dashboard_end_row = $row;
-            $sheet->getStyle("A5:B$dashboard_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle("B5:C$dashboard_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
             // ===== SECTION 2: DATA SETORAN =====
             $row += 3;
