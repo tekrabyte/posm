@@ -795,7 +795,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                                 <option value="">Pilih Store</option>
                                                 <?php
-                                require_once 'config.php';
+                                require_once __DIR__ . '/../config/config.php';
                                 $stores = $pdo->query('SELECT id, store_name FROM stores')->fetchAll();
                                 foreach ($stores as $s) {
                                     echo "<option value='{$s['id']}'>" . htmlspecialchars($s['store_name']) . "</option>";
