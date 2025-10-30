@@ -524,7 +524,12 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                                         class="font-semibold text-gray-800"></span>
                                                 </div>
                                                 <div class="flex justify-between">
-                                                    <span class="text-gray-600">Total Liter:</span>
+                                                    <span class="text-gray-600">Jumlah Tera:</span>
+                                                    <span id="detail_jumlah_tera"
+                                                        class="font-semibold text-orange-600"></span>
+                                                </div>
+                                                <div class="flex justify-between border-t pt-2">
+                                                    <span class="text-gray-600 font-medium">Total Liter:</span>
                                                     <span id="detail_total_liter"
                                                         class="font-semibold text-green-700"></span>
                                                 </div>
