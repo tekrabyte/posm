@@ -200,6 +200,9 @@ switch ($action) {
                 if (!isset($data[$field])) throw new Exception("Field wajib '{$field}' hilang.");
             }
 
+            // jumlah_tera is optional, default to 0
+            $jumlah_tera = isset($data['jumlah_tera']) ? (float)$data['jumlah_tera'] : 0;
+
             // Start transaction untuk data consistency
             $pdo->beginTransaction();
 
@@ -228,14 +231,14 @@ switch ($action) {
                 $stmtUpdate = $pdo->prepare("
                     UPDATE setoran SET 
                         jam_masuk = ?, jam_keluar = ?, nomor_awal = ?, nomor_akhir = ?, 
-                        total_liter = ?, qris = ?, cash = ?, total_setoran = ?, 
+                        jumlah_tera = ?, total_liter = ?, qris = ?, cash = ?, total_setoran = ?, 
                         total_pengeluaran = ?, total_pemasukan = ?, total_keseluruhan = ?, 
                         employee_name = ?, store_name = ?
                     WHERE id = ?
                 ");
                 $stmtUpdate->execute([
                     $data['jam_masuk'], $data['jam_keluar'], $data['nomor_awal'], $data['nomor_akhir'],
-                    $data['total_liter'], $data['qris'], $data['cash'], $total_setoran_calculated,
+                    $jumlah_tera, $data['total_liter'], $data['qris'], $data['cash'], $total_setoran_calculated,
                     $data['total_pengeluaran'], $data['total_pemasukan'], $data['total_keseluruhan'],
                     $employee_name, $store_name, $existingSetoranId
                 ]);
@@ -252,10 +255,10 @@ switch ($action) {
                 $stmtInsert = $pdo->prepare("
                     INSERT INTO setoran (
                         tanggal, employee_id, employee_name, store_id, store_name, 
-                        jam_masuk, jam_keluar, nomor_awal, nomor_akhir, 
+                        jam_masuk, jam_keluar, nomor_awal, nomor_akhir, jumlah_tera,
                         total_liter, qris, cash, total_setoran,
                         total_pengeluaran, total_pemasukan, total_keseluruhan
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 $stmtInsert->execute([
                     $today,
@@ -267,6 +270,7 @@ switch ($action) {
                     $data['jam_keluar'],
                     $data['nomor_awal'],
                     $data['nomor_akhir'],
+                    $jumlah_tera,
                     $data['total_liter'],
                     $data['qris'],
                     $data['cash'],

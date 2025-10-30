@@ -1642,13 +1642,12 @@
      async function fetchDashboardData() {
             const month = document.getElementById('filter_month_dashboard').value || '<?php echo $current_month; ?>';
             const year = document.getElementById('filter_year_dashboard').value || '<?php echo $current_year; ?>';
-            const store_id = document.getElementById('filter_store_dashboard')?.value || '';
 
-            console.log('🔍 Fetching dashboard data for:', { month, year, store_id });
+            console.log('🔍 Fetching dashboard data for:', { month, year });
 
             // --- 1. Ambil data Wallet dan Breakdown (get_dashboard_wallet) ---
             try {
-                const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}&store_id=${store_id}`);
+                const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`);
                 const walletResult = await walletResponse.json();
 
                 console.log('✅ Wallet data received:', walletResult);
