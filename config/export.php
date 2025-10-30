@@ -378,46 +378,50 @@ if ($action === 'export_dashboard_pdf') {
             // Add new page untuk store ini
             $pdf->AddPage();
 
-            // Header
-            $pdf->SetFont('dejavusans', 'B', 16);
-            $pdf->Cell(0, 10, "LAPORAN KEUANGAN - $store_name", 0, 1, 'C');
-            $pdf->SetFont('dejavusans', '', 12);
-            $pdf->Cell(0, 8, "$month_name $year", 0, 1, 'C');
-            $pdf->Ln(5);
-
-            // Dashboard Wallet
+            // Header - Compact
             $pdf->SetFont('dejavusans', 'B', 14);
+            $pdf->Cell(0, 6, "LAPORAN KEUANGAN - $store_name | $month_name $year", 0, 1, 'C');
+            $pdf->Ln(2);
+
+            // Dashboard Wallet - COMPACT DALAM 1 BARIS
+            $pdf->SetFont('dejavusans', 'B', 10);
             $pdf->SetFillColor(79, 70, 229);
             $pdf->SetTextColor(255, 255, 255);
-            $pdf->Cell(0, 8, 'DASHBOARD WALLET', 1, 1, 'C', true);
             
-            $pdf->SetFont('dejavusans', 'B', 10);
+            // Baris 1: Header Dashboard
+            $pdf->Cell(0, 5, 'DASHBOARD WALLET', 1, 1, 'C', true);
+            
+            // Baris 2: Data dalam 4 kolom
+            $pdf->SetFont('dejavusans', '', 8);
             $pdf->SetFillColor(229, 231, 235);
             $pdf->SetTextColor(0, 0, 0);
-            $pdf->Cell(120, 7, 'Keterangan', 1, 0, 'L', true);
-            $pdf->Cell(60, 7, 'Jumlah', 1, 1, 'R', true);
             
-            $pdf->SetFont('dejavusans', '', 10);
-            $pdf->Cell(120, 7, 'Total Pemasukan', 1, 0, 'L');
+            $colWidth = 67; // 270 / 4 kolom
+            
+            // Kolom 1: Pemasukan
+            $pdf->Cell($colWidth, 5, 'Pemasukan', 1, 0, 'L', true);
+            // Kolom 2: Pengeluaran  
+            $pdf->Cell($colWidth, 5, 'Pengeluaran', 1, 0, 'L', true);
+            // Kolom 3: Saldo
+            $pdf->Cell($colWidth, 5, 'Saldo Bersih', 1, 0, 'L', true);
+            // Kolom 4: Liter
+            $pdf->Cell($colWidth, 5, 'Total Liter', 1, 1, 'L', true);
+            
+            // Baris 3: Values
+            $pdf->SetFont('dejavusans', 'B', 8);
             $pdf->SetTextColor(5, 150, 105);
-            $pdf->Cell(60, 7, "Rp " . formatRupiahNumber($total_income), 1, 1, 'R');
+            $pdf->Cell($colWidth, 5, "Rp " . formatRupiahNumber($total_income), 1, 0, 'R');
             
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->Cell(120, 7, 'Total Pengeluaran', 1, 0, 'L');
             $pdf->SetTextColor(220, 38, 38);
-            $pdf->Cell(60, 7, "Rp " . formatRupiahNumber($total_expense), 1, 1, 'R');
+            $pdf->Cell($colWidth, 5, "Rp " . formatRupiahNumber($total_expense), 1, 0, 'R');
             
-            $pdf->SetFont('dejavusans', 'B', 10);
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->Cell(120, 7, 'Saldo Bersih', 1, 0, 'L');
             $pdf->SetTextColor($balance >= 0 ? 5 : 220, $balance >= 0 ? 150 : 38, $balance >= 0 ? 105 : 38);
-            $pdf->Cell(60, 7, "Rp " . formatRupiahNumber($balance), 1, 1, 'R');
+            $pdf->Cell($colWidth, 5, "Rp " . formatRupiahNumber($balance), 1, 0, 'R');
             
             $pdf->SetTextColor(0, 0, 0);
-            $pdf->Cell(120, 7, 'Total Liter Terjual', 1, 0, 'L');
-            $pdf->Cell(60, 7, number_format($total_liter, 2, ',', '.') . ' L', 1, 1, 'R');
+            $pdf->Cell($colWidth, 5, number_format($total_liter, 2, ',', '.') . ' L', 1, 1, 'R');
             
-            $pdf->Ln(5);
+            $pdf->Ln(3);
 
             // Data Setoran
             $pdf->SetFont('dejavusans', 'B', 12);
