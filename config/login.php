@@ -2,7 +2,7 @@
 session_start();
 // Jika sudah login, redirect langsung ke admin.php
 if (isset($_SESSION['user_id'])) {
-    header('Location: admin.php');
+    header('Location: ../admin/index.php');
     exit;
 }
 ?>
