@@ -1696,6 +1696,18 @@
             } catch (error) {
                 console.error('Error fetching cashflow data for dashboard:', error);
             }
+
+            // --- 3. Ambil data BBM Summary ---
+            try {
+                if (typeof getBBMSummary === 'function') {
+                    console.log('⛽ Loading BBM Summary...');
+                    await getBBMSummary(month, year);
+                } else {
+                    console.warn('⚠️ getBBMSummary function not found');
+                }
+            } catch (error) {
+                console.error('Error loading BBM summary:', error);
+            }
         }
 
         function updateDashboardDisplay(data) {
