@@ -12,7 +12,7 @@ ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
 ini_set('session.gc_maxlifetime', 1800); // 30 minutes
 ini_set('session.cookie_lifetime', 1800); // 30 minutes
 
-$host = 'localhost';
+$host = 'srv1412.hstgr.io';
 $dbname = 'u215947863_pom';
 $username = 'u215947863_pom';
 $password = 'marketLokal2611@';

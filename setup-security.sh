@@ -1,5 +1,7 @@
 #!/bin/bash
-
+sudo apt update
+sudo apt install php8.2-pdo php8.2-mysql
+sudo systemctl restart apache2
 # =============================================================================
 # Admin Panel POSM - Security Setup Script
 # =============================================================================
@@ -44,7 +46,7 @@ REQUIRED_EXTENSIONS=("pdo" "pdo_mysql" "json" "mbstring" "session")
 MISSING_EXTENSIONS=()
 
 for ext in "${REQUIRED_EXTENSIONS[@]}"; do
-    if php -m | grep -q "^$ext$"; then
+    if php -m | grep -i "^$ext$" > /dev/null; then
         echo "✅ $ext extension found"
     else
         echo "❌ $ext extension missing"
@@ -52,10 +54,46 @@ for ext in "${REQUIRED_EXTENSIONS[@]}"; do
     fi
 done
 
+# Enhanced PDO detection
+echo ""
+echo "🔍 Detailed PDO check:"
+php -r "
+if (extension_loaded('pdo')) {
+    echo '✅ PDO extension is loaded\n';
+    \$drivers = (extension_loaded('pdo_mysql')) ? PDO::getAvailableDrivers() : [];
+    echo '📋 PDO drivers: ' . (!empty(\$drivers) ? implode(', ', \$drivers) : 'None');
+} else {
+    echo '❌ PDO extension is NOT loaded';
+}
+" 2>/dev/null || echo "❌ PDO check failed"
+
 if [ ${#MISSING_EXTENSIONS[@]} -gt 0 ]; then
     echo ""
     echo "❌ Missing extensions: ${MISSING_EXTENSIONS[*]}"
-    echo "   Please install missing extensions and try again"
+    echo ""
+    
+    # Provide specific installation commands
+    if [[ " ${MISSING_EXTENSIONS[@]} " =~ " pdo " ]]; then
+        echo "💡 Solution for PDO extension:"
+        if command -v apt &> /dev/null; then
+            echo "   Ubuntu/Debian: sudo apt install php${PHP_VERSION}-pdo php${PHP_VERSION}-mysql"
+        elif command -v yum &> /dev/null; then
+            echo "   CentOS/RHEL: sudo yum install php-pdo php-mysqlnd"
+        elif command -v dnf &> /dev/null; then
+            echo "   Fedora: sudo dnf install php-pdo php-mysqlnd"
+        else
+            echo "   Please install php-pdo and php-mysql packages for your system"
+        fi
+    fi
+    
+    # General installation guide
+    echo ""
+    echo "📚 Installation Guide:"
+    echo "   1. Install missing extensions using commands above"
+    echo "   2. Restart your web server:"
+    echo "      - Apache: sudo systemctl restart apache2"
+    echo "      - Nginx + PHP-FPM: sudo systemctl restart php${PHP_VERSION}-fpm"
+    echo "   3. Run this script again"
     exit 1
 fi
 
@@ -99,16 +137,24 @@ echo "✅ File permissions set"
 echo ""
 echo "📋 Step 4: Checking database connection..."
 
-# Test database connection
+# Test database connection with better error handling
 DB_TEST=$(php -r '
+    @session_start();
     require_once "config.php";
     try {
-        $stmt = $pdo->query("SELECT 1");
-        echo "OK";
+        // Test basic PDO connection
+        $test = $pdo->query("SELECT 1")->fetchColumn();
+        if ($test == "1") {
+            echo "OK";
+        } else {
+            echo "ERROR: Query test failed";
+        }
+    } catch (PDOException $e) {
+        echo "PDO ERROR: " . $e->getMessage();
     } catch (Exception $e) {
         echo "ERROR: " . $e->getMessage();
     }
-')
+' 2>&1)
 
 if [[ $DB_TEST == "OK" ]]; then
     echo "✅ Database connection successful"
@@ -116,7 +162,10 @@ else
     echo "❌ Database connection failed:"
     echo "   $DB_TEST"
     echo ""
-    echo "   Please check database credentials in config.php"
+    echo "   Please check:"
+    echo "   1. Database credentials in config.php"
+    echo "   2. Database server is running"
+    echo "   3. Database user has proper permissions"
     exit 1
 fi
 
@@ -151,18 +200,16 @@ echo ""
 echo "📋 Step 6: Checking session configuration..."
 
 # Check if session settings are in config.php
-if grep -q "session.gc_maxlifetime" config.php; then
-    echo "✅ Session timeout configured (30 minutes)"
+if grep -q "session.gc_maxlifetime" config.php || grep -q "session_set_cookie_params" config.php; then
+    echo "✅ Session timeout configured"
 else
-    echo "⚠️  Session timeout not configured"
-    echo "   Adding session configuration to config.php..."
-    # Could add auto-config here, but safer to do manually
+    echo "⚠️  Session timeout not configured in config.php"
 fi
 
-if grep -q "session.cookie_httponly" config.php; then
+if grep -q "session.cookie_httponly" config.php || grep -q "httponly.*true" config.php; then
     echo "✅ HTTPOnly cookies enabled"
 else
-    echo "⚠️  HTTPOnly cookies not enabled"
+    echo "⚠️  HTTPOnly cookies not explicitly configured"
 fi
 
 # =============================================================================
@@ -172,20 +219,24 @@ echo ""
 echo "📋 Step 7: Testing CSRF token generation..."
 
 CSRF_TEST=$(php -r '
-    session_start();
+    @session_start();
     require_once "security.php";
-    $token = generateCSRFToken();
-    if (strlen($token) >= 32) {
-        echo "OK";
-    } else {
-        echo "ERROR";
+    try {
+        $token = generateCSRFToken();
+        if (strlen($token) >= 32 && validateCSRFToken($token)) {
+            echo "OK";
+        } else {
+            echo "ERROR: Token validation failed";
+        }
+    } catch (Exception $e) {
+        echo "ERROR: " . $e->getMessage();
     }
-')
+' 2>&1)
 
 if [[ $CSRF_TEST == "OK" ]]; then
-    echo "✅ CSRF token generation working"
+    echo "✅ CSRF token generation and validation working"
 else
-    echo "❌ CSRF token generation failed"
+    echo "❌ CSRF system test failed: $CSRF_TEST"
     exit 1
 fi
 
@@ -202,15 +253,15 @@ TEST_USER=$(php -r '
         $count = $stmt->fetchColumn();
         echo $count;
     } catch (Exception $e) {
-        echo "ERROR";
+        echo "ERROR: " . $e->getMessage();
     }
 ')
 
-if [[ $TEST_USER == "ERROR" ]]; then
-    echo "⚠️  Could not check users table"
+if [[ $TEST_USER == "ERROR"* ]]; then
+    echo "⚠️  Could not check users table: $TEST_USER"
     echo "   Make sure to run database migration: u215947863_pom.sql"
 elif [[ $TEST_USER == "0" ]]; then
-    echo "⚠️  No users found"
+    echo "⚠️  No users found in database"
     echo "   Please create an admin user in the database"
 else
     echo "✅ Found $TEST_USER user(s) in database"
