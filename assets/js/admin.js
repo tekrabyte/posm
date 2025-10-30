@@ -2077,18 +2077,21 @@ function updateStoreWallet(stores) {
         function exportDashboard(type) {
             const month = document.getElementById('filter_month_dashboard').value;
             const year = document.getElementById('filter_year_dashboard').value;
-            const storeId = document.getElementById('filter_store_dashboard').value;
 
             if (type === 'excel') {
                 const params = new URLSearchParams({
-                    action: 'export_dashboard_excel',
+                    action: 'export_dashboard_excel_v2',
                     month: month,
-                    year: year,
-                    store_id: storeId
+                    year: year
                 });
-                window.open(`export.php?${params}`, '_blank');
+                window.open(`../config/export.php?${params}`, '_blank');
             } else if (type === 'pdf') {
-                alert('Format PDF coming soon!');
+                const params = new URLSearchParams({
+                    action: 'export_dashboard_pdf',
+                    month: month,
+                    year: year
+                });
+                window.open(`../config/export.php?${params}`, '_blank');
             }
         }
 
