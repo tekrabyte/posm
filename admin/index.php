@@ -254,14 +254,14 @@ $selected_store_id = $_GET['store_id'] ?? '';
                         </h3>
                         
                         <!-- Trend Chart (Full Width) -->
-                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
                             <div class="relative" style="height: 400px;">
                                 <canvas id="trendChart"></canvas>
                             </div>
                         </div>
                         
                         <!-- Store Comparison & Breakdowns (2 columns) -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                             <!-- Store Comparison Chart -->
                             <div class="bg-white p-6 rounded-xl shadow-lg">
                                 <div class="relative" style="height: 350px;">
