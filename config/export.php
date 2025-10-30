@@ -204,52 +204,52 @@ if ($action === 'export_dashboard_excel_v2') {
             $setoran_end_row = $row - 1;
             $sheet->getStyle("B$setoran_start_row:O$setoran_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
-            // ===== SECTION 3: DATA CASHFLOW =====
+            // ===== SECTION 3: DATA CASHFLOW (MULAI DARI CELL B) =====
             $row += 2;
             $cashflow_start_row = $row;
-            $sheet->setCellValue("A$row", 'DATA MANAJEMEN KAS');
-            $sheet->mergeCells("A$row:E$row");
-            $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
-            $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F59E0B');
-            $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
-            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->setCellValue("B$row", 'DATA MANAJEMEN KAS');
+            $sheet->mergeCells("B$row:F$row");
+            $sheet->getStyle("B$row")->getFont()->setBold(true)->setSize(14);
+            $sheet->getStyle("B$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F59E0B');
+            $sheet->getStyle("B$row")->getFont()->getColor()->setRGB('FFFFFF');
+            $sheet->getStyle("B$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $row++;
             $headers = ['Tanggal', 'Deskripsi', 'Jenis', 'Kategori', 'Nominal'];
-            $col = 'A';
+            $col = 'B'; // Mulai dari B
             foreach ($headers as $header) {
                 $sheet->setCellValue($col.$row, $header);
                 $col++;
             }
-            $sheet->getStyle("A$row:E$row")->getFont()->setBold(true);
-            $sheet->getStyle("A$row:E$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('FEF3C7');
+            $sheet->getStyle("B$row:F$row")->getFont()->setBold(true);
+            $sheet->getStyle("B$row:F$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('FEF3C7');
             
             $row++;
             if (count($cashflow_data) > 0) {
                 foreach ($cashflow_data as $data) {
-                    $sheet->setCellValue("A$row", $data['tanggal']);
-                    $sheet->setCellValue("B$row", $data['description']);
-                    $sheet->setCellValue("C$row", $data['type']);
-                    $sheet->setCellValue("D$row", $data['category']);
-                    $sheet->setCellValue("E$row", "Rp " . formatRupiahNumber($data['amount']));
+                    $sheet->setCellValue("B$row", $data['tanggal']);
+                    $sheet->setCellValue("C$row", $data['description']);
+                    $sheet->setCellValue("D$row", $data['type']);
+                    $sheet->setCellValue("E$row", $data['category']);
+                    $sheet->setCellValue("F$row", "Rp " . formatRupiahNumber($data['amount']));
                     
                     // Color coding
                     if ($data['type'] === 'pemasukan' || $data['type'] === 'Pemasukan') {
-                        $sheet->getStyle("E$row")->getFont()->getColor()->setRGB('059669');
+                        $sheet->getStyle("F$row")->getFont()->getColor()->setRGB('059669');
                     } else {
-                        $sheet->getStyle("E$row")->getFont()->getColor()->setRGB('DC2626');
+                        $sheet->getStyle("F$row")->getFont()->getColor()->setRGB('DC2626');
                     }
                     $row++;
                 }
             } else {
-                $sheet->setCellValue("A$row", 'Tidak ada data cashflow');
-                $sheet->mergeCells("A$row:E$row");
-                $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->setCellValue("B$row", 'Tidak ada data cashflow');
+                $sheet->mergeCells("B$row:F$row");
+                $sheet->getStyle("B$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $row++;
             }
             
             $cashflow_end_row = $row - 1;
-            $sheet->getStyle("A$cashflow_start_row:E$cashflow_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle("B$cashflow_start_row:F$cashflow_end_row")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
             // Set column widths
             $sheet->getColumnDimension('A')->setWidth(15);
