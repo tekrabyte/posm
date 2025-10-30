@@ -291,5 +291,5 @@ php -S 0.0.0.0:3000
 - [ ] Form simpan konfigurasi dengan benar
 - [ ] Test kirim email manual berfungsi
 - [ ] Cron job berjalan setiap hari jam 12 malam
-- [ ] Email terkirim dengan SUMMARY attachment PDF
+- [ ] Email terkirim dengan SUMMARY PENJUALAN HARIANattachment PDF
 - [ ] Log pengiriman tercatat
