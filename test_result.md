@@ -251,9 +251,11 @@ Struktur HTML yang salah - elemen-elemen dashboard berada **di luar** container 
 - [ ] Export PDF dengan layout yang baik
 - [ ] File dapat di-download dengan benar
 
+**Status:** ⏳ **PENDING**
+
 ---
 
-##  FASE 3: Online Report Viewer (PENDING)
+## ⏳ FASE 5: Online Report Viewer (PENDING)
 
 ### 📋 Requirements Detail:
 - Preview laporan sebelum download
