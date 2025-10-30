@@ -930,6 +930,8 @@
         async function saveCashFlowTransaction(payload) {
             const action = payload.id ? 'edit_management_cash_flow' : 'add_management_cash_flow';
 
+            // Add CSRF token to payload
+            payload.csrf_token = CSRF_TOKEN;
             const response = await fetch(`../config/api.php?action=${action}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
