@@ -23,6 +23,12 @@ if (isset($_SESSION['user_id'])) {
     <div class="login-card bg-white p-8 rounded-lg w-full max-w-sm">
         <h1 class="text-3xl font-bold text-center mb-6 text-indigo-600">Admin Login</h1>
         
+        
+        <?php if (isset($_GET['expired'])): ?>
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 mb-4 rounded">
+            <p class="text-sm">Sesi Anda telah berakhir. Silakan login kembali.</p>
+        </div>
+        <?php endif; ?>
         <form id="loginForm">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
