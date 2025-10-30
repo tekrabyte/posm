@@ -5,7 +5,15 @@ error_reporting(E_ALL);
 
 session_start(); 
 require_once 'config.php';
+require_once 'security.php';
 header('Content-Type: application/json');
+
+// Check session timeout for authenticated endpoints
+if (isset($_SESSION['user_id'])) {
+    if (!checkSessionTimeout()) {
+        jsonResponse(false, 'Sesi Anda telah berakhir. Silakan login kembali.', [], [], 401);
+    }
+}
 
 // Fungsi pembantu untuk mengeluarkan respons JSON
 function jsonResponse($success, $message, $data = [], $summary = [], $httpCode = 200) {
