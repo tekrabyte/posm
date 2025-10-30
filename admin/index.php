@@ -154,11 +154,13 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             </select>
                         </div>
                         <button type="submit"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg shadow-md text-sm transition duration-200">
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg shadow-md text-sm transition duration-200"
+                            data-tooltip="Terapkan filter yang dipilih">
                             Terapkan Filter
                         </button>
                         <button type="button" id="resetFilterBtnDashboard"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2.5 rounded-lg shadow-md text-sm transition duration-200">
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2.5 rounded-lg shadow-md text-sm transition duration-200"
+                            data-tooltip="Reset filter ke bulan ini">
                             Reset
                         </button>
                         <div class="ml-auto flex gap-2">
