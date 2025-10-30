@@ -251,11 +251,9 @@ Struktur HTML yang salah - elemen-elemen dashboard berada **di luar** container 
 - [ ] Export PDF dengan layout yang baik
 - [ ] File dapat di-download dengan benar
 
-**Status:** ⏳ **PENDING**
-
 ---
 
-## ⏳ FASE 5: Online Report Viewer (PENDING)
+##  FASE 3: Online Report Viewer (PENDING)
 
 ### 📋 Requirements Detail:
 - Preview laporan sebelum download
@@ -283,11 +281,9 @@ Struktur HTML yang salah - elemen-elemen dashboard berada **di luar** container 
 - [ ] Download dari preview berfungsi
 - [ ] Responsive di mobile
 
-**Status:** ⏳ **PENDING**
-
 ---
 
-## ⏳ FASE 6: Scheduled Email Reports (PENDING)
+##  FASE 5: Scheduled Email Reports (PENDING)
 
 ### 📋 Requirements Detail:
 - Kirim email otomatis setiap hari jam 12 malam
