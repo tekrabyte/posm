@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Response</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 10px 0; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test API Response untuk get_history</h1>
+    <button onclick="testAPI()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch('config/api.php?action=get_history&month=10&year=2025');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = '<h2>API Response:</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                if (data.success && data.data && data.data.setoran && data.data.setoran.length > 0) {
+                    const firstItem = data.data.setoran[0];
+                    resultDiv.innerHTML += '<h2>First Item Keys:</h2><pre>' + JSON.stringify(Object.keys(firstItem), null, 2) + '</pre>';
+                    resultDiv.innerHTML += '<h2>jumlah_tera value:</h2><pre>' + firstItem.jumlah_tera + '</pre>';
+                    resultDiv.innerHTML += '<h2>total_liter value:</h2><pre>' + firstItem.total_liter + '</pre>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
