@@ -143,9 +143,9 @@ php -S 0.0.0.0:3000
 - **Action:**
   - ✅ Buat multi-sheet Excel (1 sheet per store)
   - ✅ Setiap sheet berisi:
-    - Dashboard Wallet (summary table)
-    - Data Setoran Harian (detailed table dengan Jumlah Tera)
-    - Data Cashflow Management (detailed table)
+  - ❌ Dashboard Wallet (summary table tab-dashboard) sheet berbeda
+  - ✅ Data Setoran Harian (detailed table dengan Jumlah Tera)
+  - ✅ Data Cashflow Management (detailed table)
   - ✅ Styling dengan borders, colors, dan auto-width columns
   - ✅ Sheet names sesuai nama store (max 31 characters)
 
@@ -160,7 +160,8 @@ php -S 0.0.0.0:3000
 ### 🧪 Testing Checklist:
 - ✅ Export Excel berisi multiple sheets (1 per store)
 - ✅ Setiap sheet berisi 3 section: Dashboard, Setoran, Cashflow
-- ✅ Data dipisah per store dengan rapi
+- ❌ Data semua store dengan rapi (tab-dashboard) sheet berbeda
+- ✅ Data dipisah per store dengan rapi 
 - ✅ Format tabel terstruktur dan mudah dibaca
 - ✅ Export PDF dengan layout yang baik (multi-page per store)
 - ✅ File dapat di-download dengan benar
