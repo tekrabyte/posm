@@ -36,7 +36,6 @@ $selected_store_id = $_GET['store_id'] ?? '';
     <!--<script>console.log = function() {};</script>-->
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
-</head>
 
 <body class="bg-gray-100">
     <div class="min-h-screen flex flex-col">
