@@ -487,10 +487,11 @@
     function calculateAll() {
         const nomorAwal = parseInputNumber(document.getElementById('nomor_awal').value);
         const nomorAkhir = parseInputNumber(document.getElementById('nomor_akhir').value);
+        const jumlahTera = parseInputNumber(document.getElementById('jumlah_tera').value);
         const qris = parseInt(document.getElementById('qris_value').value) || 0;
 
-        // Calculate total liter
-        const totalLiter = Math.max(0, nomorAkhir - nomorAwal);
+        // Calculate total liter with tera subtraction
+        const totalLiter = Math.max(0, nomorAkhir - nomorAwal - jumlahTera);
         appData.calculations.totalLiter = totalLiter;
 
         // Calculate total setoran
