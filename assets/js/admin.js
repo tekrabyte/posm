@@ -205,7 +205,7 @@
                 const response = await fetch('../config/api.php?action=delete_setoran', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
+                    body: JSON.stringify({ id: id, csrf_token: CSRF_TOKEN })
                 });
                 const result = await response.json();
                 alert(result.message);
