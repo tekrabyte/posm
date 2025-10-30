@@ -89,7 +89,7 @@ if (isset($_SESSION['user_id'])) {
                     }
                     
                     setTimeout(() => {
-                        window.location.href = 'admin.php';
+                        window.location.href = '../admin/index.php';
                     }, 500);
                 } else {
                     messageEl.textContent = result.message || 'Username atau password salah.';
