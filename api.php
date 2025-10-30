@@ -1080,16 +1080,12 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                     UNION ALL
                     SELECT description, amount FROM cash_flow_management cfm
                     WHERE cfm.type = 'Pemasukan' AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
-                    UNION ALL
-                    SELECT 'Setoran Kasir' as description, SUM(cash + qris) as amount
-                    FROM setoran s2
-                    WHERE YEAR(s2.tanggal) = ? AND MONTH(s2.tanggal) = ?
                 ) as combined_income
                 GROUP BY description
                 ORDER BY amount DESC
             ";
             $stmt_income = $pdo->prepare($sql_income);
-            $stmt_income->execute(array_merge($params, $params, $params));
+            $stmt_income->execute(array_merge($params, $params));
             $income_breakdown = $stmt_income->fetchAll(PDO::FETCH_ASSOC);
 
             $sql_store = "
