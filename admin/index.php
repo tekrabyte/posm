@@ -264,7 +264,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                             <!-- Store Comparison Chart -->
                             <div class="bg-white p-6 rounded-xl shadow-lg">
-                                <div class="relative" style="height: 350px;">
+                                <div class="relative" style="height: 400px;">
                                     <canvas id="storeComparisonChart"></canvas>
                                 </div>
                             </div>
@@ -272,15 +272,15 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             <!-- Income & Expense Breakdown -->
                             <div class="grid grid-cols-1 gap-6">
                                 <!-- Income Breakdown -->
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <div class="relative" style="height: 165px;">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <div class="relative" style="height: 180px;">
                                         <canvas id="incomeBreakdownChart"></canvas>
                                     </div>
                                 </div>
                                 
                                 <!-- Expense Breakdown -->
-                                <div class="bg-white p-4 rounded-xl shadow-lg">
-                                    <div class="relative" style="height: 165px;">
+                                <div class="bg-white p-6 rounded-xl shadow-lg">
+                                    <div class="relative" style="height: 180px;">
                                         <canvas id="expenseBreakdownChart"></canvas>
                                     </div>
                                 </div>
