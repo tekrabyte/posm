@@ -235,7 +235,7 @@ php -S 0.0.0.0:3000
 
 ### 📋 Requirements Detail:
 - Kirim email otomatis setiap hari jam 12 malam
-- Isi: PDF laporan bulan berjalan
+- Isi: PDF laporan HARIAN berjalan
 - Email ke: (akan dikonfigurasi user)
 
 ### 📝 Rencana Implementasi:
