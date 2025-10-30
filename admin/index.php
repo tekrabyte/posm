@@ -209,12 +209,15 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h3 class="text-lg font-bold mb-4 text-gray-800">Wallet Per Store</h3>
                         <div id="wallet_per_store" class="space-y-4"></div>
                     </div>
                 </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">Laporan Breakdown Cashflow</h3>
+                    </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h3 class="text-lg font-bold mb-4 text-gray-800">Breakdown Pengeluaran</h3>
