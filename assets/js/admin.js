@@ -932,6 +932,7 @@
 
             // Add CSRF token to payload
             payload.csrf_token = CSRF_TOKEN;
+
             const response = await fetch(`../config/api.php?action=${action}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
