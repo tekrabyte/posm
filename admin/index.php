@@ -1336,9 +1336,9 @@ $selected_store_id = $_GET['store_id'] ?? '';
 
 
     <!-- External JavaScript -->
-    <script src="assets/js/security.js"></script>
-    <script src="assets/js/admin-integration.js"></script>
-    <script src="assets/js/admin.min.js"></script>
+    <script src="../assets/js/security.js"></script>
+    <script src="../assets/js/admin-integration.js"></script>
+    <script src="../assets/js/admin.min.js"></script>
     <script>
         // Initialize CSRF Token from PHP
         if (typeof CSRF_TOKEN !== 'undefined') {
