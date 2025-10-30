@@ -19,7 +19,7 @@ Ini adalah Aplikasi POS dengan PHP tradisional dan database MySQL (remote) yang 
 
 **Testing Lokal (WAJIB SEBELUM MEMULAI SEMUA TUGAS):**
 ```bash
-# Untuk testing PHP server lokal
+export HOME=/root && git config --global user.email "tekrabyte@gmail.com" && git config --global user.name "tekra"
 apt update && apt install -y php php-cli php-mysql php-pdo php-json php-mbstring 2>&1 | tail -20
 php -S 0.0.0.0:3000
 ```
