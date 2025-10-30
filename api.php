@@ -1126,7 +1126,8 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 $stmt_cf_store->execute([$store_id, $year, $month]);
                 $cf_store = $stmt_cf_store->fetch(PDO::FETCH_ASSOC);
 
-                $income = ($store['setoran'] ?? 0) + ($store['pemasukan_setoran'] ?? 0) + ($cf_store['pemasukan_cf'] ?? 0);
+                // Setoran admin dihilangkan dari perhitungan cashflow per store
+                $income = ($store['pemasukan_setoran'] ?? 0) + ($cf_store['pemasukan_cf'] ?? 0);
                 $expense = ($store['pengeluaran_setoran'] ?? 0) + ($cf_store['pengeluaran_cf'] ?? 0);
 
                 $per_store[] = [
