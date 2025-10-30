@@ -243,6 +243,51 @@ $selected_store_id = $_GET['store_id'] ?? '';
         </div>
     </div>
 </div>
+
+                    <!-- DASHBOARD ANALYTICS CHARTS -->
+                    <div class="mb-8 space-y-6">
+                        <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            Analisis Dashboard
+                        </h3>
+                        
+                        <!-- Trend Chart (Full Width) -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <div class="relative" style="height: 400px;">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Store Comparison & Breakdowns (2 columns) -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Store Comparison Chart -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <div class="relative" style="height: 350px;">
+                                    <canvas id="storeComparisonChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Income & Expense Breakdown -->
+                            <div class="grid grid-cols-1 gap-6">
+                                <!-- Income Breakdown -->
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <div class="relative" style="height: 165px;">
+                                        <canvas id="incomeBreakdownChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Expense Breakdown -->
+                                <div class="bg-white p-4 rounded-xl shadow-lg">
+                                    <div class="relative" style="height: 165px;">
+                                        <canvas id="expenseBreakdownChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6 rounded-xl shadow-xl mb-8">
                         <h3 class="text-xl font-bold mb-4">Wallet Utama (All Stores)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
