@@ -52,6 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'a
     }
 }
 
+// CSRF Protection for POST requests (except login and get_csrf_token)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token') {
+    $csrf_token = $data['csrf_token'] ?? $_POST['csrf_token'] ?? '';
+    
+    if (!validateCSRFToken($csrf_token)) {
+        jsonResponse(false, 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.', [], [], 403);
+    }
+}
+
+// Generate CSRF token for session
+if ($action === 'get_csrf_token') {
+    $token = generateCSRFToken();
+    jsonResponse(true, 'Token berhasil diambil', ['csrf_token' => $token]);
+}
+
 // AUTH: Logout
 if ($action === 'logout') {
     session_unset();
