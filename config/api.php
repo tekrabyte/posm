@@ -397,7 +397,13 @@ switch ($action) {
             $setoran_id = $_GET['id'] ?? 0;
             if (!$setoran_id) throw new Exception("ID Setoran tidak ditemukan.");
 
-            $stmt = $pdo->prepare("SELECT * FROM setoran WHERE id = ?");
+            $stmt = $pdo->prepare("
+                SELECT s.*, e.employee_name, st.store_name
+                FROM setoran s
+                LEFT JOIN employees e ON s.employee_id = e.id
+                LEFT JOIN stores st ON s.store_id = st.id
+                WHERE s.id = ?
+            ");
             $stmt->execute([$setoran_id]);
             $setoran = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$setoran) throw new Exception("Data Setoran tidak ditemukan.");
