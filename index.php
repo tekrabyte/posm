@@ -870,7 +870,7 @@
         });
 
         // Input event listeners for live calculation
-        ['nomor_awal', 'nomor_akhir'].forEach(id => {
+        ['nomor_awal', 'nomor_akhir', 'jumlah_tera'].forEach(id => {
             document.getElementById(id)?.addEventListener('input', calculateAll);
         });
 
