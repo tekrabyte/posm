@@ -115,13 +115,15 @@ if ($action === 'export_dashboard_excel_v2') {
             $sheet->mergeCells("A".($row+1).":F".($row+1));
             $sheet->getStyle("A$row:A".($row+1))->getFont()->setBold(true)->setSize(16);
             $sheet->getStyle("A$row:A".($row+1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             $row += 3;
             $sheet->setCellValue("A$row", 'DASHBOARD WALLET');
-            $sheet->mergeCells("A$row:D$row");
+            $sheet->mergeCells("A$row:B$row");
             $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
             $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('4F46E5');
             $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
+            $sheet->getStyle("A$row")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             
             $row++;
             $sheet->setCellValue("A$row", 'Keterangan');
@@ -157,7 +159,7 @@ if ($action === 'export_dashboard_excel_v2') {
             $row += 3;
             $setoran_start_row = $row;
             $sheet->setCellValue("A$row", 'DATA SETORAN HARIAN');
-            $sheet->mergeCells("A$row:O$row");
+            $sheet->mergeCells("A$row:N$row");
             $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
             $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('10B981');
             $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
@@ -206,7 +208,7 @@ if ($action === 'export_dashboard_excel_v2') {
             $row += 2;
             $cashflow_start_row = $row;
             $sheet->setCellValue("A$row", 'DATA MANAJEMEN KAS');
-            $sheet->mergeCells("A$row:F$row");
+            $sheet->mergeCells("A$row:E$row");
             $sheet->getStyle("A$row")->getFont()->setBold(true)->setSize(14);
             $sheet->getStyle("A$row")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F59E0B');
             $sheet->getStyle("A$row")->getFont()->getColor()->setRGB('FFFFFF');
