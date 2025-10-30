@@ -22,7 +22,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         <title>Setoran Harian</title>
-        <link rel="shortcut icon" href="https://scontent.fbth7-1.fna.fbcdn.net/v/t39.30808-6/477440850_589520410728667_7020102743555682684_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=jrdr1qgu2AYQ7kNvwEJiMMJ&_nc_oc=AdmP9tWSG2fIs97XwFRLZV_U6lLldjcflxr0YgkuLtgl0QyuV_0MGj5ztVrgllUhqAQ&_nc_zt=23&_nc_ht=scontent.fbth7-1.fna&_nc_gid=ZX8bPCLbQjYlucWrE7pSmg&oh=00_AfXN1n6ExVIkUYDVViRWBejXBXGgR9W3s9CdH_N8DT-Oyw&oe=68B619AA">
+        <link rel="shortcut icon" href="">
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             .modal {
