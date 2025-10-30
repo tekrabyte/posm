@@ -116,6 +116,16 @@
                             />
                         </div>
                         <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Jumlah Tera <span class="text-gray-500 text-xs">(Optional)</span></label>
+                            <input
+                                type="number"
+                                id="jumlah_tera"
+                                class="w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="0"
+                                step="0.01"
+                            />
+                        </div>
+                        <div>
                             <label class="block text-xs font-medium text-gray-700 mb-1">Total Liter</label>
                             <div class="relative">
                                 <input
