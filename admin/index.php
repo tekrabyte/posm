@@ -235,9 +235,7 @@ $selected_store_id = $_GET['store_id'] ?? '';
                 <div class="mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-gray-800"></h3>
-                    </div>  <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-gray-800"></h3>
-                    </div>
+                    </div> 
                     <div id="bbmSummaryContainer">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
                             <div class="bg-blue-600 px-4 py-3">
