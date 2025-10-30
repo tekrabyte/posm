@@ -1085,125 +1085,92 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
         try {
             $month = $_GET['month'] ?? date('m');
             $year = $_GET['year'] ?? date('Y');
+            $store_id_filter = $_GET['store_id'] ?? '';
 
-            $where_clause = "YEAR(s.tanggal) = ? AND MONTH(s.tanggal) = ?";
             $params = [$year, $month];
+            $where_clause = "YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?";
+            
+            if (!empty($store_id_filter)) {
+                $where_clause .= " AND cfm.store_id = ?";
+                $params[] = $store_id_filter;
+            }
 
-            $sql_all = "
-                SELECT
-                    SUM(s.total_liter) as total_liter,
-                    SUM(s.cash + s.qris) as total_setoran,
-                    SUM(s.total_pemasukan) as total_pemasukan_setoran,
-                    SUM(s.total_pengeluaran) as total_pengeluaran_setoran
-                FROM setoran s
-                WHERE {$where_clause}
-            ";
-            $stmt = $pdo->prepare($sql_all);
-            $stmt->execute($params);
-            $setoran_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // NOTE: Exclude qris_setoran category karena sudah included dalam total_setoran
+            // HANYA BACA DARI CASHFLOW MANAGEMENT
             $sql_cf = "
                 SELECT
-                    SUM(CASE WHEN type = 'Pemasukan' AND category != 'qris_setoran' THEN amount ELSE 0 END) as pemasukan_manajemen,
-                    SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as pengeluaran_manajemen
-                FROM cash_flow_management
-                WHERE YEAR(tanggal) = ? AND MONTH(tanggal) = ?
+                    SUM(CASE WHEN type = 'Pemasukan' THEN amount ELSE 0 END) as total_pemasukan,
+                    SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as total_pengeluaran
+                FROM cash_flow_management cfm
+                WHERE {$where_clause}
             ";
             $stmt_cf = $pdo->prepare($sql_cf);
-            $stmt_cf->execute([$year, $month]);
+            $stmt_cf->execute($params);
             $cf_data = $stmt_cf->fetch(PDO::FETCH_ASSOC);
 
-            // Total income = setoran (cash+qris already included) + pemasukan_setoran + cashflow pemasukan (excluding qris_setoran)
-            $total_income = ($setoran_data['total_setoran'] ?? 0) + ($setoran_data['total_pemasukan_setoran'] ?? 0) + ($cf_data['pemasukan_manajemen'] ?? 0);
-            $total_expense = ($setoran_data['total_pengeluaran_setoran'] ?? 0) + ($cf_data['pengeluaran_manajemen'] ?? 0);
+            $total_income = $cf_data['total_pemasukan'] ?? 0;
+            $total_expense = $cf_data['total_pengeluaran'] ?? 0;
 
             $all_stores = [
                 'total_income' => $total_income,
                 'total_expense' => $total_expense,
                 'balance' => $total_income - $total_expense,
-                'total_liter' => $setoran_data['total_liter'] ?? 0
+                'total_liter' => 0 // Tidak ada data liter di cashflow
             ];
 
+            // Breakdown Pengeluaran - HANYA dari cashflow
             $sql_expense = "
                 SELECT description, SUM(amount) as amount
-                FROM (
-                    SELECT p.description, p.amount FROM pengeluaran p
-                    INNER JOIN setoran s ON p.setoran_id = s.id
-                    WHERE YEAR(s.tanggal) = ? AND MONTH(s.tanggal) = ?
-                    UNION ALL
-                    SELECT description, amount FROM cash_flow_management cfm
-                    WHERE cfm.type = 'Pengeluaran' AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
-                ) as combined_expenses
+                FROM cash_flow_management cfm
+                WHERE cfm.type = 'Pengeluaran' AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
+                " . (!empty($store_id_filter) ? " AND cfm.store_id = ?" : "") . "
                 GROUP BY description
                 ORDER BY amount DESC
             ";
             $stmt_expense = $pdo->prepare($sql_expense);
-            $stmt_expense->execute(array_merge($params, $params));
+            $expense_params = [$year, $month];
+            if (!empty($store_id_filter)) {
+                $expense_params[] = $store_id_filter;
+            }
+            $stmt_expense->execute($expense_params);
             $expense_breakdown = $stmt_expense->fetchAll(PDO::FETCH_ASSOC);
 
+            // Breakdown Pemasukan - HANYA dari cashflow
             $sql_income = "
                 SELECT description, SUM(amount) as amount
-                FROM (
-                    SELECT pm.description, pm.amount FROM pemasukan pm
-                    INNER JOIN setoran s ON pm.setoran_id = s.id
-                    WHERE YEAR(s.tanggal) = ? AND MONTH(s.tanggal) = ?
-                    UNION ALL
-                    SELECT description, amount FROM cash_flow_management cfm
-                    WHERE cfm.type = 'Pemasukan' AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
-                ) as combined_income
+                FROM cash_flow_management cfm
+                WHERE cfm.type = 'Pemasukan' AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
+                " . (!empty($store_id_filter) ? " AND cfm.store_id = ?" : "") . "
                 GROUP BY description
                 ORDER BY amount DESC
             ";
             $stmt_income = $pdo->prepare($sql_income);
-            $stmt_income->execute(array_merge($params, $params));
+            $stmt_income->execute($expense_params); // Reuse same params
             $income_breakdown = $stmt_income->fetchAll(PDO::FETCH_ASSOC);
 
+            // Per Store - HANYA dari cashflow
             $sql_store = "
                 SELECT
                     st.store_name,
-                    SUM(s.total_liter) as total_liter,
-                    SUM(s.cash + s.qris) as setoran,
-                    SUM(s.total_pemasukan) as pemasukan_setoran,
-                    SUM(s.total_pengeluaran) as pengeluaran_setoran
+                    COALESCE(SUM(CASE WHEN cfm.type = 'Pemasukan' THEN cfm.amount ELSE 0 END), 0) as income,
+                    COALESCE(SUM(CASE WHEN cfm.type = 'Pengeluaran' THEN cfm.amount ELSE 0 END), 0) as expense
                 FROM stores st
-                LEFT JOIN setoran s ON st.id = s.store_id AND YEAR(s.tanggal) = ? AND MONTH(s.tanggal) = ?
+                LEFT JOIN cash_flow_management cfm ON st.id = cfm.store_id 
+                    AND YEAR(cfm.tanggal) = ? AND MONTH(cfm.tanggal) = ?
                 GROUP BY st.id, st.store_name
                 ORDER BY st.store_name
             ";
             $stmt_store = $pdo->prepare($sql_store);
-            $stmt_store->execute($params);
-            $stores_raw = $stmt_store->fetchAll(PDO::FETCH_ASSOC);
+            $stmt_store->execute([$year, $month]);
+            $stores_data = $stmt_store->fetchAll(PDO::FETCH_ASSOC);
 
             $per_store = [];
-            foreach ($stores_raw as $store) {
-                $store_id_query = "SELECT id FROM stores WHERE store_name = ?";
-                $stmt_id = $pdo->prepare($store_id_query);
-                $stmt_id->execute([$store['store_name']]);
-                $store_id = $stmt_id->fetchColumn();
-
-                // NOTE: Exclude qris_setoran category karena sudah included dalam setoran
-                $sql_cf_store = "
-                    SELECT
-                        SUM(CASE WHEN type = 'Pemasukan' AND category != 'qris_setoran' THEN amount ELSE 0 END) as pemasukan_cf,
-                        SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as pengeluaran_cf
-                    FROM cash_flow_management
-                    WHERE store_id = ? AND YEAR(tanggal) = ? AND MONTH(tanggal) = ?
-                ";
-                $stmt_cf_store = $pdo->prepare($sql_cf_store);
-                $stmt_cf_store->execute([$store_id, $year, $month]);
-                $cf_store = $stmt_cf_store->fetch(PDO::FETCH_ASSOC);
-
-                // Total income per store = setoran (cash+qris already included) + pemasukan_setoran + cashflow pemasukan (excluding qris_setoran)
-                $income = ($store['setoran'] ?? 0) + ($store['pemasukan_setoran'] ?? 0) + ($cf_store['pemasukan_cf'] ?? 0);
-                $expense = ($store['pengeluaran_setoran'] ?? 0) + ($cf_store['pengeluaran_cf'] ?? 0);
-
+            foreach ($stores_data as $store) {
                 $per_store[] = [
                     'store_name' => $store['store_name'],
-                    'income' => $income,
-                    'expense' => $expense,
-                    'balance' => $income - $expense,
-                    'total_liter' => $store['total_liter'] ?? 0
+                    'income' => $store['income'],
+                    'expense' => $store['expense'],
+                    'balance' => $store['income'] - $store['expense'],
+                    'total_liter' => 0 // Tidak ada data liter di cashflow
                 ];
             }
 
@@ -1214,7 +1181,7 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
                 'per_store' => $per_store
             ];
 
-            jsonResponse(true, 'Dashboard data berhasil dimuat', $result);
+            jsonResponse(true, 'Dashboard data berhasil dimuat (ONLY CASHFLOW)', $result);
 
         } catch (Exception $e) {
             jsonResponse(false, 'Error: ' . $e->getMessage(), [], [], 500);
