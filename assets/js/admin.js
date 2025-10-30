@@ -1648,7 +1648,7 @@
 
             // --- 1. Ambil data Wallet dan Breakdown (get_dashboard_wallet) ---
             try {
-                const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}`);
+                const walletResponse = await fetch(`../config/api.php?action=get_dashboard_wallet&month=${month}&year=${year}&store_id=${store_id}`);
                 const walletResult = await walletResponse.json();
 
                 console.log('✅ Wallet data received:', walletResult);
