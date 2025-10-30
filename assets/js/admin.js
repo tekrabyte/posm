@@ -129,7 +129,7 @@
 
         async function fetchSetoranData() {
             const tableBody = document.getElementById('setoranTableBody');
-            tableBody.innerHTML = '<tr><td colspan="15" class="text-center py-6 text-gray-500">Memuat data...</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="16" class="text-center py-6 text-gray-500">Memuat data...</td></tr>';
 
             // Ambil nilai dari form filter, bukan dari URL
             const month = document.getElementById('filter_month_setoran').value || '<?php echo $current_month; ?>';
@@ -152,6 +152,7 @@
                         row.className = 'hover:bg-gray-50 transition duration-150 ease-in-out';
 
                         const total_liter_formatted = parseFloat(setoran.total_liter).toFixed(2);
+                        const jumlah_tera = parseFloat(setoran.jumlah_tera || 0).toFixed(2);
 
                         row.innerHTML = `
                     <td class="px-4 py-2 whitespace-nowrap text-gray-800">${setoran.tanggal}</td>
@@ -161,6 +162,7 @@
                     <td class="px-4 py-2 whitespace-nowrap text-center text-gray-800">${setoran.jam_keluar.substring(0, 5)}</td>
                     <td class="px-4 py-2 whitespace-nowrap text-right text-gray-800">${parseFloat(setoran.nomor_awal).toFixed(2)}</td>
                     <td class="px-4 py-2 whitespace-nowrap text-right text-gray-800">${parseFloat(setoran.nomor_akhir).toFixed(2)}</td>
+                    <td class="px-4 py-2 whitespace-nowrap text-right text-orange-600 font-medium">${jumlah_tera}</td>
                     <td class="px-4 py-2 whitespace-nowrap text-right text-indigo-700 font-medium">${total_liter_formatted} L</td>
                     <td class="px-4 py-2 whitespace-nowrap text-right text-blue-600">${formatRupiah(setoran.qris)}</td>
                     <td class="px-4 py-2 whitespace-nowrap text-right text-green-600">${formatRupiah(setoran.cash)}</td>
@@ -182,11 +184,11 @@
                     });
                     updateSetoranSummary(result.summary);
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="15" class="text-center py-6 text-gray-500">Tidak ada data setoran yang ditemukan.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="16" class="text-center py-6 text-gray-500">Tidak ada data setoran yang ditemukan.</td></tr>';
                     updateSetoranSummary(result.summary || {});
                 }
             } catch (error) {
-                tableBody.innerHTML = `<tr><td colspan="15" class="text-center py-6 text-red-500">Gagal memuat data: ${error.message}</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="16" class="text-center py-6 text-red-500">Gagal memuat data: ${error.message}</td></tr>`;
             }
         }
 
