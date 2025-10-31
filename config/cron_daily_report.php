@@ -2,10 +2,10 @@
 <?php
 /**
  * Cron Job untuk mengirim laporan harian otomatis
- * Jalankan setiap hari jam 12:00 WIB
+ * Jalankan setiap hari jam 23:50 WIB
  * 
  * Cara setup cron:
- * 0 12 * * * /usr/bin/php /app/cron_daily_report.php >> /var/log/daily_report.log 2>&1
+ * 50 23 * * * /usr/bin/php /app/config/cron_daily_report.php >> /var/log/daily_report.log 2>&1
  */
 
 // Set timezone ke Asia/Jakarta (WIB)
@@ -15,8 +15,8 @@ date_default_timezone_set('Asia/Jakarta');
 echo "[" . date('Y-m-d H:i:s') . "] Starting daily report cron job...\n";
 
 // Load dependencies
-require_once __DIR__ . '/config/config.php';
-require_once __DIR__ . '/config/email_handler.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/email_handler.php';
 
 try {
     // Inisialisasi EmailHandler
