@@ -91,10 +91,22 @@ class EmailHandler {
             return ['success' => true, 'message' => 'Email sent successfully'];
             
         } catch (Exception $e) {
-            // Log error
-            $this->logNotification($notificationType, $relatedId, $subject, $message, 'failed', $e->getMessage());
+            $errorMsg = $e->getMessage();
             
-            return ['success' => false, 'message' => 'Email failed: ' . $e->getMessage()];
+            // Provide helpful error messages for common Gmail issues
+            if (strpos($errorMsg, 'Username and Password not accepted') !== false || 
+                strpos($errorMsg, 'Invalid credentials') !== false) {
+                $errorMsg = 'Gmail credentials ditolak. Pastikan Anda menggunakan "App Password" dari Google, bukan password Gmail biasa. Cara membuat App Password: https://myaccount.google.com/apppasswords';
+            } elseif (strpos($errorMsg, 'Could not connect to SMTP host') !== false) {
+                $errorMsg = 'Tidak dapat terhubung ke server Gmail. Periksa koneksi internet atau pastikan port 587 tidak diblokir firewall.';
+            } elseif (strpos($errorMsg, 'SMTP connect() failed') !== false) {
+                $errorMsg = 'Gagal koneksi SMTP. Pastikan SMTP Host (smtp.gmail.com) dan Port (587) sudah benar.';
+            }
+            
+            // Log error
+            $this->logNotification($notificationType, $relatedId, $subject, $message, 'failed', $errorMsg);
+            
+            return ['success' => false, 'message' => 'Email failed: ' . $errorMsg];
         }
     }
     
