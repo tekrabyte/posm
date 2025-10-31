@@ -5,7 +5,8 @@
     "require": {
         "php": ">=7.4",
         "phpoffice/phpspreadsheet": "^1.29",
-        "tecnickcom/tcpdf": "^6.7"
+        "tecnickcom/tcpdf": "^6.7",
+        "phpmailer/phpmailer": "^7.0"
     },
     "config": {
         "optimize-autoloader": true,
