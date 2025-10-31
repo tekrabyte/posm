@@ -341,9 +341,13 @@ switch ($action) {
 
             // ========================================
             // AUTO-SYNC CASH TO CASHFLOW MANAGEMENT
+            // Pembulatan ke ribuan terdekat: ROUND(cash/1000,0)*1000
             // ========================================
             $cash_amount = (float)$data['cash'];
             if ($cash_amount > 0) {
+                // Pembulatan ke ribuan terdekat
+                $cash_rounded = round($cash_amount / 1000, 0) * 1000;
+                
                 $cash_description = "Pemasukan Cash Setoran - {$employee_name} ({$store_name})";
                 $cash_notes = "AUTO_SYNC:SETORAN_ID:{$setoran_id}:EMPLOYEE:{$employee_name}:DATE:{$today}";
                 
@@ -356,11 +360,63 @@ switch ($action) {
                     $today,
                     $data['store_id'],
                     $cash_description,
-                    $cash_amount,
+                    $cash_rounded,
                     $cash_notes
                 ]);
                 
                 $message .= ' | Cash otomatis masuk ke Cashflow Management';
+            }
+
+            // ========================================
+            // AUTO-SYNC PENGELUARAN TO CASHFLOW MANAGEMENT
+            // ========================================
+            if (!empty($data['pengeluaran'])) {
+                $stmtCashflowPengeluaran = $pdo->prepare("
+                    INSERT INTO cash_flow_management 
+                    (tanggal, store_id, description, amount, type, category, notes, created_at)
+                    VALUES (?, ?, ?, ?, 'Pengeluaran', 'pengeluaran_setoran', ?, NOW())
+                ");
+                
+                foreach ($data['pengeluaran'] as $item) {
+                    $pengeluaran_description = "Pengeluaran Setoran: {$item['description']} - {$employee_name} ({$store_name})";
+                    $pengeluaran_notes = "AUTO_SYNC:SETORAN_ID:{$setoran_id}:EMPLOYEE:{$employee_name}:DATE:{$today}";
+                    
+                    $stmtCashflowPengeluaran->execute([
+                        $today,
+                        $data['store_id'],
+                        $pengeluaran_description,
+                        $item['amount'],
+                        $pengeluaran_notes
+                    ]);
+                }
+                
+                $message .= ' | Pengeluaran otomatis masuk ke Cashflow Management';
+            }
+
+            // ========================================
+            // AUTO-SYNC PEMASUKAN TO CASHFLOW MANAGEMENT
+            // ========================================
+            if (!empty($data['pemasukan'])) {
+                $stmtCashflowPemasukan = $pdo->prepare("
+                    INSERT INTO cash_flow_management 
+                    (tanggal, store_id, description, amount, type, category, notes, created_at)
+                    VALUES (?, ?, ?, ?, 'Pemasukan', 'pemasukan_setoran', ?, NOW())
+                ");
+                
+                foreach ($data['pemasukan'] as $item) {
+                    $pemasukan_description = "Pemasukan Setoran: {$item['description']} - {$employee_name} ({$store_name})";
+                    $pemasukan_notes = "AUTO_SYNC:SETORAN_ID:{$setoran_id}:EMPLOYEE:{$employee_name}:DATE:{$today}";
+                    
+                    $stmtCashflowPemasukan->execute([
+                        $today,
+                        $data['store_id'],
+                        $pemasukan_description,
+                        $item['amount'],
+                        $pemasukan_notes
+                    ]);
+                }
+                
+                $message .= ' | Pemasukan otomatis masuk ke Cashflow Management';
             }
 
             // ========================================
