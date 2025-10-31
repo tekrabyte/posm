@@ -427,14 +427,33 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 showLoading('Mengirim laporan harian...');
                 
-                const formData = new FormData();
-                formData.append('action', 'send_daily_report');
-                formData.append('force', true); // Force override untuk manual trigger
+                // Use FormData untuk auto-handle CSRF token jika ada window.secureFetch
+                const data = {
+                    action: 'send_daily_report',
+                    force: true
+                };
                 
-                const response = await fetch('../config/api.php', {
-                    method: 'POST',
-                    body: formData
-                });
+                let response;
+                if (typeof window.secureFetch === 'function') {
+                    // Use secureFetch if available (handles CSRF automatically)
+                    response = await window.secureFetch('../config/api.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    // Fallback ke FormData
+                    const formData = new FormData();
+                    formData.append('action', 'send_daily_report');
+                    formData.append('force', true);
+                    
+                    response = await fetch('../config/api.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
                 
                 const result = await response.json();
                 hideLoading();
