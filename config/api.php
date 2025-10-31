@@ -43,7 +43,10 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 // Logika untuk mengambil data JSON POST body
 $data = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'application/json') !== false) {
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+if ($requestMethod === 'POST' && strpos($contentType, 'application/json') !== false) {
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
     
@@ -55,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'a
 // CSRF Protection for POST requests (except login, get_csrf_token, save_setoran, and send_daily_report)
 // save_setoran is public endpoint for frontend form submission  
 // send_daily_report is admin-authenticated action, can bypass CSRF if user is logged in
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran') {
+if ($requestMethod === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran') {
     // Skip CSRF for send_daily_report if user is authenticated
     if ($action === 'send_daily_report' && isset($_SESSION['user_id'])) {
         // Authenticated admin action, allow without CSRF token
