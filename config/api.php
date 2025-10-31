@@ -211,7 +211,23 @@ switch ($action) {
     // =========================================================
     case 'save_setoran':
         try {
-            if (empty($data)) throw new Exception("Data setoran kosong atau format tidak valid.");
+            // Parse JSON data if needed
+            if (empty($data) && $requestMethod === 'POST') {
+                $input = file_get_contents('php://input');
+                $data = json_decode($input, true);
+                
+                // Log for debugging
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    error_log('JSON decode error: ' . json_last_error_msg());
+                    error_log('Raw input: ' . $input);
+                }
+            }
+            
+            if (empty($data)) {
+                error_log('Data is empty. POST: ' . print_r($_POST, true));
+                error_log('Input: ' . file_get_contents('php://input'));
+                throw new Exception("Data setoran kosong atau format tidak valid.");
+            }
 
             $required_fields = [
                 'employee_id', 'store_id', 'jam_masuk', 'jam_keluar', 'nomor_awal', 'nomor_akhir',
