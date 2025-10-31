@@ -445,7 +445,9 @@ switch ($action) {
             // ========================================
             try {
                 // Load helper functions
-                require_once __DIR__ . '/helper_functions.php';
+                if (!function_exists('formatIndonesianDate')) {
+                    require_once __DIR__ . '/helper_functions.php';
+                }
                 require_once __DIR__ . '/email_handler.php';
                 $emailHandler = new EmailHandler($pdo);
                 
@@ -513,7 +515,9 @@ switch ($action) {
                 
             } catch (Exception $emailError) {
                 // Silent fail - email error shouldn't stop the main process
+                // Log to error log
                 error_log('Email notification failed: ' . $emailError->getMessage());
+                error_log('Stack trace: ' . $emailError->getTraceAsString());
             }
 
             jsonResponse(true, $message, ['id' => $setoran_id, 'qris_synced' => ($qris_amount > 0)]);
