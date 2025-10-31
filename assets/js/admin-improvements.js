@@ -490,10 +490,7 @@ function showConfirmDialog(message, onConfirm, onCancel) {
  */
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Initializing Admin Improvements...');
-    
-    // Initialize Advanced Filters
-    initAdvancedFilters();
-    
+ 
     // Add CSV Export Buttons
     addCSVExportButtons();
     
