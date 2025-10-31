@@ -1574,31 +1574,5 @@ function exportExcel($year, $month, $total_income, $total_expense, $pdo) {
     echo '</table>';
     echo '</body></html>';
     exit;
-    
-
-// ============================================
-// DAILY REPORT EMAIL API
-// ============================================
-
-if ($action === 'send_daily_report') {
-    require_once __DIR__ . '/email_handler.php';
-    
-    // Force override flag untuk manual trigger
-    $forceOverride = isset($_POST['force']) && $_POST['force'] === true;
-    
-    try {
-        $emailHandler = new EmailHandler($pdo);
-        $result = $emailHandler->sendDailyReport($forceOverride);
-        
-        if ($result['success']) {
-            jsonResponse(true, $result['message']);
-        } else {
-            jsonResponse(false, $result['message']);
-        }
-    } catch (Exception $e) {
-        jsonResponse(false, 'Error: ' . $e->getMessage());
-    }
-}
-
 }
 ?>
