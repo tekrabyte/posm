@@ -47,12 +47,18 @@ $rawInput = ''; // Store raw input for reuse
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
-if ($requestMethod === 'POST' && strpos($contentType, 'application/json') !== false) {
+// Always read raw input for POST requests
+if ($requestMethod === 'POST') {
     $rawInput = file_get_contents('php://input');
-    $data = json_decode($rawInput, true);
     
-    if (empty($action) && is_array($data) && isset($data['employee_id'])) {
-        $action = 'save_setoran';
+    // Parse as JSON if Content-Type is application/json
+    if (strpos($contentType, 'application/json') !== false && !empty($rawInput)) {
+        $data = json_decode($rawInput, true);
+        
+        // Auto-detect save_setoran action
+        if (empty($action) && is_array($data) && isset($data['employee_id'])) {
+            $action = 'save_setoran';
+        }
     }
 }
 
