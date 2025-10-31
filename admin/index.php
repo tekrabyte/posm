@@ -107,6 +107,8 @@ $selected_store_id = $_GET['store_id'] ?? '';
                             data-tab="stores">Manajemen Store</button>
                         <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
                             data-tab="employees">Manajemen Karyawan</button>
+                        <button class="tab-button py-3 px-1 text-sm text-gray-700 hover:text-indigo-600"
+                            data-tab="email-settings">⚙️ Email Settings</button>
                     </div>
                 </div>
             </nav>
