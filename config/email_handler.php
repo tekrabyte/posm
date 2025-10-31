@@ -758,7 +758,7 @@ define('BASE_URL', $protocol . '://' . $host . $path);
                 <div class="footer">
                     <h2>Info Selengkapnya <a href="' . BASE_URL . '/admin"">klik disini</a></h2>
                     <p><strong>POM MINI ©2025</strong></p>
-                    <p>Laporan otomatis dikirim setiap hari jam 12:00 WIB</p>
+                    <p>Laporan otomatis dikirim setiap hari jam 23:50 WIB</p>
                     <p style="opacity: 0.7;">Jangan balas email ini - Email otomatis sistem</p>
                 </div>
             </div>
