@@ -566,8 +566,6 @@ switch ($action) {
                     </div>
                 </div>
                 ';
-                    <p style="font-size: 18px;"><strong><span class="badge badge-info">Rp ' . number_format($data['total_keseluruhan'], 0, ',', '.') . '</span></strong></p>
-                ';
                 
                 // Send email (async, don't block if fails)
                 $emailHandler->sendNotification($emailSubject, $emailMessage, 'setoran', $setoran_id);
