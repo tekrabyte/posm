@@ -212,6 +212,14 @@ switch ($action) {
     // =========================================================
     case 'save_setoran':
         try {
+            // Debug logging
+            error_log('=== SAVE SETORAN DEBUG ===');
+            error_log('Request Method: ' . $requestMethod);
+            error_log('Content-Type: ' . $contentType);
+            error_log('Action: ' . $action);
+            error_log('Data empty? ' . (empty($data) ? 'YES' : 'NO'));
+            error_log('Raw Input Length: ' . strlen($rawInput));
+            
             // Parse JSON data if not already parsed
             if (empty($data) && $requestMethod === 'POST' && !empty($rawInput)) {
                 $data = json_decode($rawInput, true);
@@ -220,18 +228,19 @@ switch ($action) {
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     error_log('JSON decode error: ' . json_last_error_msg());
                     error_log('Raw input: ' . substr($rawInput, 0, 500)); // First 500 chars
+                } else {
+                    error_log('JSON decoded successfully. Keys: ' . implode(', ', array_keys($data)));
                 }
             }
             
             // If still empty, check $_POST
             if (empty($data) && !empty($_POST)) {
+                error_log('Using $_POST data');
                 $data = $_POST;
             }
             
             if (empty($data)) {
-                error_log('Data is empty after all attempts');
-                error_log('Content-Type: ' . $contentType);
-                error_log('Request Method: ' . $requestMethod);
+                error_log('ERROR: Data is empty after all attempts');
                 throw new Exception("Data setoran kosong atau format tidak valid.");
             }
 
