@@ -443,129 +443,107 @@ switch ($action) {
                 $emailHandler = new EmailHandler($pdo);
                 
                 // Format email message
-                $emailSubject = '🆕 Data Setoran Baru - ' . $store_name;
-                $emailMessage = '
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0;">
-                        <h2 style="margin: 0; font-size: 24px;">📋 Setoran Harian Baru</h2>
-                        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">' . date('d F Y', strtotime($today)) . '</p>
-                    </div>
-                    
-                    <div style="background: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; border-top: none;">
-                        <!-- Info Karyawan & Store -->
-                        <table style="width: 100%; margin-bottom: 20px;">
-                            <tr>
-                                <td style="padding: 8px 0; width: 30%; color: #6b7280; font-size: 14px;">Store:</td>
-                                <td style="padding: 8px 0; font-weight: bold; font-size: 14px;">' . htmlspecialchars($store_name) . '</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Karyawan:</td>
-                                <td style="padding: 8px 0; font-weight: bold; font-size: 14px;">' . htmlspecialchars($employee_name) . '</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Jam Kerja:</td>
-                                <td style="padding: 8px 0; font-weight: bold; font-size: 14px;">' . $data['jam_masuk'] . ' - ' . $data['jam_keluar'] . '</td>
-                            </tr>
-                        </table>
-                        
-                        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-                        
-                        <!-- Data Meter -->
-                        <h3 style="color: #1f2937; font-size: 16px; margin: 0 0 10px 0;">⛽ Data Meter</h3>
-                        <table style="width: 100%; margin-bottom: 20px; background: white; border-radius: 6px; overflow: hidden;">
-                            <tr>
-                                <td style="padding: 12px; width: 50%; border: 1px solid #e5e7eb;">
-                                    <div style="color: #6b7280; font-size: 12px;">Total Liter</div>
-                                    <div style="font-weight: bold; font-size: 16px; color: #3b82f6;">' . number_format($data['total_liter'], 2, ',', '.') . ' L</div>
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <!-- Setoran -->
-                        <h3 style="color: #1f2937; font-size: 16px; margin: 0 0 10px 0;">💰 Setoran</h3>
-                        <table style="width: 100%; margin-bottom: 20px; background: white; border-radius: 6px; overflow: hidden; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb;">
-                                    <div style="color: #6b7280; font-size: 12px;">Cash</div>
-                                    <div style="font-weight: bold; font-size: 16px; color: #10b981;">Rp ' . number_format($data['cash'], 0, ',', '.') . '</div>
-                                </td>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb;">
-                                    <div style="color: #6b7280; font-size: 12px;">QRIS</div>
-                                    <div style="font-weight: bold; font-size: 16px; color: #8b5cf6;">Rp ' . number_format($data['qris'], 0, ',', '.') . '</div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="padding: 12px; border: 1px solid #e5e7eb; background: #f0fdf4;">
-                                    <div style="color: #6b7280; font-size: 12px;">Total Setoran</div>
-                                    <div style="font-weight: bold; font-size: 18px; color: #059669;">Rp ' . number_format($total_setoran_calculated, 0, ',', '.') . '</div>
-                                </td>
-                            </tr>
-                        </table>
-                ';
-                
-                // Add pengeluaran if exists
-                if (!empty($data['pengeluaran'])) {
-                    $emailMessage .= '
-                        <h3 style="color: #1f2937; font-size: 16px; margin: 20px 0 10px 0;">💸 Pengeluaran (PU)</h3>
-                        <table style="width: 100%; margin-bottom: 20px; background: white; border-radius: 6px; overflow: hidden; border-collapse: collapse;">
-                    ';
-                    foreach ($data['pengeluaran'] as $item) {
-                        $emailMessage .= '
-                            <tr>
-                                <td style="padding: 10px; border: 1px solid #e5e7eb; font-size: 14px;">' . htmlspecialchars($item['description']) . '</td>
-                                <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: right; font-weight: bold; color: #ef4444; font-size: 14px;">Rp ' . number_format($item['amount'], 0, ',', '.') . '</td>
-                            </tr>
-                        ';
-                    }
-                    $emailMessage .= '
-                            <tr>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb; background: #fef2f2; font-weight: bold;">Total Pengeluaran</td>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb; background: #fef2f2; text-align: right; font-weight: bold; color: #dc2626; font-size: 16px;">Rp ' . number_format($data['total_pengeluaran'], 0, ',', '.') . '</td>
-                            </tr>
-                        </table>
-                    ';
-                }
-                
-                // Add pemasukan if exists
-                if (!empty($data['pemasukan'])) {
-                    $emailMessage .= '
-                        <h3 style="color: #1f2937; font-size: 16px; margin: 20px 0 10px 0;">💵 Pemasukan (PU)</h3>
-                        <table style="width: 100%; margin-bottom: 20px; background: white; border-radius: 6px; overflow: hidden; border-collapse: collapse;">
-                    ';
-                    foreach ($data['pemasukan'] as $item) {
-                        $emailMessage .= '
-                            <tr>
-                                <td style="padding: 10px; border: 1px solid #e5e7eb; font-size: 14px;">' . htmlspecialchars($item['description']) . '</td>
-                                <td style="padding: 10px; border: 1px solid #e5e7eb; text-align: right; font-weight: bold; color: #10b981; font-size: 14px;">Rp ' . number_format($item['amount'], 0, ',', '.') . '</td>
-                            </tr>
-                        ';
-                    }
-                    $emailMessage .= '
-                            <tr>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb; background: #f0fdf4; font-weight: bold;">Total Pemasukan</td>
-                                <td style="padding: 12px; border: 1px solid #e5e7eb; background: #f0fdf4; text-align: right; font-weight: bold; color: #059669; font-size: 16px;">Rp ' . number_format($data['total_pemasukan'], 0, ',', '.') . '</td>
-                            </tr>
-                        </table>
-                    ';
-                }
-                
-                // Total keseluruhan
-                $emailMessage .= '
-                        <hr style="border: none; border-top: 2px solid #3b82f6; margin: 20px 0;">
-                        
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">💼 Total Keseluruhan</div>
-                            <div style="font-size: 28px; font-weight: bold;">Rp ' . number_format($data['total_keseluruhan'], 0, ',', '.') . '</div>
-                        </div>
-                        
-                        <div style="margin-top: 20px; padding: 15px; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
-                            <p style="margin: 0; font-size: 13px; color: #1e40af;">
-                                <strong>Catatan:</strong> Data ini otomatis masuk ke Cashflow Management per store.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                ';
+               $emailSubject = '🆕 Setoran Baru - ' . $store_name;
+$emailMessage = '
+<div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #f9fafb; padding: 15px;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 6px;">
+        <h2 style="margin: 0; font-size: 18px;">📋 Setoran Harian Baru</h2>
+        <p style="margin: 3px 0 0 0; opacity: 0.9; font-size: 12px;">' . date('d F Y', strtotime($today)) . '</p>
+    </div>
+    
+    <div style="background: white; padding: 15px; margin-top: 10px; border-radius: 6px;">
+        <!-- Info -->
+        <table style="width: 100%; margin-bottom: 15px;">
+            <tr><td style="padding: 3px 0; width: 35%; color: #6b7280; font-size: 13px;">Store:</td><td style="padding: 3px 0; font-weight: bold; font-size: 13px;">' . htmlspecialchars($store_name) . '</td></tr>
+            <tr><td style="padding: 3px 0; color: #6b7280; font-size: 13px;">Karyawan:</td><td style="padding: 3px 0; font-weight: bold; font-size: 13px;">' . htmlspecialchars($employee_name) . '</td></tr>
+            <tr><td style="padding: 3px 0; color: #6b7280; font-size: 13px;">Jam:</td><td style="padding: 3px 0; font-weight: bold; font-size: 13px;">' . $data['jam_masuk'] . ' - ' . $data['jam_keluar'] . '</td></tr>
+        </table>
+
+        <!-- Data Utama -->
+        <div style="display: flex; margin-bottom: 10px; gap: 8px;">
+            <div style="flex: 1; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                <div style="color: #6b7280; font-size: 11px;">Total Liter</div>
+                <div style="font-weight: bold; font-size: 14px; color: #3b82f6;">' . number_format($data['total_liter'], 2, ',', '.') . ' L</div>
+            </div>
+        </div>
+
+        <!-- Setoran -->
+        <div style="display: flex; margin-bottom: 10px; gap: 8px;">
+            <div style="flex: 1; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                <div style="color: #6b7280; font-size: 11px;">Cash</div>
+                <div style="font-weight: bold; font-size: 13px; color: #10b981;">Rp ' . number_format($data['cash'], 0, ',', '.') . '</div>
+            </div>
+            <div style="flex: 1; padding: 8px; border: 1px solid #e5e7eb; border-radius: 4px;">
+                <div style="color: #6b7280; font-size: 11px;">QRIS</div>
+                <div style="font-weight: bold; font-size: 13px; color: #8b5cf6;">Rp ' . number_format($data['qris'], 0, ',', '.') . '</div>
+            </div>
+        </div>
+
+        <div style="padding: 10px; background: #f0fdf4; border-radius: 4px; margin-bottom: 10px;">
+            <div style="color: #6b7280; font-size: 11px;">Total Setoran</div>
+            <div style="font-weight: bold; font-size: 15px; color: #059669;">Rp ' . number_format($total_setoran_calculated, 0, ',', '.') . '</div>
+        </div>
+';
+
+// Pengeluaran
+if (!empty($data['pengeluaran'])) {
+    $emailMessage .= '
+        <div style="margin-bottom: 10px;">
+            <div style="font-weight: bold; color: #1f2937; font-size: 13px; margin-bottom: 5px;">💸 Pengeluaran</div>
+    ';
+    foreach ($data['pengeluaran'] as $item) {
+        $emailMessage .= '
+            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f3f4f6;">
+                <span style="font-size: 12px;">' . htmlspecialchars($item['description']) . '</span>
+                <span style="font-weight: bold; color: #ef4444; font-size: 12px;">Rp ' . number_format($item['amount'], 0, ',', '.') . '</span>
+            </div>
+        ';
+    }
+    $emailMessage .= '
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: bold;">
+                <span style="font-size: 12px;">Total</span>
+                <span style="color: #dc2626; font-size: 13px;">Rp ' . number_format($data['total_pengeluaran'], 0, ',', '.') . '</span>
+            </div>
+        </div>
+    ';
+}
+
+// Pemasukan
+if (!empty($data['pemasukan'])) {
+    $emailMessage .= '
+        <div style="margin-bottom: 10px;">
+            <div style="font-weight: bold; color: #1f2937; font-size: 13px; margin-bottom: 5px;">💵 Pemasukan</div>
+    ';
+    foreach ($data['pemasukan'] as $item) {
+        $emailMessage .= '
+            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f3f4f6;">
+                <span style="font-size: 12px;">' . htmlspecialchars($item['description']) . '</span>
+                <span style="font-weight: bold; color: #10b981; font-size: 12px;">Rp ' . number_format($item['amount'], 0, ',', '.') . '</span>
+            </div>
+        ';
+    }
+    $emailMessage .= '
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: bold;">
+                <span style="font-size: 12px;">Total</span>
+                <span style="color: #059669; font-size: 13px;">Rp ' . number_format($data['total_pemasukan'], 0, ',', '.') . '</span>
+            </div>
+        </div>
+    ';
+}
+
+// Total Akhir
+$emailMessage .= '
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; border-radius: 6px; text-align: center;">
+            <div style="font-size: 11px; opacity: 0.9;">Total Keseluruhan</div>
+            <div style="font-size: 18px; font-weight: bold;">Rp ' . number_format($data['total_keseluruhan'], 0, ',', '.') . '</div>
+        </div>
+        
+        <div style="margin-top: 10px; padding: 8px; background: #eff6ff; border-radius: 4px;">
+            <p style="margin: 0; font-size: 11px; color: #1e40af; text-align: center;">Data otomatis masuk ke Cashflow Management</p>
+        </div>
+    </div>
+</div>
+';
                 
                 // Send email (async, don't block if fails)
                 $emailHandler->sendNotification($emailSubject, $emailMessage, 'setoran', $setoran_id);
