@@ -1056,6 +1056,139 @@ $selected_store_id = $_GET['store_id'] ?? '';
                     </div>
                 </div>
 
+                <!-- TAB EMAIL SETTINGS -->
+                <div id="tab-email-settings" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                        ⚙️ Email Notification Settings
+                        <span id="emailStatusBadge" class="text-xs px-3 py-1 rounded-full bg-gray-300 text-gray-700">Loading...</span>
+                    </h2>
+
+                    <!-- Email Configuration Form -->
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">📧 Konfigurasi SMTP</h3>
+                        <form id="emailConfigForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+                                    <input type="text" id="smtp_host" name="smtp_host" value="smtp.gmail.com" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <p class="text-xs text-gray-500 mt-1">Default: smtp.gmail.com</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port</label>
+                                    <input type="number" id="smtp_port" name="smtp_port" value="587" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <p class="text-xs text-gray-500 mt-1">Default: 587 (TLS)</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Gmail Address (Pengirim)</label>
+                                <input type="email" id="smtp_username" name="smtp_username" placeholder="your-email@gmail.com" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p class="text-xs text-gray-500 mt-1">Email Gmail yang akan digunakan untuk mengirim notifikasi</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Gmail App Password</label>
+                                <input type="password" id="smtp_password" name="smtp_password" placeholder="App Password (bukan password Gmail biasa)" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <a href="https://support.google.com/accounts/answer/185833" target="_blank" class="text-blue-600 hover:underline">
+                                        Cara membuat App Password →
+                                    </a>
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email Penerima Notifikasi</label>
+                                <input type="email" id="recipient_email" name="recipient_email" placeholder="recipient@example.com" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <p class="text-xs text-gray-500 mt-1">Email yang akan menerima notifikasi data baru</p>
+                            </div>
+
+                            <div class="flex items-center">
+                                <input type="checkbox" id="is_enabled" name="is_enabled" checked
+                                    class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <label for="is_enabled" class="ml-2 text-sm font-medium text-gray-700">
+                                    Enable Email Notifications
+                                </label>
+                            </div>
+
+                            <div class="flex gap-3 pt-4 border-t">
+                                <button type="submit"
+                                    class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Simpan Konfigurasi
+                                </button>
+                                
+                                <button type="button" id="testEmailBtn"
+                                    class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                    Kirim Test Email
+                                </button>
+
+                                <button type="button" id="testConnectionBtn"
+                                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Test Connection
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Notification History -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-700">📬 History Notifikasi (50 Terakhir)</h3>
+                            <button id="refreshHistoryBtn"
+                                class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm transition duration-200">
+                                Refresh
+                            </button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Subject</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
+                                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Sent At</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="emailHistoryTableBody" class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-gray-500">Memuat history...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Real-time Status Indicator -->
+                    <div class="mt-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-semibold">🔄 Real-time Monitoring Status</h4>
+                                <p class="text-sm opacity-90 mt-1">Polling setiap 5 detik untuk deteksi data baru</p>
+                            </div>
+                            <div id="realtimeStatusIndicator" class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-medium">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- MODAL STORE -->
                 <div id="modalStore"
                     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
