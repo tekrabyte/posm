@@ -29,11 +29,11 @@ switch ($action) {
                     dc.change_timestamp,
                     CASE 
                         WHEN dc.table_name = 'setoran' THEN s.employee_id
-                        WHEN dc.table_name = 'cashflow' THEN c.store_id
+                        WHEN dc.table_name = 'cash_flow_management' THEN c.store_id
                     END as identifier
                 FROM data_changes dc
                 LEFT JOIN setoran s ON dc.table_name = 'setoran' AND dc.record_id = s.id
-                LEFT JOIN cashflow c ON dc.table_name = 'cashflow' AND dc.record_id = c.id
+                LEFT JOIN cash_flow_management c ON dc.table_name = 'cash_flow_management' AND dc.record_id = c.id
                 WHERE dc.change_timestamp > ? 
                   AND dc.notified = 0
                 ORDER BY dc.change_timestamp DESC
