@@ -518,7 +518,10 @@ switch ($action) {
 
             jsonResponse(true, $message, ['id' => $setoran_id, 'qris_synced' => ($qris_amount > 0)]);
         } catch (Exception $e) {
-            $pdo->rollBack();
+            // Only rollback if transaction is active
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             jsonResponse(false, 'Error: Gagal menyimpan data setoran. ' . $e->getMessage(), [], [], 500);
         }
         break;
