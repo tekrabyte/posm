@@ -1141,6 +1141,31 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                     Test Connection
                                 </button>
                             </div>
+                            
+                            <!-- Daily Report Section -->
+                            <div class="mt-6 pt-6 border-t">
+                                <h4 class="text-md font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                    📊 Laporan Harian Otomatis
+                                </h4>
+                                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-lg border border-indigo-200">
+                                    <p class="text-sm text-gray-700 mb-3">
+                                        <strong>Format Laporan:</strong> Info 1 Bulan (All Store & Per Store) + Info Hari Ini (Per Store)
+                                    </p>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        ⏰ Laporan dikirim otomatis setiap hari jam <strong>12:00 WIB</strong>
+                                    </p>
+                                    <button type="button" id="sendDailyReportBtn"
+                                        class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        Kirim Laporan Harian Sekarang
+                                    </button>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        ℹ️ Tombol ini akan mengirim laporan meskipun sudah dikirim hari ini (untuk testing)
+                                    </p>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
