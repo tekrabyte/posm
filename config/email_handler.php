@@ -71,7 +71,17 @@ class EmailHandler {
             
             // Recipients
             $mail->setFrom($this->config['smtp_username'], 'Pemberitahuan POM MINI');
-            $mail->addAddress($this->config['recipient_email']);
+            
+            // Parse multiple recipients (separated by comma or semicolon)
+            $recipients = $this->parseRecipients($this->config['recipient_email']);
+            
+            if (empty($recipients)) {
+                throw new Exception('No valid recipient email addresses found');
+            }
+            
+            foreach ($recipients as $recipientEmail) {
+                $mail->addAddress($recipientEmail);
+            }
             
             // Content
             $mail->isHTML(true);
@@ -88,7 +98,7 @@ class EmailHandler {
             // Update last_sent
             $this->updateLastSent();
             
-            return ['success' => true, 'message' => 'Email sent successfully'];
+            return ['success' => true, 'message' => 'Email sent successfully to ' . count($recipients) . ' recipient(s)'];
             
         } catch (Exception $e) {
             $errorMsg = $e->getMessage();
