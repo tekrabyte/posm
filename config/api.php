@@ -322,6 +322,82 @@ switch ($action) {
                 $message .= ' | QRIS otomatis masuk ke Cashflow Management';
             }
 
+            // ========================================
+            // TRACK CHANGE & SEND EMAIL NOTIFICATION
+            // ========================================
+            try {
+                // Track change untuk real-time polling
+                $stmtTrack = $pdo->prepare("
+                    INSERT INTO data_changes (table_name, record_id, change_type)
+                    VALUES ('setoran', ?, ?)
+                ");
+                $stmtTrack->execute([$setoran_id, $existingSetoranId ? 'update' : 'insert']);
+                
+                // Send email notification
+                require_once __DIR__ . '/email_handler.php';
+                $emailHandler = new EmailHandler($pdo);
+                
+                // Format email message
+                $emailSubject = '🆕 Data Setoran Baru - ' . $store_name;
+                $emailMessage = '
+                    <h3>📋 <strong>SETORAN BARU</strong></h3>
+                    <p><strong>Tanggal:</strong> ' . date('d/m/Y', strtotime($today)) . '</p>
+                    <p><strong>Store:</strong> ' . htmlspecialchars($store_name) . '</p>
+                    <p><strong>Karyawan:</strong> ' . htmlspecialchars($employee_name) . '</p>
+                    <p><strong>Jam Kerja:</strong> ' . $data['jam_masuk'] . ' - ' . $data['jam_keluar'] . '</p>
+                    
+                    <hr style="border: 1px solid #e5e7eb; margin: 15px 0;">
+                    
+                    <h4>⛽ Data Meter</h4>
+                    <p><strong>Total Liter:</strong> ' . number_format($data['total_liter'], 2, ',', '.') . ' L</p>
+                    
+                    <h4>💰 Setoran</h4>
+                    <p><strong>Cash:</strong> Rp ' . number_format($data['cash'], 0, ',', '.') . '</p>
+                    <p><strong>QRIS:</strong> Rp ' . number_format($data['qris'], 0, ',', '.') . '</p>
+                    <p><strong>Total:</strong> <span class="badge badge-success">Rp ' . number_format($total_setoran_calculated, 0, ',', '.') . '</span></p>
+                ';
+                
+                // Add pengeluaran if exists
+                if (!empty($data['pengeluaran'])) {
+                    $emailMessage .= '
+                        <h4>💸 Pengeluaran</h4>
+                        <ul>
+                    ';
+                    foreach ($data['pengeluaran'] as $item) {
+                        $emailMessage .= '<li>' . htmlspecialchars($item['description']) . ': <strong>Rp ' . number_format($item['amount'], 0, ',', '.') . '</strong></li>';
+                    }
+                    $emailMessage .= '</ul>';
+                    $emailMessage .= '<p><strong>Total Pengeluaran:</strong> <span class="badge badge-danger">Rp ' . number_format($data['total_pengeluaran'], 0, ',', '.') . '</span></p>';
+                }
+                
+                // Add pemasukan if exists
+                if (!empty($data['pemasukan'])) {
+                    $emailMessage .= '
+                        <h4>💵 Pemasukan</h4>
+                        <ul>
+                    ';
+                    foreach ($data['pemasukan'] as $item) {
+                        $emailMessage .= '<li>' . htmlspecialchars($item['description']) . ': <strong>Rp ' . number_format($item['amount'], 0, ',', '.') . '</strong></li>';
+                    }
+                    $emailMessage .= '</ul>';
+                    $emailMessage .= '<p><strong>Total Pemasukan:</strong> <span class="badge badge-success">Rp ' . number_format($data['total_pemasukan'], 0, ',', '.') . '</span></p>';
+                }
+                
+                // Total keseluruhan
+                $emailMessage .= '
+                    <hr style="border: 2px solid #3b82f6; margin: 15px 0;">
+                    <h4>💼 Total Keseluruhan</h4>
+                    <p style="font-size: 18px;"><strong><span class="badge badge-info">Rp ' . number_format($data['total_keseluruhan'], 0, ',', '.') . '</span></strong></p>
+                ';
+                
+                // Send email (async, don't block if fails)
+                $emailHandler->sendNotification($emailSubject, $emailMessage, 'setoran', $setoran_id);
+                
+            } catch (Exception $emailError) {
+                // Silent fail - email error shouldn't stop the main process
+                error_log('Email notification failed: ' . $emailError->getMessage());
+            }
+            
             // Commit transaction
             $pdo->commit();
 
