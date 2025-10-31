@@ -43,6 +43,34 @@ class EmailHandler {
     }
     
     /**
+     * Parse multiple recipient emails
+     * Support separators: comma (,) and semicolon (;)
+     * 
+     * @param string $recipientString Email string with multiple recipients
+     * @return array Array of valid email addresses
+     */
+    private function parseRecipients($recipientString) {
+        // Replace semicolons with commas for uniform processing
+        $recipientString = str_replace(';', ',', $recipientString);
+        
+        // Split by comma
+        $emails = explode(',', $recipientString);
+        
+        // Clean up and validate emails
+        $validEmails = [];
+        foreach ($emails as $email) {
+            $email = trim($email);
+            
+            // Validate email format
+            if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $validEmails[] = $email;
+            }
+        }
+        
+        return $validEmails;
+    }
+    
+    /**
      * Kirim email notification
      */
     public function sendNotification($subject, $message, $notificationType = 'mixed', $relatedId = null) {
