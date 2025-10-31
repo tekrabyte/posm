@@ -43,12 +43,13 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 // Logika untuk mengambil data JSON POST body
 $data = [];
+$rawInput = ''; // Store raw input for reuse
 $requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
 if ($requestMethod === 'POST' && strpos($contentType, 'application/json') !== false) {
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
+    $rawInput = file_get_contents('php://input');
+    $data = json_decode($rawInput, true);
     
     if (empty($action) && is_array($data) && isset($data['employee_id'])) {
         $action = 'save_setoran';
