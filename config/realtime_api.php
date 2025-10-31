@@ -1,4 +1,9 @@
 <?php
+// Suppress all errors and warnings to ensure clean JSON output
+error_reporting(0);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/email_handler.php';
 
