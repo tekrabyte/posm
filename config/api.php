@@ -1416,6 +1416,26 @@ function jsonResponse($success, $message, $data = [], $summary = [], $httpCode =
         }
         break;
 
+    // =========================================================
+    // SEND DAILY REPORT EMAIL
+    // =========================================================
+    case 'send_daily_report':
+        try {
+            require_once __DIR__ . '/email_handler.php';
+            
+            // Force override flag untuk manual trigger
+            $forceOverride = isset($_POST['force']) && $_POST['force'] === 'true';
+            
+            $emailHandler = new EmailHandler($pdo);
+            $result = $emailHandler->sendDailyReport($forceOverride);
+            
+            jsonResponse($result['success'], $result['message']);
+            
+        } catch (Exception $e) {
+            jsonResponse(false, 'Error: ' . $e->getMessage(), [], [], 500);
+        }
+        break;
+
     default:
         jsonResponse(false, 'Aksi tidak valid atau tidak ditemukan', [], [], 400);
 }
