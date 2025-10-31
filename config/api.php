@@ -332,6 +332,30 @@ switch ($action) {
             }
 
             // ========================================
+            // AUTO-SYNC CASH TO CASHFLOW MANAGEMENT
+            // ========================================
+            $cash_amount = (float)$data['cash'];
+            if ($cash_amount > 0) {
+                $cash_description = "Pemasukan Cash Setoran - {$employee_name} ({$store_name})";
+                $cash_notes = "AUTO_SYNC:SETORAN_ID:{$setoran_id}:EMPLOYEE:{$employee_name}:DATE:{$today}";
+                
+                $stmtCashflow = $pdo->prepare("
+                    INSERT INTO cash_flow_management 
+                    (tanggal, store_id, description, amount, type, category, notes, created_at)
+                    VALUES (?, ?, ?, ?, 'Pemasukan', 'cash_setoran', ?, NOW())
+                ");
+                $stmtCashflow->execute([
+                    $today,
+                    $data['store_id'],
+                    $cash_description,
+                    $cash_amount,
+                    $cash_notes
+                ]);
+                
+                $message .= ' | Cash otomatis masuk ke Cashflow Management';
+            }
+
+            // ========================================
             // TRACK CHANGE & SEND EMAIL NOTIFICATION
             // ========================================
             try {
