@@ -345,7 +345,17 @@ class EmailHandler {
             
             // Recipients
             $mail->setFrom($this->config['smtp_username'], 'Laporan Harian POM MINI');
-            $mail->addAddress($this->config['recipient_email']);
+            
+            // Parse multiple recipients (separated by comma or semicolon)
+            $recipients = $this->parseRecipients($this->config['recipient_email']);
+            
+            if (empty($recipients)) {
+                throw new Exception('No valid recipient email addresses found');
+            }
+            
+            foreach ($recipients as $recipientEmail) {
+                $mail->addAddress($recipientEmail);
+            }
             
             // Content
             $mail->isHTML(true);
@@ -362,7 +372,7 @@ class EmailHandler {
             // Update last_daily_report_sent
             $this->updateLastDailyReportSent();
             
-            return ['success' => true, 'message' => 'Laporan harian berhasil dikirim'];
+            return ['success' => true, 'message' => 'Laporan harian berhasil dikirim ke ' . count($recipients) . ' recipient(s)'];
             
         } catch (Exception $e) {
             $errorMsg = $e->getMessage();
