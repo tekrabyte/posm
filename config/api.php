@@ -833,6 +833,55 @@ case 'add_management_cash_flow':
         if ($success) {
             $id = $pdo->lastInsertId();
             error_log("Data berhasil disimpan dengan ID: " . $id);
+            
+            // ========================================
+            // TRACK CHANGE & SEND EMAIL NOTIFICATION
+            // ========================================
+            try {
+                // Track change untuk real-time polling
+                $stmtTrack = $pdo->prepare("
+                    INSERT INTO data_changes (table_name, record_id, change_type)
+                    VALUES ('cash_flow_management', ?, 'insert')
+                ");
+                $stmtTrack->execute([$id]);
+                
+                // Send email notification
+                require_once __DIR__ . '/email_handler.php';
+                $emailHandler = new EmailHandler($pdo);
+                
+                // Get store name
+                $stmtStore = $pdo->prepare("SELECT store_name FROM stores WHERE id = ?");
+                $stmtStore->execute([$data['store_id']]);
+                $store_name = $stmtStore->fetchColumn() ?: 'Tidak Diketahui';
+                
+                // Format email message
+                $typeIcon = $data['type'] === 'Pemasukan' ? '💵' : '💸';
+                $emailSubject = $typeIcon . ' ' . $data['type'] . ' Baru - ' . $store_name;
+                $emailMessage = '
+                    <h3>' . $typeIcon . ' <strong>' . strtoupper($data['type']) . '</strong></h3>
+                    <p><strong>Tanggal:</strong> ' . date('d/m/Y', strtotime($data['tanggal'])) . '</p>
+                    <p><strong>Store:</strong> ' . htmlspecialchars($store_name) . '</p>
+                    
+                    <hr style="border: 1px solid #e5e7eb; margin: 15px 0;">
+                    
+                    <h4>📝 Detail</h4>
+                    <p><strong>Kategori:</strong> ' . htmlspecialchars($data['category']) . '</p>
+                    <p><strong>Deskripsi:</strong> ' . htmlspecialchars($data['description']) . '</p>
+                    
+                    <hr style="border: 2px solid #3b82f6; margin: 15px 0;">
+                    
+                    <h4>💰 Nominal</h4>
+                    <p style="font-size: 18px;"><strong><span class="badge ' . ($data['type'] === 'Pemasukan' ? 'badge-success' : 'badge-danger') . '">Rp ' . number_format($data['amount'], 0, ',', '.') . '</span></strong></p>
+                ';
+                
+                // Send email (async, don't block if fails)
+                $emailHandler->sendNotification($emailSubject, $emailMessage, $data['type'] === 'Pemasukan' ? 'pemasukan' : 'pengeluaran', $id);
+                
+            } catch (Exception $emailError) {
+                // Silent fail - email error shouldn't stop the main process
+                error_log('Email notification failed: ' . $emailError->getMessage());
+            }
+            
             jsonResponse(true, 'Transaksi kas berhasil ditambahkan', ['id' => $id]);
         } else {
             throw new Exception("Gagal menyimpan ke database.");
