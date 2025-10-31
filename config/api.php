@@ -52,9 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'a
     }
 }
 
-// CSRF Protection for POST requests (except login, get_csrf_token, and save_setoran)
+// CSRF Protection for POST requests (except login, get_csrf_token, save_setoran, and send_daily_report)
 // save_setoran is public endpoint for frontend form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran') {
+// send_daily_report is triggered action from authenticated admin panel
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran' && $action !== 'send_daily_report') {
     $csrf_token = $data['csrf_token'] ?? $_POST['csrf_token'] ?? '';
     
     if (!validateCSRFToken($csrf_token)) {
