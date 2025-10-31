@@ -206,6 +206,18 @@ switch ($action) {
         try {
             $limit = $_GET['limit'] ?? 50;
             
+            // Check if table exists first
+            $tableCheck = $pdo->query("SHOW TABLES LIKE 'email_notifications'");
+            if (!$tableCheck->fetch()) {
+                // Table doesn't exist, return empty response
+                echo json_encode([
+                    'success' => true,
+                    'history' => [],
+                    'info' => 'email_notifications table not found - please run migration'
+                ]);
+                break;
+            }
+            
             $stmt = $pdo->prepare("
                 SELECT * FROM email_notifications 
                 ORDER BY created_at DESC 
@@ -222,7 +234,12 @@ switch ($action) {
             
         } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            echo json_encode([
+                'success' => false, 
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
         }
         break;
     
