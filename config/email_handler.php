@@ -70,7 +70,7 @@ class EmailHandler {
             $mail->CharSet = 'UTF-8';
             
             // Recipients
-            $mail->setFrom($this->config['smtp_username'], 'Admin POSM Notification');
+            $mail->setFrom($this->config['smtp_username'], 'Pemberitahuan POM MINI');
             $mail->addAddress($this->config['recipient_email']);
             
             // Content
@@ -134,14 +134,14 @@ class EmailHandler {
         <body>
             <div class="container">
                 <div class="header">
-                    <h2 style="margin: 0;">🔔 POSM Notification</h2>
+                    <h2 style="margin: 0;">🔔 Pemberitahuan POM MINI </h2>
                     <p style="margin: 5px 0 0 0; opacity: 0.9;">Data Baru Terdeteksi</p>
                 </div>
                 <div class="content">
                     ' . nl2br($message) . '
                 </div>
                 <div class="footer">
-                    <p style="margin: 0;">Admin Panel POSM © 2025</p>
+                    <p style="margin: 0;">POM MINI © 2025</p>
                     <p style="margin: 5px 0 0 0; opacity: 0.7;">Notifikasi otomatis - Jangan balas email ini</p>
                 </div>
             </div>
@@ -306,14 +306,14 @@ class EmailHandler {
             $mail->CharSet = 'UTF-8';
             
             // Recipients
-            $mail->setFrom($this->config['smtp_username'], 'Admin POSM Laporan Harian');
+            $mail->setFrom($this->config['smtp_username'], 'Laporan Harian POM MINI');
             $mail->addAddress($this->config['recipient_email']);
             
             // Content
             $mail->isHTML(true);
-            $mail->Subject = '📊 Laporan Harian Wallet POSM - ' . date('d F Y');
+            $mail->Subject = '📊 Laporan Harian POM MINI - ' . date('d F Y');
             $mail->Body = $emailBody;
-            $mail->AltBody = 'Laporan Harian Wallet POSM';
+            $mail->AltBody = 'Laporan Harian Wallet POM MINI';
             
             // Send
             $mail->send();
@@ -577,14 +577,14 @@ class EmailHandler {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>📊 Laporan Harian Wallet POSM</h1>
+                    <h1>📊 Laporan Harian Wallet POM MINI</h1>
                     <p>' . $todayDate . '</p>
                 </div>
                 
                 <div class="content">
                     <!-- Section 1: Info 1 Bulan Wallet (All Store) -->
                     <div class="section">
-                        <div class="section-title">📈 Info 1 Bulan Wallet - Semua Store (' . $monthName . ')</div>
+                        <div class="section-title">📈 Informasi Wallet - Semua Store (' . $monthName . ')</div>
                         <div class="summary-box">
                             <div class="summary-row">
                                 <span class="summary-label">Total Pemasukan:</span>
@@ -607,7 +607,7 @@ class EmailHandler {
                     
                     <!-- Section 2: Info 1 Bulan Wallet (Per Store) -->
                     <div class="section">
-                        <div class="section-title">🏪 Info 1 Bulan Wallet - Per Store (' . $monthName . ')</div>';
+                        <div class="section-title">🏪  Informasi Wallet - Per Store (' . $monthName . ')</div>';
         
         if (!empty($data['monthly_per_store'])) {
             $html .= '
@@ -647,7 +647,7 @@ class EmailHandler {
                     
                     <!-- Section 3: Info 1 Hari Wallet (Per Store) -->
                     <div class="section">
-                        <div class="section-title">📅 Info Hari Ini - Per Store (' . $todayDate . ')</div>';
+                        <div class="section-title">📅 Laporan Hari Ini  (' . $todayDate . ')</div>';
         
         if (!empty($data['daily_per_store'])) {
             $html .= '
@@ -682,12 +682,21 @@ class EmailHandler {
             $html .= '<div class="no-data">Tidak ada data untuk hari ini</div>';
         }
         
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+$path = dirname($_SERVER['SCRIPT_NAME']);
+
+// Hilangkan trailing slash jika ada
+$path = rtrim($path, '/');
+
+define('BASE_URL', $protocol . '://' . $host . $path);
         $html .= '
                     </div>
                 </div>
                 
                 <div class="footer">
-                    <p><strong>Admin Panel POSM © 2025</strong></p>
+                    <h2>Info Selengkapnya <a href="' . BASE_URL . '/admin"">klik disini</a></h2>
+                    <p><strong>POM MINI ©2025</strong></p>
                     <p>Laporan otomatis dikirim setiap hari jam 12:00 WIB</p>
                     <p style="opacity: 0.7;">Jangan balas email ini - Email otomatis sistem</p>
                 </div>

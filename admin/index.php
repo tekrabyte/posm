@@ -1068,14 +1068,14 @@ $selected_store_id = $_GET['store_id'] ?? '';
                         <h3 class="text-lg font-semibold mb-4 text-gray-700">📧 Konfigurasi SMTP</h3>
                         <form id="emailConfigForm" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                                <div class="hidden">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
                                     <input type="text" id="smtp_host" name="smtp_host" value="smtp.gmail.com" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     <p class="text-xs text-gray-500 mt-1">Default: smtp.gmail.com</p>
                                 </div>
                                 
-                                <div>
+                                <div class="hidden">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port</label>
                                     <input type="number" id="smtp_port" name="smtp_port" value="587" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -1083,14 +1083,14 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                 </div>
                             </div>
 
-                            <div>
+                            <div class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Gmail Address (Pengirim)</label>
                                 <input type="email" id="smtp_username" name="smtp_username" placeholder="your-email@gmail.com" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 <p class="text-xs text-gray-500 mt-1">Email Gmail yang akan digunakan untuk mengirim notifikasi</p>
                             </div>
 
-                            <div>
+                            <div class="hidden">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Gmail App Password</label>
                                 <input type="password" id="smtp_password" name="smtp_password" placeholder="App Password (bukan password Gmail biasa)" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -1124,17 +1124,8 @@ $selected_store_id = $_GET['store_id'] ?? '';
                                     </svg>
                                     Simpan Konfigurasi
                                 </button>
-                                
-                                <button type="button" id="testEmailBtn"
-                                    class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                    Kirim Test Email
-                                </button>
-
                                 <button type="button" id="testConnectionBtn"
-                                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
+                                    class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition duration-200 flex items-center">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
