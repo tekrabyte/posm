@@ -428,19 +428,25 @@ switch ($action) {
             }
 
             // ========================================
-            // TRACK CHANGE & SEND EMAIL NOTIFICATION
+            // TRACK CHANGE (Inside Transaction)
+            // ========================================
+            // Track change untuk real-time polling
+            $stmtTrack = $pdo->prepare("
+                INSERT INTO data_changes (table_name, record_id, change_type)
+                VALUES ('setoran', ?, ?)
+            ");
+            $stmtTrack->execute([$setoran_id, $existingSetoranId ? 'update' : 'insert']);
+            
+            // Commit transaction - MUST be done before email
+            $pdo->commit();
+
+            // ========================================
+            // SEND EMAIL NOTIFICATION (After Commit)
             // ========================================
             try {
-                // Track change untuk real-time polling
-                $stmtTrack = $pdo->prepare("
-                    INSERT INTO data_changes (table_name, record_id, change_type)
-                    VALUES ('setoran', ?, ?)
-                ");
-                $stmtTrack->execute([$setoran_id, $existingSetoranId ? 'update' : 'insert']);
-                
-                // Send email notification
-                require_once __DIR__ . '/email_handler.php';
+                // Load helper functions
                 require_once __DIR__ . '/helper_functions.php';
+                require_once __DIR__ . '/email_handler.php';
                 $emailHandler = new EmailHandler($pdo);
                 
                 // Format email message - WhatsApp style
@@ -509,9 +515,6 @@ switch ($action) {
                 // Silent fail - email error shouldn't stop the main process
                 error_log('Email notification failed: ' . $emailError->getMessage());
             }
-            
-            // Commit transaction
-            $pdo->commit();
 
             jsonResponse(true, $message, ['id' => $setoran_id, 'qris_synced' => ($qris_amount > 0)]);
         } catch (Exception $e) {
