@@ -409,26 +409,48 @@ class EmailHandler {
      * Get data 1 bulan per store
      */
     private function getMonthlyDataPerStore() {
+        // Query Cashflow Management per store
         $query = "
-            SELECT 
-                s.store_name,
-                SUM(st.total_pemasukan) as total_pemasukan,
-                SUM(st.total_pengeluaran) as total_pengeluaran,
-                SUM(st.total_liter) as total_liter
-            FROM setoran st
-            LEFT JOIN stores s ON st.store_id = s.id
-            WHERE MONTH(st.tanggal) = MONTH(CURRENT_DATE())
-              AND YEAR(st.tanggal) = YEAR(CURRENT_DATE())
-            GROUP BY st.store_id, s.store_name
-            ORDER BY s.store_name
+            SELECT
+                st.store_name,
+                COALESCE(SUM(CASE WHEN cfm.type = 'Pemasukan' THEN cfm.amount ELSE 0 END), 0) as total_pemasukan,
+                COALESCE(SUM(CASE WHEN cfm.type = 'Pengeluaran' THEN cfm.amount ELSE 0 END), 0) as total_pengeluaran
+            FROM stores st
+            LEFT JOIN cash_flow_management cfm ON st.id = cfm.store_id 
+                AND MONTH(cfm.tanggal) = MONTH(CURRENT_DATE())
+                AND YEAR(cfm.tanggal) = YEAR(CURRENT_DATE())
+            GROUP BY st.id, st.store_name
+            ORDER BY st.store_name
         ";
         
         $stmt = $this->pdo->query($query);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Hitung saldo bersih untuk setiap store
+        // Query liter per store
+        $query_liter = "
+            SELECT
+                s.store_name,
+                COALESCE(SUM(st.total_liter), 0) as total_liter
+            FROM setoran st
+            LEFT JOIN stores s ON st.store_id = s.id
+            WHERE MONTH(st.tanggal) = MONTH(CURRENT_DATE())
+              AND YEAR(st.tanggal) = YEAR(CURRENT_DATE())
+            GROUP BY st.store_id, s.store_name
+        ";
+        
+        $stmt_liter = $this->pdo->query($query_liter);
+        $liter_data = $stmt_liter->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Create a map of store_name => total_liter
+        $liter_map = [];
+        foreach ($liter_data as $liter_row) {
+            $liter_map[$liter_row['store_name']] = $liter_row['total_liter'];
+        }
+        
+        // Merge liter data and calculate saldo_bersih
         foreach ($results as &$row) {
-            $row['saldo_bersih'] = ($row['total_pemasukan'] ?? 0) - ($row['total_pengeluaran'] ?? 0);
+            $row['total_liter'] = $liter_map[$row['store_name']] ?? 0;
+            $row['saldo_bersih'] = $row['total_pemasukan'] - $row['total_pengeluaran'];
         }
         
         return $results;
