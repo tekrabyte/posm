@@ -209,7 +209,7 @@ switch ($action) {
      */
     case 'get_notification_history':
         try {
-            $limit = $_GET['limit'] ?? 50;
+            $limit = intval($_GET['limit'] ?? 50);
             
             // Check if table exists first
             $tableCheck = $pdo->query("SHOW TABLES LIKE 'email_notifications'");
@@ -225,11 +225,12 @@ switch ($action) {
             
             $stmt = $pdo->prepare("
                 SELECT * FROM email_notifications 
-                ORDER BY created_at DESC 
-                LIMIT ?
+                ORDER BY sent_at DESC 
+                LIMIT :limit
             ");
             
-            $stmt->execute([$limit]);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
             $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             echo json_encode([
