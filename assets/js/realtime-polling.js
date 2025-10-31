@@ -416,6 +416,44 @@ document.addEventListener('DOMContentLoaded', function() {
         testEmailBtn.addEventListener('click', sendTestEmail);
     }
     
+    // Send daily report button
+    const sendDailyReportBtn = document.getElementById('sendDailyReportBtn');
+    if (sendDailyReportBtn) {
+        sendDailyReportBtn.addEventListener('click', async function() {
+            if (!confirm('Kirim Laporan Harian sekarang?\n\nLaporan akan dikirim ke email penerima yang sudah dikonfigurasi.')) {
+                return;
+            }
+            
+            try {
+                showLoading('Mengirim laporan harian...');
+                
+                const formData = new FormData();
+                formData.append('action', 'send_daily_report');
+                formData.append('force', true); // Force override untuk manual trigger
+                
+                const response = await fetch('../config/api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                hideLoading();
+                
+                if (result.success) {
+                    showToast(result.message || 'Laporan harian berhasil dikirim!', 'success');
+                    // Reload notification history
+                    loadNotificationHistory();
+                } else {
+                    showToast(result.message || 'Gagal mengirim laporan harian', 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showToast('Error: ' + error.message, 'error');
+                console.error('Error sending daily report:', error);
+            }
+        });
+    }
+    
     // Refresh history button
     const refreshHistoryBtn = document.getElementById('refreshHistoryBtn');
     if (refreshHistoryBtn) {
