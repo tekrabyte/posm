@@ -481,23 +481,30 @@ switch ($action) {
             // SEND EMAIL NOTIFICATION (After Commit)
             // ========================================
             try {
-                // Load helper functions
-                if (!function_exists('formatIndonesianDate')) {
-                    require_once __DIR__ . '/helper_functions.php';
-                }
                 require_once __DIR__ . '/email_handler.php';
                 $emailHandler = new EmailHandler($pdo);
                 
-                // Format email message - WhatsApp style
+                // Format email message - WhatsApp style (Simple PHP implementation)
                 $emailSubject = '🆕 Setoran Baru - ' . $store_name;
                 
-                // Format tanggal Indonesia
-                $tanggalIndonesia = formatIndonesianDate($today);
+                // Format tanggal Indonesia (inline)
+                $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                $months = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                $dayName = $days[date('w', strtotime($today))];
+                $day = date('j', strtotime($today)); // No leading zero
+                $month = $months[date('n', strtotime($today))];
+                $year = date('Y', strtotime($today));
+                $tanggalIndonesia = "$dayName, $day $month $year";
+                
+                // Format Rupiah (inline)
+                function formatRupiah($number) {
+                    return number_format($number, 0, ',', '.');
+                }
                 
                 // Build email message text
                 $emailText = "*Setoran Harian* 📋\n";
                 $emailText .= $tanggalIndonesia . "\n";
-                $emailText .= "🤦‍♀️ Nama: " . htmlspecialchars($employee_name) . "\n";
+                $emailText .= "🤦‍♀️ Nama: " . $employee_name . "\n";
                 $emailText .= "🕐 Jam: (" . $data['jam_masuk'] . " - " . $data['jam_keluar'] . ")\n\n";
                 
                 $emailText .= "⛽ Data Meter\n";
@@ -514,7 +521,7 @@ switch ($action) {
                 if (!empty($data['pengeluaran'])) {
                     $emailText .= "💸 Pengeluaran (PU)\n";
                     foreach ($data['pengeluaran'] as $item) {
-                        $emailText .= "• " . htmlspecialchars($item['description']) . ": Rp " . formatRupiah($item['amount']) . "\n";
+                        $emailText .= "• " . $item['description'] . ": Rp " . formatRupiah($item['amount']) . "\n";
                     }
                     $emailText .= "Total Pengeluaran: Rp " . formatRupiah($data['total_pengeluaran']) . "\n\n";
                 }
@@ -523,7 +530,7 @@ switch ($action) {
                 if (!empty($data['pemasukan'])) {
                     $emailText .= "💵 Pemasukan (PU)\n";
                     foreach ($data['pemasukan'] as $item) {
-                        $emailText .= "• " . htmlspecialchars($item['description']) . ": Rp " . formatRupiah($item['amount']) . "\n";
+                        $emailText .= "• " . $item['description'] . ": Rp " . formatRupiah($item['amount']) . "\n";
                     }
                     $emailText .= "Total Pemasukan: Rp " . formatRupiah($data['total_pemasukan']) . "\n\n";
                 }
@@ -538,7 +545,7 @@ switch ($action) {
     </div>
     
     <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
-        <pre style="font-family: \'Courier New\', monospace; font-size: 14px; line-height: 1.6; margin: 0; white-space: pre-wrap; word-wrap: break-word; color: #1f2937;">' . $emailText . '</pre>
+        <pre style="font-family: \'Courier New\', monospace; font-size: 14px; line-height: 1.6; margin: 0; white-space: pre-wrap; word-wrap: break-word; color: #1f2937;">' . htmlspecialchars($emailText) . '</pre>
     </div>
     
     <div style="margin-top: 15px; padding: 12px; background: #eff6ff; border-radius: 6px; text-align: center;">
@@ -552,7 +559,6 @@ switch ($action) {
                 
             } catch (Exception $emailError) {
                 // Silent fail - email error shouldn't stop the main process
-                // Log to error log
                 error_log('Email notification failed: ' . $emailError->getMessage());
                 error_log('Stack trace: ' . $emailError->getTraceAsString());
             }
