@@ -256,8 +256,9 @@ switch ($action) {
                 $pdo->exec("DELETE FROM pengeluaran WHERE setoran_id = $setoran_id");
                 $pdo->exec("DELETE FROM pemasukan WHERE setoran_id = $setoran_id");
                 
-                // Delete old QRIS cashflow entry and create new one
+                // Delete old QRIS and CASH cashflow entries and create new ones
                 $pdo->prepare("DELETE FROM cash_flow_management WHERE category = 'qris_setoran' AND notes LIKE ?")->execute(["%SETORAN_ID:$setoran_id%"]);
+                $pdo->prepare("DELETE FROM cash_flow_management WHERE category = 'cash_setoran' AND notes LIKE ?")->execute(["%SETORAN_ID:$setoran_id%"]);
                 
                 $message = 'Data setoran berhasil diperbarui (ditimpa)';
             } else {
