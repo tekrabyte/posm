@@ -141,6 +141,13 @@ switch ($action) {
             $stmt2 = $pdo->prepare("DELETE FROM pemasukan WHERE setoran_id = ?");
             $stmt2->execute([$data['id']]);
             
+            // Delete related cashflow entries (QRIS and CASH)
+            $stmt_cf_qris = $pdo->prepare("DELETE FROM cash_flow_management WHERE category = 'qris_setoran' AND notes LIKE ?");
+            $stmt_cf_qris->execute(["%SETORAN_ID:{$data['id']}%"]);
+            
+            $stmt_cf_cash = $pdo->prepare("DELETE FROM cash_flow_management WHERE category = 'cash_setoran' AND notes LIKE ?");
+            $stmt_cf_cash->execute(["%SETORAN_ID:{$data['id']}%"]);
+            
             $stmt3 = $pdo->prepare("DELETE FROM setoran WHERE id = ?");
             $stmt3->execute([$data['id']]);
             
