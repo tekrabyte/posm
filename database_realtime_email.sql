@@ -50,5 +50,5 @@ ON DUPLICATE KEY UPDATE
   `smtp_username` = VALUES(`smtp_username`);
 
 -- 5. Index untuk performa query
-ALTER TABLE `setoran` ADD INDEX `idx_created_at` (`created_at`);
-ALTER TABLE `cashflow` ADD INDEX `idx_created_at` (`created_at`);
+ALTER TABLE `setoran` ADD INDEX IF NOT EXISTS `idx_created_at` (`created_at`);
+ALTER TABLE `cash_flow_management` ADD INDEX IF NOT EXISTS `idx_created_at` (`created_at`);
