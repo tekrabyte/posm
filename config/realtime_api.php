@@ -19,6 +19,20 @@ switch ($action) {
         try {
             $lastCheck = $_GET['last_check'] ?? date('Y-m-d H:i:s', strtotime('-10 seconds'));
             
+            // Check if data_changes table exists first
+            $tableCheck = $pdo->query("SHOW TABLES LIKE 'data_changes'");
+            if (!$tableCheck->fetch()) {
+                // Table doesn't exist, return empty response
+                echo json_encode([
+                    'success' => true,
+                    'has_changes' => false,
+                    'changes' => [],
+                    'current_time' => date('Y-m-d H:i:s'),
+                    'info' => 'data_changes table not found - please run migration'
+                ]);
+                break;
+            }
+            
             // Query perubahan terbaru
             $stmt = $pdo->prepare("
                 SELECT 
@@ -60,7 +74,12 @@ switch ($action) {
             
         } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            echo json_encode([
+                'success' => false, 
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
         }
         break;
     
