@@ -212,21 +212,26 @@ switch ($action) {
     // =========================================================
     case 'save_setoran':
         try {
-            // Parse JSON data if needed
-            if (empty($data) && $requestMethod === 'POST') {
-                $input = file_get_contents('php://input');
-                $data = json_decode($input, true);
+            // Parse JSON data if not already parsed
+            if (empty($data) && $requestMethod === 'POST' && !empty($rawInput)) {
+                $data = json_decode($rawInput, true);
                 
                 // Log for debugging
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     error_log('JSON decode error: ' . json_last_error_msg());
-                    error_log('Raw input: ' . $input);
+                    error_log('Raw input: ' . substr($rawInput, 0, 500)); // First 500 chars
                 }
             }
             
+            // If still empty, check $_POST
+            if (empty($data) && !empty($_POST)) {
+                $data = $_POST;
+            }
+            
             if (empty($data)) {
-                error_log('Data is empty. POST: ' . print_r($_POST, true));
-                error_log('Input: ' . file_get_contents('php://input'));
+                error_log('Data is empty after all attempts');
+                error_log('Content-Type: ' . $contentType);
+                error_log('Request Method: ' . $requestMethod);
                 throw new Exception("Data setoran kosong atau format tidak valid.");
             }
 
