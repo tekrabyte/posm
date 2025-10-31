@@ -53,13 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && strpos($_SERVER['CONTENT_TYPE'], 'a
 }
 
 // CSRF Protection for POST requests (except login, get_csrf_token, save_setoran, and send_daily_report)
-// save_setoran is public endpoint for frontend form submission
-// send_daily_report is triggered action from authenticated admin panel
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran' && $action !== 'send_daily_report') {
-    $csrf_token = $data['csrf_token'] ?? $_POST['csrf_token'] ?? '';
-    
-    if (!validateCSRFToken($csrf_token)) {
-        jsonResponse(false, 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.', [], [], 403);
+// save_setoran is public endpoint for frontend form submission  
+// send_daily_report is admin-authenticated action, can bypass CSRF if user is logged in
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action !== 'login' && $action !== 'get_csrf_token' && $action !== 'save_setoran') {
+    // Skip CSRF for send_daily_report if user is authenticated
+    if ($action === 'send_daily_report' && isset($_SESSION['user_id'])) {
+        // Authenticated admin action, allow without CSRF token
+    } else {
+        $csrf_token = $data['csrf_token'] ?? $_POST['csrf_token'] ?? '';
+        
+        if (!validateCSRFToken($csrf_token)) {
+            jsonResponse(false, 'Token keamanan tidak valid. Silakan refresh halaman dan coba lagi.', [], [], 403);
+        }
     }
 }
 
