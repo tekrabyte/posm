@@ -3,7 +3,7 @@
         'name' => 'admin-panel-posm/app',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9e50cad826d86ce453b7a5f7c775d6d222f8b989',
+        'reference' => 'f54c87111727827a1028345ae530418eb2132818',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'admin-panel-posm/app' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9e50cad826d86ce453b7a5f7c775d6d222f8b989',
+            'reference' => 'f54c87111727827a1028345ae530418eb2132818',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
