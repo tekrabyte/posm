@@ -368,21 +368,39 @@ class EmailHandler {
      * Get data 1 bulan untuk semua store
      */
     private function getMonthlyDataAllStores() {
-        $query = "
-            SELECT 
-                SUM(total_pemasukan) as total_pemasukan,
-                SUM(total_pengeluaran) as total_pengeluaran,
-                SUM(total_liter) as total_liter
+        // Query Cashflow Management untuk Income & Expense
+        $query_cf = "
+            SELECT
+                SUM(CASE WHEN type = 'Pemasukan' THEN amount ELSE 0 END) as total_pemasukan,
+                SUM(CASE WHEN type = 'Pengeluaran' THEN amount ELSE 0 END) as total_pengeluaran
+            FROM cash_flow_management
+            WHERE MONTH(tanggal) = MONTH(CURRENT_DATE())
+              AND YEAR(tanggal) = YEAR(CURRENT_DATE())
+        ";
+        
+        $stmt_cf = $this->pdo->query($query_cf);
+        $cf_data = $stmt_cf->fetch(PDO::FETCH_ASSOC);
+        
+        // Query Total Liter dari tabel Setoran
+        $query_liter = "
+            SELECT
+                COALESCE(SUM(total_liter), 0) as total_liter
             FROM setoran
             WHERE MONTH(tanggal) = MONTH(CURRENT_DATE())
               AND YEAR(tanggal) = YEAR(CURRENT_DATE())
         ";
         
-        $stmt = $this->pdo->query($query);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt_liter = $this->pdo->query($query_liter);
+        $liter_data = $stmt_liter->fetch(PDO::FETCH_ASSOC);
+        
+        $result = [
+            'total_pemasukan' => $cf_data['total_pemasukan'] ?? 0,
+            'total_pengeluaran' => $cf_data['total_pengeluaran'] ?? 0,
+            'total_liter' => $liter_data['total_liter'] ?? 0
+        ];
         
         // Hitung saldo bersih
-        $result['saldo_bersih'] = ($result['total_pemasukan'] ?? 0) - ($result['total_pengeluaran'] ?? 0);
+        $result['saldo_bersih'] = $result['total_pemasukan'] - $result['total_pengeluaran'];
         
         return $result;
     }
