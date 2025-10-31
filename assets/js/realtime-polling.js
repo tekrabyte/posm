@@ -427,33 +427,17 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 showLoading('Mengirim laporan harian...');
                 
-                // Use FormData untuk auto-handle CSRF token jika ada window.secureFetch
-                const data = {
-                    action: 'send_daily_report',
-                    force: true
-                };
+                // Prepare FormData
+                const formData = new FormData();
+                formData.append('action', 'send_daily_report');
+                formData.append('force', 'true');
                 
-                let response;
-                if (typeof window.secureFetch === 'function') {
-                    // Use secureFetch if available (handles CSRF automatically)
-                    response = await window.secureFetch('../config/api.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                } else {
-                    // Fallback ke FormData
-                    const formData = new FormData();
-                    formData.append('action', 'send_daily_report');
-                    formData.append('force', true);
-                    
-                    response = await fetch('../config/api.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-                }
+                // Use regular fetch since secureFetch has issues with this endpoint
+                // and we've added exception in api.php
+                const response = await fetch('../config/api.php', {
+                    method: 'POST',
+                    body: formData
+                });
                 
                 const result = await response.json();
                 hideLoading();
