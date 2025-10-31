@@ -237,5 +237,445 @@ class EmailHandler {
             return ['success' => false, 'message' => 'Connection failed: ' . $e->getMessage()];
         }
     }
+    
+    /**
+     * Kirim Laporan Harian
+     * Format: Info 1 Bulan (All Store + Per Store) dan Info 1 Hari (Per Store)
+     */
+    public function sendDailyReport($forceOverride = false) {
+        // Cek apakah email enabled
+        if (!$this->config || !$this->config['is_enabled']) {
+            return ['success' => false, 'message' => 'Email notification disabled'];
+        }
+        
+        // Validasi config
+        if (empty($this->config['smtp_username']) || empty($this->config['smtp_password']) || empty($this->config['recipient_email'])) {
+            return ['success' => false, 'message' => 'Email configuration incomplete'];
+        }
+        
+        // Cek apakah sudah kirim hari ini (anti-duplicate) kecuali force override
+        if (!$forceOverride && isset($this->config['last_daily_report_sent'])) {
+            $lastSent = date('Y-m-d', strtotime($this->config['last_daily_report_sent']));
+            $today = date('Y-m-d');
+            if ($lastSent === $today) {
+                return ['success' => false, 'message' => 'Laporan harian sudah dikirim hari ini'];
+            }
+        }
+        
+        try {
+            // Ambil data laporan
+            $reportData = $this->generateReportData();
+            
+            // Format email body
+            $emailBody = $this->formatDailyReportEmail($reportData);
+            
+            $mail = new PHPMailer(true);
+            
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $this->config['smtp_host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->config['smtp_username'];
+            $mail->Password = $this->config['smtp_password'];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = $this->config['smtp_port'];
+            $mail->CharSet = 'UTF-8';
+            
+            // Recipients
+            $mail->setFrom($this->config['smtp_username'], 'Admin POSM Laporan Harian');
+            $mail->addAddress($this->config['recipient_email']);
+            
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = '📊 Laporan Harian Wallet POSM - ' . date('d F Y');
+            $mail->Body = $emailBody;
+            $mail->AltBody = 'Laporan Harian Wallet POSM';
+            
+            // Send
+            $mail->send();
+            
+            // Log success
+            $this->logNotification('daily_report', null, 'Laporan Harian', 'Laporan harian berhasil dikirim', 'sent');
+            
+            // Update last_daily_report_sent
+            $this->updateLastDailyReportSent();
+            
+            return ['success' => true, 'message' => 'Laporan harian berhasil dikirim'];
+            
+        } catch (Exception $e) {
+            // Log error
+            $this->logNotification('daily_report', null, 'Laporan Harian', 'Gagal kirim laporan harian', 'failed', $e->getMessage());
+            
+            return ['success' => false, 'message' => 'Gagal kirim laporan: ' . $e->getMessage()];
+        }
+    }
+    
+    /**
+     * Generate data untuk laporan harian
+     */
+    private function generateReportData() {
+        $data = [];
+        
+        // 1. Info 1 Bulan Wallet (All Store)
+        $data['monthly_all'] = $this->getMonthlyDataAllStores();
+        
+        // 2. Info 1 Bulan Wallet (Per Store)
+        $data['monthly_per_store'] = $this->getMonthlyDataPerStore();
+        
+        // 3. Info 1 Hari Wallet (Per Store)
+        $data['daily_per_store'] = $this->getDailyDataPerStore();
+        
+        return $data;
+    }
+    
+    /**
+     * Get data 1 bulan untuk semua store
+     */
+    private function getMonthlyDataAllStores() {
+        $query = "
+            SELECT 
+                SUM(total_pemasukan) as total_pemasukan,
+                SUM(total_pengeluaran) as total_pengeluaran,
+                SUM(total_liter) as total_liter
+            FROM setoran
+            WHERE MONTH(tanggal) = MONTH(CURRENT_DATE())
+              AND YEAR(tanggal) = YEAR(CURRENT_DATE())
+        ";
+        
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Hitung saldo bersih
+        $result['saldo_bersih'] = ($result['total_pemasukan'] ?? 0) - ($result['total_pengeluaran'] ?? 0);
+        
+        return $result;
+    }
+    
+    /**
+     * Get data 1 bulan per store
+     */
+    private function getMonthlyDataPerStore() {
+        $query = "
+            SELECT 
+                s.store_name,
+                SUM(st.total_pemasukan) as total_pemasukan,
+                SUM(st.total_pengeluaran) as total_pengeluaran,
+                SUM(st.total_liter) as total_liter
+            FROM setoran st
+            LEFT JOIN stores s ON st.store_id = s.id
+            WHERE MONTH(st.tanggal) = MONTH(CURRENT_DATE())
+              AND YEAR(st.tanggal) = YEAR(CURRENT_DATE())
+            GROUP BY st.store_id, s.store_name
+            ORDER BY s.store_name
+        ";
+        
+        $stmt = $this->pdo->query($query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Hitung saldo bersih untuk setiap store
+        foreach ($results as &$row) {
+            $row['saldo_bersih'] = ($row['total_pemasukan'] ?? 0) - ($row['total_pengeluaran'] ?? 0);
+        }
+        
+        return $results;
+    }
+    
+    /**
+     * Get data hari ini per store
+     */
+    private function getDailyDataPerStore() {
+        $query = "
+            SELECT 
+                s.store_name,
+                SUM(st.total_pemasukan) as total_pemasukan,
+                SUM(st.total_pengeluaran) as total_pengeluaran,
+                SUM(st.total_liter) as total_liter
+            FROM setoran st
+            LEFT JOIN stores s ON st.store_id = s.id
+            WHERE DATE(st.tanggal) = CURRENT_DATE()
+            GROUP BY st.store_id, s.store_name
+            ORDER BY s.store_name
+        ";
+        
+        $stmt = $this->pdo->query($query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Hitung saldo bersih untuk setiap store
+        foreach ($results as &$row) {
+            $row['saldo_bersih'] = ($row['total_pemasukan'] ?? 0) - ($row['total_pengeluaran'] ?? 0);
+        }
+        
+        return $results;
+    }
+    
+    /**
+     * Format email body untuk laporan harian
+     */
+    private function formatDailyReportEmail($data) {
+        $monthName = date('F Y');
+        $todayDate = date('d F Y');
+        
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body { 
+                    font-family: Arial, sans-serif; 
+                    line-height: 1.6; 
+                    color: #333;
+                    background: #f5f5f5;
+                }
+                .container { 
+                    max-width: 800px; 
+                    margin: 20px auto; 
+                    background: white;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                }
+                .header { 
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    color: white; 
+                    padding: 30px; 
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                .header p {
+                    margin: 10px 0 0 0;
+                    opacity: 0.9;
+                    font-size: 16px;
+                }
+                .content { 
+                    padding: 30px;
+                }
+                .section {
+                    margin-bottom: 30px;
+                }
+                .section-title {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-left: 4px solid #667eea;
+                    margin-bottom: 15px;
+                    font-weight: bold;
+                    font-size: 18px;
+                    color: #333;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 20px;
+                    background: white;
+                }
+                th {
+                    background: #667eea;
+                    color: white;
+                    padding: 12px;
+                    text-align: left;
+                    font-weight: 600;
+                    font-size: 14px;
+                }
+                td {
+                    padding: 12px;
+                    border-bottom: 1px solid #e5e7eb;
+                    font-size: 14px;
+                }
+                tr:hover {
+                    background: #f9fafb;
+                }
+                .summary-box {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                }
+                .summary-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 8px 0;
+                    border-bottom: 1px solid rgba(255,255,255,0.2);
+                }
+                .summary-row:last-child {
+                    border-bottom: none;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+                .summary-label {
+                    font-weight: 500;
+                }
+                .summary-value {
+                    font-weight: bold;
+                }
+                .positive {
+                    color: #10b981;
+                    font-weight: bold;
+                }
+                .negative {
+                    color: #ef4444;
+                    font-weight: bold;
+                }
+                .footer { 
+                    background: #374151; 
+                    color: white; 
+                    padding: 20px; 
+                    text-align: center; 
+                    font-size: 12px;
+                }
+                .footer p {
+                    margin: 5px 0;
+                }
+                .no-data {
+                    text-align: center;
+                    padding: 20px;
+                    color: #6b7280;
+                    font-style: italic;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>📊 Laporan Harian Wallet POSM</h1>
+                    <p>' . $todayDate . '</p>
+                </div>
+                
+                <div class="content">
+                    <!-- Section 1: Info 1 Bulan Wallet (All Store) -->
+                    <div class="section">
+                        <div class="section-title">📈 Info 1 Bulan Wallet - Semua Store (' . $monthName . ')</div>
+                        <div class="summary-box">
+                            <div class="summary-row">
+                                <span class="summary-label">Total Pemasukan:</span>
+                                <span class="summary-value">Rp ' . number_format($data['monthly_all']['total_pemasukan'] ?? 0, 0, ',', '.') . '</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Total Pengeluaran:</span>
+                                <span class="summary-value">Rp ' . number_format($data['monthly_all']['total_pengeluaran'] ?? 0, 0, ',', '.') . '</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Saldo Bersih:</span>
+                                <span class="summary-value">Rp ' . number_format($data['monthly_all']['saldo_bersih'] ?? 0, 0, ',', '.') . '</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Total Liter Terjual:</span>
+                                <span class="summary-value">' . number_format($data['monthly_all']['total_liter'] ?? 0, 2, ',', '.') . ' L</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Section 2: Info 1 Bulan Wallet (Per Store) -->
+                    <div class="section">
+                        <div class="section-title">🏪 Info 1 Bulan Wallet - Per Store (' . $monthName . ')</div>';
+        
+        if (!empty($data['monthly_per_store'])) {
+            $html .= '
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Store</th>
+                                    <th>Total Pemasukan</th>
+                                    <th>Total Pengeluaran</th>
+                                    <th>Saldo Bersih</th>
+                                    <th>Total Liter</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+            
+            foreach ($data['monthly_per_store'] as $row) {
+                $saldoClass = $row['saldo_bersih'] >= 0 ? 'positive' : 'negative';
+                $html .= '
+                                <tr>
+                                    <td><strong>' . htmlspecialchars($row['store_name'] ?? 'Unknown') . '</strong></td>
+                                    <td>Rp ' . number_format($row['total_pemasukan'] ?? 0, 0, ',', '.') . '</td>
+                                    <td>Rp ' . number_format($row['total_pengeluaran'] ?? 0, 0, ',', '.') . '</td>
+                                    <td class="' . $saldoClass . '">Rp ' . number_format($row['saldo_bersih'] ?? 0, 0, ',', '.') . '</td>
+                                    <td>' . number_format($row['total_liter'] ?? 0, 2, ',', '.') . ' L</td>
+                                </tr>';
+            }
+            
+            $html .= '
+                            </tbody>
+                        </table>';
+        } else {
+            $html .= '<div class="no-data">Tidak ada data untuk bulan ini</div>';
+        }
+        
+        $html .= '
+                    </div>
+                    
+                    <!-- Section 3: Info 1 Hari Wallet (Per Store) -->
+                    <div class="section">
+                        <div class="section-title">📅 Info Hari Ini - Per Store (' . $todayDate . ')</div>';
+        
+        if (!empty($data['daily_per_store'])) {
+            $html .= '
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Store</th>
+                                    <th>Total Pemasukan</th>
+                                    <th>Total Pengeluaran</th>
+                                    <th>Saldo Bersih</th>
+                                    <th>Total Liter</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+            
+            foreach ($data['daily_per_store'] as $row) {
+                $saldoClass = $row['saldo_bersih'] >= 0 ? 'positive' : 'negative';
+                $html .= '
+                                <tr>
+                                    <td><strong>' . htmlspecialchars($row['store_name'] ?? 'Unknown') . '</strong></td>
+                                    <td>Rp ' . number_format($row['total_pemasukan'] ?? 0, 0, ',', '.') . '</td>
+                                    <td>Rp ' . number_format($row['total_pengeluaran'] ?? 0, 0, ',', '.') . '</td>
+                                    <td class="' . $saldoClass . '">Rp ' . number_format($row['saldo_bersih'] ?? 0, 0, ',', '.') . '</td>
+                                    <td>' . number_format($row['total_liter'] ?? 0, 2, ',', '.') . ' L</td>
+                                </tr>';
+            }
+            
+            $html .= '
+                            </tbody>
+                        </table>';
+        } else {
+            $html .= '<div class="no-data">Tidak ada data untuk hari ini</div>';
+        }
+        
+        $html .= '
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p><strong>Admin Panel POSM © 2025</strong></p>
+                    <p>Laporan otomatis dikirim setiap hari jam 12:00 WIB</p>
+                    <p style="opacity: 0.7;">Jangan balas email ini - Email otomatis sistem</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ';
+        
+        return $html;
+    }
+    
+    /**
+     * Update last_daily_report_sent timestamp
+     */
+    private function updateLastDailyReportSent() {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE email_config SET last_daily_report_sent = NOW() WHERE id = 1");
+            $stmt->execute();
+            
+            // Reload config
+            $this->loadConfig();
+        } catch (Exception $e) {
+            // Silent fail
+        }
+    }
 }
 ?>
